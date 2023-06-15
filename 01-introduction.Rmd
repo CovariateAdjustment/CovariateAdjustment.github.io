@@ -1,0 +1,71 @@
+# Introduction {#intro}
+
+In this section, we will lay out the notation for the following chapters, discuss what assumptions are required for these methods to be applied, and survey the literature on covariate adjustment.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Notation and Assumptions
+
+Let $A$ denote a binary treatment assignment: $A = 1$ indicates assignment to receive the treatment of interest, and $A = 0$ indicates assignment to the control or comparator group. Let $Y$ denote the outcome of interest, and $X$ denote a vector of baseline covariates. If stratified randomization is used, let $X_{S}$ denote the stratification variables, and $X_{\bar{S}}$ denote the other baseline covariates, and $X = (X_{S}, X_{\bar{S}})$.We assume that treatment assignment is independent of the baseline covariates, i.e. $A \perp X$, or if stratified randomization is used, that the treatment assignment is conditionally independent of the other covariates, i.e. $A \perp\!\!\!\perp X_{\bar{S}} \vert X_{S}$. Each participant's data is assumed to be independent, identically distributed (IID) draws from an unknown distribution $P(X, A, Y)$.
+
+In order to include covariate information in an analysis, we have to specify how these covariates relate to the outcome in a regression model, which models a conditional distribution of the outcome as as a function of the covariates. In most circumstances, the validity of our inference from regression models depends on how close the regression model's specification reflects the true data generation mechanism, which is almost always unknown. This may make investigators understandably reluctant to use covariate adjusted methods, as they do not want the validity of the analysis to depend on assumptions of a correctly specified model.
+
+What may be surprising is that there are covariate adjustment methods that provide valid estimates of the treatment effect, even if the models used to obtain these estimates are arbitrarily misspecified. These estimators also can have precision that is equal or better than the unadjusted estimators.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+
+## The Analysis of Covariance (ANCOVA)
+
+
+The ANCOVA is perhaps the best known method for covariate adjustment with a continuous outcome. The simplest version of an ANCOVA is a linear regression of the final outcome $Y$ on the baseline covariate $X$, usually the outcome measured at baseline, and treatment assignment $A$:
+
+$$Y_{i} = \beta_{0} + \beta_{X}X_{i} + \beta_{A}A_{i} + \epsilon_{i}$$
+
+This regression model assumes that the final outcome is linearly related to the outcome at baseline, with an additive effect of treatment. Even if the true relationship between the final outcome and the baseline covariate is nonlinear, includes interactions, and includes other variables that are omitted from the model, the ANCOVA estimate will provide a consistent estimate of the treatment effect that is as precise or even more precise than an unadjusted estimate. An outcome model that more accurately reflects the data generating mechanism will improve precision, but is not required for a consistent estimate of the outcome.
+
+Linear regression involves the conditional mean, but we are interested in a marginal treatment effect. In order to obtain a marginal treatment effect, we need to marginalize (i.e. average over) the variation in the covariates:
+
+$$\hat{\mu}_{1} = \hat{E}[Y \vert A = 1] = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y \vert A = 1, X]$$
+
+In the case of the simple ANCOVA model with only one covariate, the marginal mean under treatment would be:
+
+$$\hat{\mu}_{1} = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y \vert A = 1, X] = \frac{1}{n} \sum_{i=1}^{n} (\hat{\beta}_{0} + \hat{\beta}_{X}X_{i} + \hat{\beta}_{A}) = \hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n} + \hat{\beta}_{A}$$
+Note that this utilizes the covariate data from the entire sample, not just those who were assigned to receive the active treatment. The marginal mean under control would be:
+
+$$\hat{\mu}_{0} = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y \vert A = 1, X] = \frac{1}{n} \sum_{i=1}^{n} (\hat{\beta}_{0} + \hat{\beta}_{X}X_{i}) = \hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n}$$
+Likewise, our marginal estimate of the mean under control utilizes the covariate data from the entire sample, not just those who were assigned to receive the control treatment. Our estimate of the average treatment effect would be the contrast between these quantities:
+
+$$\hat{\theta}_{ATE} = \hat{\mu}_{1} - \hat{\mu}_{0} = (\hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n} + \hat{\beta}_{A}) - (\hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n}) = \hat{\beta}_{A}$$
+
+The procedure for gives us the same result as we would have otherwise used to estimate the treatment effect: the regression coefficient associated with treatment. When there are no treatment-by-covariate interactions and the model does not use a nonlinear link function, the conditional effect and the marginal effect coincide. However, the approach we outlined here is applicable to a wide range of outcome models, including those using link functions, like logistic regression, or models that include treatment-by-covariate interactions.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Generalizing the ANCOVA: G-computation
+
+In general, if we have a regression model $\hat{f}(X, A) = \hat{E}[Y \vert A, X]$, we can obtain the average treatment effect by respectively computing the marginal mean under treatment and control, and taking a contrast between these quantities:
+
+$$\hat{\theta}_{ATE} = \hat{\mu_{1}} - \hat{\mu_{0}} = \left(\frac{1}{n} \sum_{i=1}^{n} \hat{f}(X, A = 1) \right) - \left(\frac{1}{n} \sum_{i=1}^{n} \hat{f}(X, A = 0) \right)$$
+This approach is known as G-computation or the standardization estimator.
+
+
+

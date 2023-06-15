@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Using R | Covariate Adjustment in Randomized Trials</title>
+  <meta name="description" content="<p>This a series of tutorials meant to help investigators apply covariate
+adjusted analyses in randomized trials.</p>" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Using R | Covariate Adjustment in Randomized Trials" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This a series of tutorials meant to help investigators apply covariate
+adjusted analyses in randomized trials.</p>" />
+  <meta name="github-repo" content="covariateadjustment/covariateadjustment.github.io" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Using R | Covariate Adjustment in Randomized Trials" />
+  
+  <meta name="twitter:description" content="<p>This a series of tutorials meant to help investigators apply covariate
+adjusted analyses in randomized trials.</p>" />
+  
+
+<meta name="author" content="Josh Betz, Kelly van Lancker, and Michael Rosenblum" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="estimands.html"/>
+<link rel="next" href="ancova.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/table1-1.0/table1_defaults.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Covariate Adjustment in Randomized Trials</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> The Book</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-this-book"><i class="fa fa-check"></i><b>1.1</b> Using this Book</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#case-studies"><i class="fa fa-check"></i><b>1.2</b> Case Studies</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="index.html"><a href="index.html#ctn_03"><i class="fa fa-check"></i><b>1.2.1</b> Buprenorphine tapering schedule and illicit opioid use: CTN-03</a></li>
+<li class="chapter" data-level="1.2.2" data-path="index.html"><a href="index.html#mistie_iii"><i class="fa fa-check"></i><b>1.2.2</b> Functional Outcome in Hemorrhagic Stroke: MISTIE III</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#notation-and-assumptions"><i class="fa fa-check"></i><b>2.1</b> Notation and Assumptions</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#the-analysis-of-covariance-ancova"><i class="fa fa-check"></i><b>2.2</b> The Analysis of Covariance (ANCOVA)</a></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#generalizing-the-ancova-g-computation"><i class="fa fa-check"></i><b>2.3</b> Generalizing the ANCOVA: G-computation</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="estimands.html"><a href="estimands.html"><i class="fa fa-check"></i><b>3</b> Targets of Inference: Estimands</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="estimands.html"><a href="estimands.html#estimands-for-continuous-and-binary-outcomes"><i class="fa fa-check"></i><b>3.1</b> Estimands for Continuous and Binary Outcomes</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="estimands.html"><a href="estimands.html#difference-in-means"><i class="fa fa-check"></i><b>3.1.1</b> Difference in Means</a></li>
+<li class="chapter" data-level="3.1.2" data-path="estimands.html"><a href="estimands.html#ratio-of-means"><i class="fa fa-check"></i><b>3.1.2</b> Ratio of Means</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="estimands.html"><a href="estimands.html#ordinal_estimands"><i class="fa fa-check"></i><b>3.2</b> Estimands for Ordinal Outcomes</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="estimands.html"><a href="estimands.html#difference-in-mean-utility"><i class="fa fa-check"></i><b>3.2.1</b> Difference in Mean Utility</a></li>
+<li class="chapter" data-level="3.2.2" data-path="estimands.html"><a href="estimands.html#mann-whitney-m-w-estimand"><i class="fa fa-check"></i><b>3.2.2</b> Mann-Whitney (M-W) Estimand</a></li>
+<li class="chapter" data-level="3.2.3" data-path="estimands.html"><a href="estimands.html#log-odds-ratio-lor"><i class="fa fa-check"></i><b>3.2.3</b> Log Odds Ratio (LOR)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="estimands.html"><a href="estimands.html#survival_estimands"><i class="fa fa-check"></i><b>3.3</b> Survival/Time-To-Event Outcomes</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="estimands.html"><a href="estimands.html#kaplan-meier-survival-function"><i class="fa fa-check"></i><b>3.3.1</b> Kaplan Meier Survival Function</a></li>
+<li class="chapter" data-level="3.3.2" data-path="estimands.html"><a href="estimands.html#restricted-mean-survival-time"><i class="fa fa-check"></i><b>3.3.2</b> Restricted Mean Survival Time</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="using_r.html"><a href="using_r.html"><i class="fa fa-check"></i><b>4</b> Using R</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="using_r.html"><a href="using_r.html#installing-packages"><i class="fa fa-check"></i><b>4.1</b> Installing Packages</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="using_r.html"><a href="using_r.html#packages-from-cran"><i class="fa fa-check"></i><b>4.1.1</b> Packages from CRAN</a></li>
+<li class="chapter" data-level="4.1.2" data-path="using_r.html"><a href="using_r.html#packages-from-github"><i class="fa fa-check"></i><b>4.1.2</b> Packages from Github</a></li>
+<li class="chapter" data-level="4.1.3" data-path="using_r.html"><a href="using_r.html#loading-packages-into-workspace"><i class="fa fa-check"></i><b>4.1.3</b> Loading Packages into Workspace</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="using_r.html"><a href="using_r.html#loading-the-data-mistie-iii"><i class="fa fa-check"></i><b>4.2</b> Loading the Data: MISTIE-III</a></li>
+<li class="chapter" data-level="4.3" data-path="using_r.html"><a href="using_r.html#assessing-baseline-balance"><i class="fa fa-check"></i><b>4.3</b> Assessing Baseline Balance</a></li>
+<li class="chapter" data-level="4.4" data-path="using_r.html"><a href="using_r.html#visualizing-data"><i class="fa fa-check"></i><b>4.4</b> Visualizing Data</a></li>
+<li class="chapter" data-level="4.5" data-path="using_r.html"><a href="using_r.html#fitting-regression-models"><i class="fa fa-check"></i><b>4.5</b> Fitting Regression Models</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="using_r.html"><a href="using_r.html#generalized-linear-model"><i class="fa fa-check"></i><b>4.5.1</b> Generalized Linear Model</a></li>
+<li class="chapter" data-level="4.5.2" data-path="using_r.html"><a href="using_r.html#logrank-test-and-cox-proportional-hazards-model"><i class="fa fa-check"></i><b>4.5.2</b> Logrank Test and Cox Proportional Hazards Model</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="using_r.html"><a href="using_r.html#variance-estimation"><i class="fa fa-check"></i><b>4.6</b> Variance Estimation</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="using_r.html"><a href="using_r.html#robust-standard-errors"><i class="fa fa-check"></i><b>4.6.1</b> Robust Standard Errors</a></li>
+<li class="chapter" data-level="4.6.2" data-path="using_r.html"><a href="using_r.html#bootstrap-estimator"><i class="fa fa-check"></i><b>4.6.2</b> Bootstrap Estimator</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="using_r.html"><a href="using_r.html#addressing-multiplicity"><i class="fa fa-check"></i><b>4.7</b> Addressing Multiplicity</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>5</b> Analysis of Covariance and its Generalization</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="ancova.html"><a href="ancova.html#generalizing-the-ancova-estimator-g-computation"><i class="fa fa-check"></i><b>5.1</b> Generalizing the ANCOVA Estimator: G-Computation</a></li>
+<li class="chapter" data-level="5.2" data-path="ancova.html"><a href="ancova.html#inverse-weighting-doubly-robust-weighted-least-squares"><i class="fa fa-check"></i><b>5.2</b> Inverse Weighting: Doubly Robust Weighted Least Squares</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="doublyrobust.html"><a href="doublyrobust.html"><i class="fa fa-check"></i><b>6</b> Doubly Robust Estimators</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="doublyrobust.html"><a href="doublyrobust.html#augmented-inverse-probability-weighted-estimation"><i class="fa fa-check"></i><b>6.1</b> Augmented Inverse Probability Weighted Estimation</a></li>
+<li class="chapter" data-level="6.2" data-path="doublyrobust.html"><a href="doublyrobust.html#targeted-maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.2</b> Targeted Maximum Likelihood Estimation</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="groupsequential.html"><a href="groupsequential.html"><i class="fa fa-check"></i><b>7</b> Group Sequential Designs</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="groupsequential.html"><a href="groupsequential.html#group-sequential-designs"><i class="fa fa-check"></i><b>7.1</b> Group Sequential Designs</a></li>
+<li class="chapter" data-level="7.2" data-path="groupsequential.html"><a href="groupsequential.html#power-sample-size-calculations"><i class="fa fa-check"></i><b>7.2</b> Power &amp; Sample Size Calculations</a></li>
+<li class="chapter" data-level="7.3" data-path="groupsequential.html"><a href="groupsequential.html#analyses-unadjusted-and-adjusted"><i class="fa fa-check"></i><b>7.3</b> Analyses: Unadjusted and Adjusted</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="informationadaptive.html"><a href="informationadaptive.html"><i class="fa fa-check"></i><b>8</b> Information Adaptive Designs</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="informationadaptive.html"><a href="informationadaptive.html#information-adaptive-designs"><i class="fa fa-check"></i><b>8.1</b> Information Adaptive Designs</a></li>
+<li class="chapter" data-level="8.2" data-path="informationadaptive.html"><a href="informationadaptive.html#power-sample-size-calculations-1"><i class="fa fa-check"></i><b>8.2</b> Power &amp; Sample Size Calculations</a></li>
+<li class="chapter" data-level="8.3" data-path="informationadaptive.html"><a href="informationadaptive.html#analyses-unadjusted-and-adjusted-1"><i class="fa fa-check"></i><b>8.3</b> Analyses: Unadjusted and Adjusted</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="recommendations.html"><a href="recommendations.html"><i class="fa fa-check"></i><b>9</b> Guidance on Applying Covariate Adjustment</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="recommendations.html"><a href="recommendations.html#statistical-analysis-plans"><i class="fa fa-check"></i><b>9.1</b> Statistical Analysis Plans</a></li>
+<li class="chapter" data-level="9.2" data-path="recommendations.html"><a href="recommendations.html#sample-size-for-adjusted-vs.-unadjusted"><i class="fa fa-check"></i><b>9.2</b> Sample size for adjusted vs. unadjusted</a></li>
+<li class="chapter" data-level="9.3" data-path="recommendations.html"><a href="recommendations.html#number-of-parameters-vs.-sample-size"><i class="fa fa-check"></i><b>9.3</b> Number of parameters vs. sample size</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="appendices.html"><a href="appendices.html"><i class="fa fa-check"></i><b>10</b> Appendices</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="appendices.html"><a href="appendices.html#appendix_a_glossary"><i class="fa fa-check"></i><b>10.1</b> Appendix A: Glossary of Terms</a></li>
+<li class="chapter" data-level="10.2" data-path="appendices.html"><a href="appendices.html#appendix_b_using_r"><i class="fa fa-check"></i><b>10.2</b> Appendix B: Resources for Using R</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Covariate Adjustment in Randomized Trials</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="using_r" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Using R<a href="using_r.html#using_r" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The R environment for Statistical Computing is a free, open source environment for managing and visualizing data and performing analyses. Its capabilities can be augmented by downloading software packages from repositories, such as the <a href="https://cran.r-project.org/">Comprehensive R Archival Network (CRAN)</a>, and more recently, <a href="https://github.com/">GitHub</a>. <a href="https://rstudio.com/">Rstudio</a> is a powerful development environment that makes it easier to use R, expands its functionality, and allows the integration of other tools, such as Git, into an analyst’s workflow. If you are new to R or would like additional resources on using R in practice, see <a href="appendices.html#appendix_b_using_r">the appendix</a>.</p>
+<p>In addition to R and Rstudio, we will also need to install <a href="https://cran.r-project.org/bin/windows/Rtools/">RTools</a>, also known as the R toolchain. These are software tools for compiling software packages. Some of the packages we use may have to be compiled after being downloaded, and RTools provides all the software needed to do so. CRAN provides instruction on which version of RTools you should use, depending on your version of R, and how to install it.</p>
+<hr />
+<div id="installing-packages" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Installing Packages<a href="using_r.html#installing-packages" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Once we have Rtools installed, we are ready to install the required packages from CRAN and Github. The <code>install.packages()</code> function in R can be used to install packages from CRAN, R-Forge, BioC, and other repositories via the command line. In Rstudio, users can also use the ‘Packages’ tab to see which packages are installed, their current version, and whether or not they have been loaded into the workspace for use. If you have installed the <code>devtools</code> package, <code>devtools::install_github()</code> can be used to install packages from Github or other version control repositories.</p>
+<p>If you would like to explore which R packages are available for a given application or research area, the <a href="https://cran.r-project.org/web/views/">CRAN Task Views</a>, including the <a href="https://cran.r-project.org/web/views/ClinicalTrials.html">CRAN Clinical Trials taskview</a>, are worth exploring.</p>
+<hr />
+<div id="packages-from-cran" class="section level3 hasAnchor" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> Packages from CRAN<a href="using_r.html#packages-from-cran" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Below are some of the packages that we will use from CRAN, along with a brief description of their purposes:</p>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/knitr/index.html">knitr</a> - Tools for literate programming: including code in reproducible reports</li>
+<li><a href="https://cloud.r-project.org/web/packages/devtools/index.html">devtools</a> - A suite of tools for R package development</li>
+<li><a href="https://www.tidyverse.org/packages/">tidyverse</a> - An ecosystem of packages for working with data</li>
+<li><a href="https://cran.r-project.org/web/packages/table1/index.html">table1</a> - Creating simple tabulations in aggregate and by treatment arm</li>
+<li><a href="https://cran.r-project.org/web/packages/cobalt/index.html">cobalt</a> - Creating tables and plots for assessing covariate balance</li>
+<li><a href="https://cran.r-project.org/web/packages/sandwich/index.html">sandwich</a> Robust covariance matrix estimation</li>
+<li><a href="https://cran.r-project.org/web/packages/margins/index.html">margins</a> Calculating marginal or partial effects from regression models</li>
+<li><a href="https://cran.r-project.org/web/packages/survminer/index.html">survminer</a> - Creating plots of time-to-event data</li>
+<li><a href="https://cran.r-project.org/web/packages/survRM2/index.html">survRM2</a> - Calculating the restricted mean survival time (RMST) with and without covariate adjustment.</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="using_r.html#cb2-1" tabindex="-1"></a>required_packages <span class="ot">&lt;-</span></span>
+<span id="cb2-2"><a href="using_r.html#cb2-2" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;devtools&quot;</span>,</span>
+<span id="cb2-3"><a href="using_r.html#cb2-3" tabindex="-1"></a>    <span class="st">&quot;cobalt&quot;</span>,</span>
+<span id="cb2-4"><a href="using_r.html#cb2-4" tabindex="-1"></a>    <span class="st">&quot;knitr&quot;</span>,</span>
+<span id="cb2-5"><a href="using_r.html#cb2-5" tabindex="-1"></a>    <span class="st">&quot;margins&quot;</span>,</span>
+<span id="cb2-6"><a href="using_r.html#cb2-6" tabindex="-1"></a>    <span class="st">&quot;sandwich&quot;</span>,</span>
+<span id="cb2-7"><a href="using_r.html#cb2-7" tabindex="-1"></a>    <span class="st">&quot;survminer&quot;</span>,</span>
+<span id="cb2-8"><a href="using_r.html#cb2-8" tabindex="-1"></a>    <span class="st">&quot;survRM2&quot;</span></span>
+<span id="cb2-9"><a href="using_r.html#cb2-9" tabindex="-1"></a>    <span class="st">&quot;table1&quot;</span>,</span>
+<span id="cb2-10"><a href="using_r.html#cb2-10" tabindex="-1"></a>    <span class="st">&quot;tidyverse&quot;</span></span>
+<span id="cb2-11"><a href="using_r.html#cb2-11" tabindex="-1"></a>  )</span>
+<span id="cb2-12"><a href="using_r.html#cb2-12" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="using_r.html#cb2-13" tabindex="-1"></a>packages_to_install <span class="ot">&lt;-</span></span>
+<span id="cb2-14"><a href="using_r.html#cb2-14" tabindex="-1"></a>  <span class="fu">setdiff</span>(</span>
+<span id="cb2-15"><a href="using_r.html#cb2-15" tabindex="-1"></a>    <span class="at">x =</span> required_packages,</span>
+<span id="cb2-16"><a href="using_r.html#cb2-16" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">installed.packages</span>(.Library)[, <span class="st">&quot;Package&quot;</span>]</span>
+<span id="cb2-17"><a href="using_r.html#cb2-17" tabindex="-1"></a>  )</span>
+<span id="cb2-18"><a href="using_r.html#cb2-18" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="using_r.html#cb2-19" tabindex="-1"></a><span class="fu">install.packages</span>(packages_to_install)</span></code></pre></div>
+<hr />
+</div>
+<div id="packages-from-github" class="section level3 hasAnchor" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> Packages from Github<a href="using_r.html#packages-from-github" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We will also use the following packages from Github:</p>
+<ul>
+<li><a href="https://github.com/nt-williams/simul">simul</a> Inference based on Efficient Influence Function and Multiplier Bootstrap</li>
+<li><a href="https://github.com/nt-williams/adjrct">adjrct</a> Doubly Robust, Efficient Estimators for Survival and Time to Event Outcomes</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="using_r.html#cb3-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;nt-williams/simul&quot;</span>)</span>
+<span id="cb3-2"><a href="using_r.html#cb3-2" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;nt-williams/adjrct&quot;</span>)</span></code></pre></div>
+</div>
+<div id="loading-packages-into-workspace" class="section level3 hasAnchor" number="4.1.3">
+<h3><span class="header-section-number">4.1.3</span> Loading Packages into Workspace<a href="using_r.html#loading-packages-into-workspace" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Once a package has been successfully installed, we use the <code>library()</code> command to load it into the workspace for use:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="using_r.html#cb4-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Data manipulation: dplyr, tidyr</span></span>
+<span id="cb4-2"><a href="using_r.html#cb4-2" tabindex="-1"></a><span class="fu">library</span>(table1) <span class="co"># Creation of Summary tables</span></span></code></pre></div>
+<p>It is possible that different packages contain a function of the same name. For example, the <code>table1</code> package contains the function <code>table1()</code>: there are other packages that also have a function named <code>table1()</code>, such as the <a href="https://cran.r-project.org/web/packages/furniture/index.html"><code>furniture</code></a> package. If both of these packages are loaded, it can cause confusion about which version should be used when <code>table1()</code> is called. R will warn when such conflicts can arise, but as a best practice, it is useful to specify the package and function as as follows: <code>table1::table1()</code>. This makes code easier to use and potentially reduces ambiguity.</p>
+<hr />
+</div>
+</div>
+<div id="loading-the-data-mistie-iii" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Loading the Data: MISTIE-III<a href="using_r.html#loading-the-data-mistie-iii" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The <a href="index.html#mistie_iii">data dictionary</a> and more information about the MISTIE III study were presented earlier. All of the data needed for the examples are available on the web. To load these, we create a file connection to the URL using the <code>url()</code> function, and then use <code>read.csv()</code> to read in the comma separated values (CSV) file. To load data from a local file path, the <code>file.path()</code> function is useful for creating file paths. We can start by loading the simulated MISTIE III data. Once we have loaded the full data, we can use <code>dplyr::slice</code> to take the first 500 rows.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="using_r.html#cb5-1" tabindex="-1"></a>data_url <span class="ot">&lt;-</span></span>
+<span id="cb5-2"><a href="using_r.html#cb5-2" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">&quot;https://github.com/jbetz-jhu/CovariateAdjustmentTutorial&quot;</span>,</span>
+<span id="cb5-3"><a href="using_r.html#cb5-3" tabindex="-1"></a>         <span class="st">&quot;/raw/main/Simulated_MISTIE_III_v1.2.csv&quot;</span>)</span>
+<span id="cb5-4"><a href="using_r.html#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="using_r.html#cb5-5" tabindex="-1"></a>sim_miii_full <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="fu">url</span>(data_url))</span>
+<span id="cb5-6"><a href="using_r.html#cb5-6" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="using_r.html#cb5-7" tabindex="-1"></a><span class="co"># Read in data: Recast categorical variables as factors</span></span>
+<span id="cb5-8"><a href="using_r.html#cb5-8" tabindex="-1"></a>sim_miii_full <span class="ot">&lt;-</span></span>
+<span id="cb5-9"><a href="using_r.html#cb5-9" tabindex="-1"></a>  sim_miii_full <span class="sc">%&gt;%</span> </span>
+<span id="cb5-10"><a href="using_r.html#cb5-10" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb5-11"><a href="using_r.html#cb5-11" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb5-12"><a href="using_r.html#cb5-12" tabindex="-1"></a>    <span class="co"># Convert variables from binary indicators to labeled categorical variables</span></span>
+<span id="cb5-13"><a href="using_r.html#cb5-13" tabindex="-1"></a>    <span class="at">male =</span></span>
+<span id="cb5-14"><a href="using_r.html#cb5-14" tabindex="-1"></a>      <span class="fu">factor</span>(</span>
+<span id="cb5-15"><a href="using_r.html#cb5-15" tabindex="-1"></a>        <span class="at">x =</span> male,</span>
+<span id="cb5-16"><a href="using_r.html#cb5-16" tabindex="-1"></a>        <span class="at">levels =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>,</span>
+<span id="cb5-17"><a href="using_r.html#cb5-17" tabindex="-1"></a>        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;0. Female&quot;</span>, <span class="st">&quot;1. Male&quot;</span>)</span>
+<span id="cb5-18"><a href="using_r.html#cb5-18" tabindex="-1"></a>      ),</span>
+<span id="cb5-19"><a href="using_r.html#cb5-19" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb5-20"><a href="using_r.html#cb5-20" tabindex="-1"></a>      <span class="at">.cols =</span> </span>
+<span id="cb5-21"><a href="using_r.html#cb5-21" tabindex="-1"></a>        <span class="fu">all_of</span>(</span>
+<span id="cb5-22"><a href="using_r.html#cb5-22" tabindex="-1"></a>          <span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;hx_cvd&quot;</span>, <span class="st">&quot;hx_hyperlipidemia&quot;</span>,</span>
+<span id="cb5-23"><a href="using_r.html#cb5-23" tabindex="-1"></a>                <span class="st">&quot;on_anticoagulants&quot;</span>, <span class="st">&quot;on_antiplatelets&quot;</span>)</span>
+<span id="cb5-24"><a href="using_r.html#cb5-24" tabindex="-1"></a>        ),</span>
+<span id="cb5-25"><a href="using_r.html#cb5-25" tabindex="-1"></a>      <span class="at">.fns =</span> <span class="cf">function</span>(x) <span class="fu">factor</span>(x, <span class="at">levels =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;0. No&quot;</span>, <span class="st">&quot;1. Yes&quot;</span>))</span>
+<span id="cb5-26"><a href="using_r.html#cb5-26" tabindex="-1"></a>    ),</span>
+<span id="cb5-27"><a href="using_r.html#cb5-27" tabindex="-1"></a>    <span class="co"># Convert GCS and MRS variables from character data to categorical variables</span></span>
+<span id="cb5-28"><a href="using_r.html#cb5-28" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb5-29"><a href="using_r.html#cb5-29" tabindex="-1"></a>      <span class="at">.cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;gcs&quot;</span>) <span class="sc">|</span> <span class="fu">starts_with</span>(<span class="st">&quot;mrs&quot;</span>),</span>
+<span id="cb5-30"><a href="using_r.html#cb5-30" tabindex="-1"></a>      <span class="at">.fns =</span> factor</span>
+<span id="cb5-31"><a href="using_r.html#cb5-31" tabindex="-1"></a>    ),</span>
+<span id="cb5-32"><a href="using_r.html#cb5-32" tabindex="-1"></a>    <span class="at">ich_location =</span></span>
+<span id="cb5-33"><a href="using_r.html#cb5-33" tabindex="-1"></a>      <span class="fu">factor</span>(</span>
+<span id="cb5-34"><a href="using_r.html#cb5-34" tabindex="-1"></a>        <span class="at">x =</span> ich_location,</span>
+<span id="cb5-35"><a href="using_r.html#cb5-35" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Deep&quot;</span>, <span class="st">&quot;Lobar&quot;</span>)</span>
+<span id="cb5-36"><a href="using_r.html#cb5-36" tabindex="-1"></a>      ),</span>
+<span id="cb5-37"><a href="using_r.html#cb5-37" tabindex="-1"></a>    <span class="at">arm =</span></span>
+<span id="cb5-38"><a href="using_r.html#cb5-38" tabindex="-1"></a>      <span class="fu">factor</span>(</span>
+<span id="cb5-39"><a href="using_r.html#cb5-39" tabindex="-1"></a>        <span class="at">x =</span> arm,</span>
+<span id="cb5-40"><a href="using_r.html#cb5-40" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;medical&quot;</span>, <span class="st">&quot;surgical&quot;</span>)</span>
+<span id="cb5-41"><a href="using_r.html#cb5-41" tabindex="-1"></a>      ),</span>
+<span id="cb5-42"><a href="using_r.html#cb5-42" tabindex="-1"></a>    <span class="at">tx =</span> <span class="dv">1</span><span class="sc">*</span>(arm <span class="sc">==</span> <span class="st">&quot;surgical&quot;</span>)</span>
+<span id="cb5-43"><a href="using_r.html#cb5-43" tabindex="-1"></a>  )</span>
+<span id="cb5-44"><a href="using_r.html#cb5-44" tabindex="-1"></a></span>
+<span id="cb5-45"><a href="using_r.html#cb5-45" tabindex="-1"></a></span>
+<span id="cb5-46"><a href="using_r.html#cb5-46" tabindex="-1"></a><span class="co"># Take the first 500 rows</span></span>
+<span id="cb5-47"><a href="using_r.html#cb5-47" tabindex="-1"></a>sim_miii <span class="ot">&lt;-</span></span>
+<span id="cb5-48"><a href="using_r.html#cb5-48" tabindex="-1"></a>  sim_miii_full <span class="sc">%&gt;%</span> </span>
+<span id="cb5-49"><a href="using_r.html#cb5-49" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">500</span>)</span></code></pre></div>
+<p>Other useful functions include:</p>
+<ul>
+<li><code>head()</code>/<code>tail()</code> - Looking at the first <span class="math inline">\(n\)</span> rows of a dataset</li>
+<li><code>nrow()</code>/<code>ncol()</code> - Counting the rows/columns of a dataset</li>
+<li><code>colnames()</code>/<code>rownames()</code> - Getting the row/column names of a dataset</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="using_r.html#cb6-1" tabindex="-1"></a><span class="fu">head</span>(sim_miii)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 22
+##   sim_participant_id   age male      hx_cvd hx_hyperlipidemia on_anticoagulants
+##                &lt;int&gt; &lt;int&gt; &lt;fct&gt;     &lt;fct&gt;  &lt;fct&gt;             &lt;fct&gt;            
+## 1                  1    52 1. Male   0. No  0. No             0. No            
+## 2                  2    74 0. Female 0. No  1. Yes            1. Yes           
+## 3                  3    62 1. Male   0. No  1. Yes            0. No            
+## 4                  4    81 0. Female 0. No  0. No             0. No            
+## 5                  5    73 0. Female 0. No  1. Yes            0. No            
+## 6                  6    60 1. Male   1. Yes 1. Yes            0. No            
+## # ℹ 16 more variables: on_antiplatelets &lt;fct&gt;, ich_location &lt;fct&gt;,
+## #   ich_s_volume &lt;dbl&gt;, ivh_s_volume &lt;int&gt;, gcs_category &lt;fct&gt;, arm &lt;fct&gt;,
+## #   ich_eot_volume &lt;dbl&gt;, mrs_30d &lt;fct&gt;, mrs_30d_complete &lt;fct&gt;,
+## #   mrs_180d &lt;fct&gt;, mrs_180d_complete &lt;fct&gt;, mrs_365d &lt;fct&gt;,
+## #   mrs_365d_complete &lt;fct&gt;, days_on_study &lt;int&gt;, died_on_study &lt;int&gt;, tx &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="using_r.html#cb8-1" tabindex="-1"></a><span class="fu">nrow</span>(sim_miii)</span></code></pre></div>
+<pre><code>## [1] 500</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="using_r.html#cb10-1" tabindex="-1"></a><span class="fu">ncol</span>(sim_miii)</span></code></pre></div>
+<pre><code>## [1] 22</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="using_r.html#cb12-1" tabindex="-1"></a><span class="fu">colnames</span>(sim_miii)</span></code></pre></div>
+<pre><code>##  [1] &quot;sim_participant_id&quot; &quot;age&quot;                &quot;male&quot;              
+##  [4] &quot;hx_cvd&quot;             &quot;hx_hyperlipidemia&quot;  &quot;on_anticoagulants&quot; 
+##  [7] &quot;on_antiplatelets&quot;   &quot;ich_location&quot;       &quot;ich_s_volume&quot;      
+## [10] &quot;ivh_s_volume&quot;       &quot;gcs_category&quot;       &quot;arm&quot;               
+## [13] &quot;ich_eot_volume&quot;     &quot;mrs_30d&quot;            &quot;mrs_30d_complete&quot;  
+## [16] &quot;mrs_180d&quot;           &quot;mrs_180d_complete&quot;  &quot;mrs_365d&quot;          
+## [19] &quot;mrs_365d_complete&quot;  &quot;days_on_study&quot;      &quot;died_on_study&quot;     
+## [22] &quot;tx&quot;</code></pre>
+<hr />
+</div>
+<div id="assessing-baseline-balance" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Assessing Baseline Balance<a href="using_r.html#assessing-baseline-balance" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>While randomization will tend to produce treatment groups that are similar on both measured and unmeasured factors, there will always be some degree of imbalance between groups in some characteristics. It is important to remember that these differences only represent confounding if groups are imbalanced on variables that are associated with the outcome. To assess the degree of imbalance, we can tabulate characteristics by treatment arm, and compute standardized differences to get a scale-free measure of the magnitude of imbalance.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="using_r.html#cb14-1" tabindex="-1"></a><span class="fu">table1</span>(</span>
+<span id="cb14-2"><a href="using_r.html#cb14-2" tabindex="-1"></a>  <span class="sc">~</span> age <span class="sc">+</span> male <span class="sc">+</span></span>
+<span id="cb14-3"><a href="using_r.html#cb14-3" tabindex="-1"></a>    on_antiplatelets <span class="sc">+</span> ich_location <span class="sc">+</span> ich_s_volume <span class="sc">+</span> ivh_s_volume <span class="sc">+</span></span>
+<span id="cb14-4"><a href="using_r.html#cb14-4" tabindex="-1"></a>    gcs_category <span class="sc">|</span> arm, </span>
+<span id="cb14-5"><a href="using_r.html#cb14-5" tabindex="-1"></a>  <span class="at">data =</span> sim_miii</span>
+<span id="cb14-6"><a href="using_r.html#cb14-6" tabindex="-1"></a>)</span></code></pre></div>
+<div class="Rtable1"><table class="Rtable1">
+<thead>
+<tr>
+<th class='rowlabel firstrow lastrow'></th>
+<th class='firstrow lastrow'><span class='stratlabel'>medical<br><span class='stratn'>(N=250)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>surgical<br><span class='stratn'>(N=250)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Overall<br><span class='stratn'>(N=500)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class='rowlabel firstrow'>age</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>60.6 (12.9)</td>
+<td>60.1 (12.5)</td>
+<td>60.3 (12.7)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>62.0 [28.0, 85.0]</td>
+<td class='lastrow'>61.0 [35.0, 88.0]</td>
+<td class='lastrow'>62.0 [28.0, 88.0]</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>male</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>0. Female</td>
+<td>100 (40.0%)</td>
+<td>94 (37.6%)</td>
+<td>194 (38.8%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>1. Male</td>
+<td class='lastrow'>150 (60.0%)</td>
+<td class='lastrow'>156 (62.4%)</td>
+<td class='lastrow'>306 (61.2%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>on_antiplatelets</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>0. No</td>
+<td>179 (71.6%)</td>
+<td>164 (65.6%)</td>
+<td>343 (68.6%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>1. Yes</td>
+<td class='lastrow'>71 (28.4%)</td>
+<td class='lastrow'>86 (34.4%)</td>
+<td class='lastrow'>157 (31.4%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>ich_location</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Deep</td>
+<td>155 (62.0%)</td>
+<td>159 (63.6%)</td>
+<td>314 (62.8%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Lobar</td>
+<td class='lastrow'>95 (38.0%)</td>
+<td class='lastrow'>91 (36.4%)</td>
+<td class='lastrow'>186 (37.2%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>ich_s_volume</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>47.9 (17.3)</td>
+<td>47.4 (16.2)</td>
+<td>47.7 (16.7)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>45.9 [15.2, 112]</td>
+<td class='lastrow'>47.0 [12.9, 106]</td>
+<td class='lastrow'>46.3 [12.9, 112]</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>ivh_s_volume</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>2.46 (3.96)</td>
+<td>2.09 (3.40)</td>
+<td>2.28 (3.69)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>0 [0, 32.0]</td>
+<td class='lastrow'>0 [0, 18.0]</td>
+<td class='lastrow'>0 [0, 32.0]</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>gcs_category</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>1. Severe (3-8)</td>
+<td>71 (28.4%)</td>
+<td>63 (25.2%)</td>
+<td>134 (26.8%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>2. Moderate (9-12)</td>
+<td>111 (44.4%)</td>
+<td>102 (40.8%)</td>
+<td>213 (42.6%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>3. Mild (13-15)</td>
+<td class='lastrow'>68 (27.2%)</td>
+<td class='lastrow'>85 (34.0%)</td>
+<td class='lastrow'>153 (30.6%)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This allows us to compare the means, medians, frequencies, and ranges of variables between groups.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="using_r.html#cb15-1" tabindex="-1"></a><span class="fu">library</span>(cobalt)</span>
+<span id="cb15-2"><a href="using_r.html#cb15-2" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="using_r.html#cb15-3" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">bal.tab</span>(</span>
+<span id="cb15-4"><a href="using_r.html#cb15-4" tabindex="-1"></a>  <span class="at">x =</span> </span>
+<span id="cb15-5"><a href="using_r.html#cb15-5" tabindex="-1"></a>    <span class="co"># Only tabulate baseline variables</span></span>
+<span id="cb15-6"><a href="using_r.html#cb15-6" tabindex="-1"></a>    sim_miii <span class="sc">%&gt;%</span> </span>
+<span id="cb15-7"><a href="using_r.html#cb15-7" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
+<span id="cb15-8"><a href="using_r.html#cb15-8" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">all_of</span>(</span>
+<span id="cb15-9"><a href="using_r.html#cb15-9" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;male&quot;</span>, <span class="st">&quot;on_antiplatelets&quot;</span>,</span>
+<span id="cb15-10"><a href="using_r.html#cb15-10" tabindex="-1"></a>              <span class="st">&quot;ich_location&quot;</span>, <span class="st">&quot;ich_s_volume&quot;</span>, <span class="st">&quot;ivh_s_volume&quot;</span>, <span class="st">&quot;gcs_category&quot;</span>)</span>
+<span id="cb15-11"><a href="using_r.html#cb15-11" tabindex="-1"></a>      )</span>
+<span id="cb15-12"><a href="using_r.html#cb15-12" tabindex="-1"></a>    ),</span>
+<span id="cb15-13"><a href="using_r.html#cb15-13" tabindex="-1"></a>  <span class="at">treat =</span> sim_miii<span class="sc">$</span>arm,</span>
+<span id="cb15-14"><a href="using_r.html#cb15-14" tabindex="-1"></a>  <span class="co"># Compute standardized differences for both binary and continuous variables</span></span>
+<span id="cb15-15"><a href="using_r.html#cb15-15" tabindex="-1"></a>  <span class="at">binary =</span> <span class="st">&quot;std&quot;</span>,</span>
+<span id="cb15-16"><a href="using_r.html#cb15-16" tabindex="-1"></a>  <span class="at">continuous =</span> <span class="st">&quot;std&quot;</span></span>
+<span id="cb15-17"><a href="using_r.html#cb15-17" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## Balance Measures
+##                                    Type Diff.Un
+## age                             Contin. -0.0362
+## male_1. Male                     Binary  0.0493
+## on_antiplatelets_1. Yes          Binary  0.1295
+## ich_location_Lobar               Binary -0.0331
+## ich_s_volume                    Contin. -0.0292
+## ivh_s_volume                    Contin. -0.1019
+## gcs_category_1. Severe (3-8)     Binary -0.0723
+## gcs_category_2. Moderate (9-12)  Binary -0.0729
+## gcs_category_3. Mild (13-15)     Binary  0.1480
+## 
+## Sample sizes
+##     medical surgical
+## All     250      250</code></pre>
+<hr />
+</div>
+<div id="visualizing-data" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> Visualizing Data<a href="using_r.html#visualizing-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>One of the many strength of R is the powerful and flexible data visualization tools in its software ecosystem: see <a href="https://r-graph-gallery.com/">the R Graph Gallery</a> for some examples. The <a href="https://ggplot2.tidyverse.org/"><code>ggplot2</code></a> package, and some related packages like <a href="https://cran.r-project.org/web/packages/survminer/index.html">survminer</a>, are useful for assessing baseline balance and visualizing outcome data.</p>
+<p>For example, we may want to assess the cumulative distribution of a baseline covariate instead of just checking the summary statistics.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="using_r.html#cb17-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb17-2"><a href="using_r.html#cb17-2" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="using_r.html#cb17-3" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb17-4"><a href="using_r.html#cb17-4" tabindex="-1"></a>  <span class="at">data =</span> sim_miii,</span>
+<span id="cb17-5"><a href="using_r.html#cb17-5" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb17-6"><a href="using_r.html#cb17-6" tabindex="-1"></a>    <span class="at">x =</span> age</span>
+<span id="cb17-7"><a href="using_r.html#cb17-7" tabindex="-1"></a>  )</span>
+<span id="cb17-8"><a href="using_r.html#cb17-8" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb17-9"><a href="using_r.html#cb17-9" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(</span>
+<span id="cb17-10"><a href="using_r.html#cb17-10" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span>,</span>
+<span id="cb17-11"><a href="using_r.html#cb17-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="using_r.html#cb17-12" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(</span>
+<span id="cb17-13"><a href="using_r.html#cb17-13" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">color =</span> arm),</span>
+<span id="cb17-14"><a href="using_r.html#cb17-14" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span>,</span>
+<span id="cb17-15"><a href="using_r.html#cb17-15" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-16"><a href="using_r.html#cb17-16" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="_main_files/figure-html/Plot-eCDF-Age-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Or we may want to create a plot of the Kaplan-Meier estimate of the survival function (see the <a href="estimands.html#estimands">estimands</a> section for its definition).</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="using_r.html#cb18-1" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb18-2"><a href="using_r.html#cb18-2" tabindex="-1"></a><span class="fu">library</span>(survminer)</span>
+<span id="cb18-3"><a href="using_r.html#cb18-3" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="using_r.html#cb18-4" tabindex="-1"></a><span class="co"># Create a &#39;survival object&#39; from event times and indicators</span></span>
+<span id="cb18-5"><a href="using_r.html#cb18-5" tabindex="-1"></a>miii_surv <span class="ot">&lt;-</span> </span>
+<span id="cb18-6"><a href="using_r.html#cb18-6" tabindex="-1"></a>  <span class="fu">with</span>(sim_miii,</span>
+<span id="cb18-7"><a href="using_r.html#cb18-7" tabindex="-1"></a>       survival<span class="sc">::</span><span class="fu">Surv</span>(</span>
+<span id="cb18-8"><a href="using_r.html#cb18-8" tabindex="-1"></a>         <span class="at">time =</span> days_on_study,</span>
+<span id="cb18-9"><a href="using_r.html#cb18-9" tabindex="-1"></a>         <span class="at">event =</span> died_on_study</span>
+<span id="cb18-10"><a href="using_r.html#cb18-10" tabindex="-1"></a>       )</span>
+<span id="cb18-11"><a href="using_r.html#cb18-11" tabindex="-1"></a>  )</span>
+<span id="cb18-12"><a href="using_r.html#cb18-12" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="using_r.html#cb18-13" tabindex="-1"></a><span class="co"># Use survfit to calculate survival data</span></span>
+<span id="cb18-14"><a href="using_r.html#cb18-14" tabindex="-1"></a>time_to_death_km <span class="ot">&lt;-</span></span>
+<span id="cb18-15"><a href="using_r.html#cb18-15" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">survfit</span>(</span>
+<span id="cb18-16"><a href="using_r.html#cb18-16" tabindex="-1"></a>    <span class="at">formula =</span> miii_surv <span class="sc">~</span> arm,</span>
+<span id="cb18-17"><a href="using_r.html#cb18-17" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
+<span id="cb18-18"><a href="using_r.html#cb18-18" tabindex="-1"></a>  )</span>
+<span id="cb18-19"><a href="using_r.html#cb18-19" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="using_r.html#cb18-20" tabindex="-1"></a><span class="co"># Create the Kaplan-Meier Plot</span></span>
+<span id="cb18-21"><a href="using_r.html#cb18-21" tabindex="-1"></a>survminer<span class="sc">::</span><span class="fu">ggsurvplot</span>(</span>
+<span id="cb18-22"><a href="using_r.html#cb18-22" tabindex="-1"></a>  <span class="at">fit =</span> time_to_death_km,</span>
+<span id="cb18-23"><a href="using_r.html#cb18-23" tabindex="-1"></a>  <span class="at">conf.int =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb18-24"><a href="using_r.html#cb18-24" tabindex="-1"></a>  <span class="at">risk.table =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb18-25"><a href="using_r.html#cb18-25" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Days&quot;</span>, </span>
+<span id="cb18-26"><a href="using_r.html#cb18-26" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;Survival probability&quot;</span></span>
+<span id="cb18-27"><a href="using_r.html#cb18-27" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/Plot-KM-MISTIE-III-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>From this plot, we can see that most of the mortality occurs soon after randomization, with greater mortality in the medical management arm early in the trial. After the first 90 days, the rate of events decreases in both arms.</p>
+<hr />
+</div>
+<div id="fitting-regression-models" class="section level2 hasAnchor" number="4.5">
+<h2><span class="header-section-number">4.5</span> Fitting Regression Models<a href="using_r.html#fitting-regression-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>While covariate adjustment does involve regression modeling, an in-depth discussion of regression modeling is not needed for the purposes of implementing covariate adjustment. For those wanting a more in-depth presentation of fitting generalized linear models (GLMs) in R see Dobson &amp; Barnett <span class="citation">(<a href="#ref-DobsonBarnett2018">2018</a>)</span>.</p>
+<div id="generalized-linear-model" class="section level3 hasAnchor" number="4.5.1">
+<h3><span class="header-section-number">4.5.1</span> Generalized Linear Model<a href="using_r.html#generalized-linear-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Fitting a GLM in R is done using the <code>glm()</code> function. For example if we wanted to model the probability of being assigned to the surgical arm in MISTIE III by an individual’s age, ICH volume, and IVH volume, the code is as follows:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="using_r.html#cb19-1" tabindex="-1"></a>pr_mis_glm <span class="ot">&lt;-</span></span>
+<span id="cb19-2"><a href="using_r.html#cb19-2" tabindex="-1"></a>  <span class="fu">glm</span>(</span>
+<span id="cb19-3"><a href="using_r.html#cb19-3" tabindex="-1"></a>    <span class="at">formula =</span></span>
+<span id="cb19-4"><a href="using_r.html#cb19-4" tabindex="-1"></a>      tx <span class="sc">~</span> age <span class="sc">+</span> ich_s_volume <span class="sc">+</span> ivh_s_volume,</span>
+<span id="cb19-5"><a href="using_r.html#cb19-5" tabindex="-1"></a>    <span class="at">data =</span> sim_miii,</span>
+<span id="cb19-6"><a href="using_r.html#cb19-6" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>)</span>
+<span id="cb19-7"><a href="using_r.html#cb19-7" tabindex="-1"></a>  )</span></code></pre></div>
+<p>Once the model has been fit, we can use it for creating summary tables, calculating confidence intervals, or generating fitted values for a new dataset:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="using_r.html#cb20-1" tabindex="-1"></a><span class="co"># Produce GLM Summary Table</span></span>
+<span id="cb20-2"><a href="using_r.html#cb20-2" tabindex="-1"></a><span class="fu">summary</span>(pr_mis_glm)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = tx ~ age + ich_s_volume + ivh_s_volume, family = binomial(link = &quot;logit&quot;), 
+##     data = sim_miii)
+## 
+## Coefficients:
+##                Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)   0.3090527  0.5028292   0.615    0.539
+## age          -0.0034148  0.0070781  -0.482    0.629
+## ich_s_volume -0.0008168  0.0054271  -0.151    0.880
+## ivh_s_volume -0.0282560  0.0249439  -1.133    0.257
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 693.15  on 499  degrees of freedom
+## Residual deviance: 691.58  on 496  degrees of freedom
+## AIC: 699.58
+## 
+## Number of Fisher Scoring iterations: 3</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="using_r.html#cb22-1" tabindex="-1"></a><span class="co"># Calculate Confidence Intervals for Coefficients</span></span>
+<span id="cb22-2"><a href="using_r.html#cb22-2" tabindex="-1"></a><span class="fu">confint</span>(pr_mis_glm)</span></code></pre></div>
+<pre><code>##                    2.5 %     97.5 %
+## (Intercept)  -0.67578350 1.29885632
+## age          -0.01732742 0.01045830
+## ich_s_volume -0.01148661 0.00983616
+## ivh_s_volume -0.07808960 0.02017825</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="using_r.html#cb24-1" tabindex="-1"></a><span class="co"># Calculate fitted probabilities for new data:</span></span>
+<span id="cb24-2"><a href="using_r.html#cb24-2" tabindex="-1"></a><span class="co"># 1. 65 years old, 30 mL ICH, 0 mL IVH</span></span>
+<span id="cb24-3"><a href="using_r.html#cb24-3" tabindex="-1"></a><span class="co"># 2. 70 years old, 50 mL ICH, 15 mL IVH</span></span>
+<span id="cb24-4"><a href="using_r.html#cb24-4" tabindex="-1"></a><span class="fu">predict</span>(</span>
+<span id="cb24-5"><a href="using_r.html#cb24-5" tabindex="-1"></a>  <span class="at">object =</span> pr_mis_glm,</span>
+<span id="cb24-6"><a href="using_r.html#cb24-6" tabindex="-1"></a>  <span class="at">newdata =</span> </span>
+<span id="cb24-7"><a href="using_r.html#cb24-7" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
+<span id="cb24-8"><a href="using_r.html#cb24-8" tabindex="-1"></a>      <span class="at">age =</span> <span class="fu">c</span>(<span class="dv">65</span>, <span class="dv">70</span>),</span>
+<span id="cb24-9"><a href="using_r.html#cb24-9" tabindex="-1"></a>      <span class="at">ich_s_volume =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">50</span>),</span>
+<span id="cb24-10"><a href="using_r.html#cb24-10" tabindex="-1"></a>      <span class="at">ivh_s_volume =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">15</span>)</span>
+<span id="cb24-11"><a href="using_r.html#cb24-11" tabindex="-1"></a>    ),</span>
+<span id="cb24-12"><a href="using_r.html#cb24-12" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;response&quot;</span></span>
+<span id="cb24-13"><a href="using_r.html#cb24-13" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>##         1         2 
+## 0.5156414 0.4025950</code></pre>
+</div>
+<div id="logrank-test-and-cox-proportional-hazards-model" class="section level3 hasAnchor" number="4.5.2">
+<h3><span class="header-section-number">4.5.2</span> Logrank Test and Cox Proportional Hazards Model<a href="using_r.html#logrank-test-and-cox-proportional-hazards-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>For time-to-event outcomes, such as mortality, the logrank test and Cox Proportional Hazards (PH) model are commonly used analytic approaches. Using the survival object <code>miii_surv</code> created earlier using <code>survival::Surv()</code>, we can pass this object to other functions to perform the logrank test (using <code>survival::survdiff</code>) and fit the Cox PH model (using <code>survival::coxph</code>).</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="using_r.html#cb26-1" tabindex="-1"></a>mortality_logrank <span class="ot">&lt;-</span></span>
+<span id="cb26-2"><a href="using_r.html#cb26-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">survdiff</span>(</span>
+<span id="cb26-3"><a href="using_r.html#cb26-3" tabindex="-1"></a>    <span class="at">formula =</span> miii_surv <span class="sc">~</span> arm,</span>
+<span id="cb26-4"><a href="using_r.html#cb26-4" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
+<span id="cb26-5"><a href="using_r.html#cb26-5" tabindex="-1"></a>  )</span>
+<span id="cb26-6"><a href="using_r.html#cb26-6" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="using_r.html#cb26-7" tabindex="-1"></a>mortality_logrank</span></code></pre></div>
+<pre><code>## Call:
+## survival::survdiff(formula = miii_surv ~ arm, data = sim_miii)
+## 
+##                N Observed Expected (O-E)^2/E (O-E)^2/V
+## arm=medical  250       64     49.6      4.19      8.06
+## arm=surgical 250       40     54.4      3.82      8.06
+## 
+##  Chisq= 8.1  on 1 degrees of freedom, p= 0.005</code></pre>
+<p>For the Cox PH model, the <code>ties = "efron"</code> argument specifies how tied survival times are addressed, and the <code>robust = TRUE</code> computes robust estimates of the covariance matrix of regression coefficients:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="using_r.html#cb28-1" tabindex="-1"></a>mortality_cox <span class="ot">&lt;-</span></span>
+<span id="cb28-2"><a href="using_r.html#cb28-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">coxph</span>(</span>
+<span id="cb28-3"><a href="using_r.html#cb28-3" tabindex="-1"></a>    <span class="at">formula =</span> miii_surv <span class="sc">~</span> arm,</span>
+<span id="cb28-4"><a href="using_r.html#cb28-4" tabindex="-1"></a>    <span class="at">data =</span> sim_miii,</span>
+<span id="cb28-5"><a href="using_r.html#cb28-5" tabindex="-1"></a>    <span class="at">ties =</span> <span class="st">&quot;efron&quot;</span>,</span>
+<span id="cb28-6"><a href="using_r.html#cb28-6" tabindex="-1"></a>    <span class="at">robust =</span> <span class="cn">TRUE</span></span>
+<span id="cb28-7"><a href="using_r.html#cb28-7" tabindex="-1"></a>  )</span>
+<span id="cb28-8"><a href="using_r.html#cb28-8" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="using_r.html#cb28-9" tabindex="-1"></a><span class="fu">summary</span>(mortality_cox)</span></code></pre></div>
+<pre><code>## Call:
+## survival::coxph(formula = miii_surv ~ arm, data = sim_miii, ties = &quot;efron&quot;, 
+##     robust = TRUE)
+## 
+##   n= 500, number of events= 104 
+## 
+##                coef exp(coef) se(coef) robust se      z Pr(&gt;|z|)   
+## armsurgical -0.5670    0.5672   0.2016    0.1995 -2.841  0.00449 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+##             exp(coef) exp(-coef) lower .95 upper .95
+## armsurgical    0.5672      1.763    0.3836    0.8387
+## 
+## Concordance= 0.575  (se = 0.024 )
+## Likelihood ratio test= 8.16  on 1 df,   p=0.004
+## Wald test            = 8.07  on 1 df,   p=0.004
+## Score (logrank) test = 8.12  on 1 df,   p=0.004,   Robust = 8.03  p=0.005
+## 
+##   (Note: the likelihood ratio and score tests assume independence of
+##      observations within a cluster, the Wald and robust score tests do not).</code></pre>
+<p>This model assumes that the ratio of the rates of events between the treatment and control arm is approximately constant over time. We can assess using the <code>survival::cox.zph</code> function:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="using_r.html#cb30-1" tabindex="-1"></a><span class="co"># Test Proportionality Assumption: Schoenfeld Residuals</span></span>
+<span id="cb30-2"><a href="using_r.html#cb30-2" tabindex="-1"></a><span class="fu">cox.zph</span>(<span class="at">fit =</span> mortality_cox)</span></code></pre></div>
+<pre><code>##        chisq df      p
+## arm     9.85  1 0.0017
+## GLOBAL  9.85  1 0.0017</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="using_r.html#cb32-1" tabindex="-1"></a><span class="co"># Plot smoothed residuals</span></span>
+<span id="cb32-2"><a href="using_r.html#cb32-2" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cox.zph</span>(<span class="at">fit =</span> mortality_cox))</span>
+<span id="cb32-3"><a href="using_r.html#cb32-3" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/Cox-PH-Test-MISTIE-III-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>From the plot, we can see that the hazard ratio is initially negative, but increases towards zero as time goes on. It seems as if the treatment has a beneficial effect on mortality for a few weeks after randomization, which then diminishes. This is a violation of the proportional hazards assumption, which is further discussed in the chapter on <a href="estimands.html#survival_estimands">estimands</a>.</p>
+<hr />
+</div>
+</div>
+<div id="variance-estimation" class="section level2 hasAnchor" number="4.6">
+<h2><span class="header-section-number">4.6</span> Variance Estimation<a href="using_r.html#variance-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="robust-standard-errors" class="section level3 hasAnchor" number="4.6.1">
+<h3><span class="header-section-number">4.6.1</span> Robust Standard Errors<a href="using_r.html#robust-standard-errors" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Most of the standard errors reported in software, such as those returned by <code>vcov()</code>, are model-based estimates of the standard error, which assume that the model is correctly specified. Robust or “Sandwich” standard errors can be used to obtain a consistent estimate of the standard error in such cases. Note that robust estimates of standard errors are different from robust estimates of the regression coefficients themselves.</p>
+<p>The <code>sandwich::vcovHC()</code> function can be used to obtain different types of robust standard errors:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="using_r.html#cb33-1" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span>
+<span id="cb33-2"><a href="using_r.html#cb33-2" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="using_r.html#cb33-3" tabindex="-1"></a><span class="co"># Model-based standard errors</span></span>
+<span id="cb33-4"><a href="using_r.html#cb33-4" tabindex="-1"></a><span class="fu">vcov</span>(<span class="at">object =</span> pr_mis_glm)</span></code></pre></div>
+<pre><code>##               (Intercept)           age  ich_s_volume  ivh_s_volume
+## (Intercept)   0.252837171 -2.993310e-03 -1.285278e-03 -1.316243e-03
+## age          -0.002993310  5.009960e-05 -1.254035e-06  1.346355e-05
+## ich_s_volume -0.001285278 -1.254035e-06  2.945316e-05 -1.887093e-05
+## ivh_s_volume -0.001316243  1.346355e-05 -1.887093e-05  6.221973e-04</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="using_r.html#cb35-1" tabindex="-1"></a><span class="co"># Robust standard errors</span></span>
+<span id="cb35-2"><a href="using_r.html#cb35-2" tabindex="-1"></a>sandwich<span class="sc">::</span><span class="fu">vcovHC</span>(<span class="at">x =</span> pr_mis_glm, <span class="at">type =</span> <span class="st">&quot;HC3&quot;</span>)</span></code></pre></div>
+<pre><code>##               (Intercept)           age  ich_s_volume  ivh_s_volume
+## (Intercept)   0.263262683 -3.112090e-03 -1.349840e-03 -0.0014409131
+## age          -0.003112090  5.179135e-05 -9.534434e-07  0.0000144568
+## ich_s_volume -0.001349840 -9.534434e-07  3.044098e-05 -0.0000171047
+## ivh_s_volume -0.001440913  1.445680e-05 -1.710470e-05  0.0006168577</code></pre>
+<p>These can be passed as an argument to other functions for computing confidence intervals for contrasts and marginal means.</p>
+<hr />
+</div>
+<div id="bootstrap-estimator" class="section level3 hasAnchor" number="4.6.2">
+<h3><span class="header-section-number">4.6.2</span> Bootstrap Estimator<a href="using_r.html#bootstrap-estimator" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The bootstrap procedure uses resampling to obtain an estimate of the variance of the sampling distribution of an estimator. In R, this is done using the <code>boot</code> package, which is part of base R.</p>
+<p>First, we need to write a function to produce the statistic of interest. In this case, we will bootstrap the Mann-Whitney U statistic: see the <a href="estimands.html#ordinal_estimands">estimands</a> for more information on this estimand. The first argument to this function must be the data, and the second argument should be a vector of indices for our bootstrap sample, and any other arguments can be supplied thereafter.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="using_r.html#cb37-1" tabindex="-1"></a><span class="co"># 1. Write a function that produces the test statistic:</span></span>
+<span id="cb37-2"><a href="using_r.html#cb37-2" tabindex="-1"></a>wilcox_to_auc <span class="ot">&lt;-</span></span>
+<span id="cb37-3"><a href="using_r.html#cb37-3" tabindex="-1"></a>  <span class="cf">function</span>(data, <span class="at">indices =</span> <span class="cn">NULL</span>, formula){</span>
+<span id="cb37-4"><a href="using_r.html#cb37-4" tabindex="-1"></a>    <span class="co"># Input data must be a data.frame</span></span>
+<span id="cb37-5"><a href="using_r.html#cb37-5" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">all</span>(<span class="fu">class</span>(data) <span class="sc">==</span> <span class="st">&quot;data.frame&quot;</span>)){</span>
+<span id="cb37-6"><a href="using_r.html#cb37-6" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;`data` must be a data.frame: use `as.data.frame()` for a tibble.&quot;</span>)</span>
+<span id="cb37-7"><a href="using_r.html#cb37-7" tabindex="-1"></a>    }</span>
+<span id="cb37-8"><a href="using_r.html#cb37-8" tabindex="-1"></a>    </span>
+<span id="cb37-9"><a href="using_r.html#cb37-9" tabindex="-1"></a>    <span class="co"># If bootstrap indices not supplied, use entire dataset</span></span>
+<span id="cb37-10"><a href="using_r.html#cb37-10" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.null</span>(indices)) indices <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)</span>
+<span id="cb37-11"><a href="using_r.html#cb37-11" tabindex="-1"></a>    </span>
+<span id="cb37-12"><a href="using_r.html#cb37-12" tabindex="-1"></a>    <span class="co"># Extract Outcome/Treatment from Formula</span></span>
+<span id="cb37-13"><a href="using_r.html#cb37-13" tabindex="-1"></a>    outcome <span class="ot">&lt;-</span> <span class="fu">all.vars</span>(<span class="fu">update</span>(formula, . <span class="sc">~</span> <span class="dv">0</span>))</span>
+<span id="cb37-14"><a href="using_r.html#cb37-14" tabindex="-1"></a>    treatment <span class="ot">&lt;-</span> <span class="fu">all.vars</span>(<span class="fu">update</span>(formula, <span class="dv">0</span> <span class="sc">~</span> .))</span>
+<span id="cb37-15"><a href="using_r.html#cb37-15" tabindex="-1"></a>    <span class="fu">stopifnot</span>(<span class="fu">length</span>(treatment) <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb37-16"><a href="using_r.html#cb37-16" tabindex="-1"></a>    </span>
+<span id="cb37-17"><a href="using_r.html#cb37-17" tabindex="-1"></a>    <span class="co"># Convert outcome to numeric using levels: Assumes levels are ordered</span></span>
+<span id="cb37-18"><a href="using_r.html#cb37-18" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.numeric</span>(data[, outcome])){</span>
+<span id="cb37-19"><a href="using_r.html#cb37-19" tabindex="-1"></a>      data[, outcome] <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data[, outcome])</span>
+<span id="cb37-20"><a href="using_r.html#cb37-20" tabindex="-1"></a>    }</span>
+<span id="cb37-21"><a href="using_r.html#cb37-21" tabindex="-1"></a>    </span>
+<span id="cb37-22"><a href="using_r.html#cb37-22" tabindex="-1"></a>    <span class="co"># Run Wilcoxon Rank Sum on data using the bootstrap indices</span></span>
+<span id="cb37-23"><a href="using_r.html#cb37-23" tabindex="-1"></a>    wrst_result <span class="ot">&lt;-</span></span>
+<span id="cb37-24"><a href="using_r.html#cb37-24" tabindex="-1"></a>      <span class="fu">wilcox.test</span>(</span>
+<span id="cb37-25"><a href="using_r.html#cb37-25" tabindex="-1"></a>        <span class="at">formula =</span> formula,</span>
+<span id="cb37-26"><a href="using_r.html#cb37-26" tabindex="-1"></a>        <span class="at">data =</span> data[indices,]</span>
+<span id="cb37-27"><a href="using_r.html#cb37-27" tabindex="-1"></a>      )</span>
+<span id="cb37-28"><a href="using_r.html#cb37-28" tabindex="-1"></a>    </span>
+<span id="cb37-29"><a href="using_r.html#cb37-29" tabindex="-1"></a>    <span class="co"># Compute AUC statistic</span></span>
+<span id="cb37-30"><a href="using_r.html#cb37-30" tabindex="-1"></a>    <span class="fu">return</span>(wrst_result<span class="sc">$</span>statistic<span class="sc">/</span><span class="fu">prod</span>(<span class="fu">table</span>(data[indices, treatment])))</span>
+<span id="cb37-31"><a href="using_r.html#cb37-31" tabindex="-1"></a>  }</span></code></pre></div>
+<p>Now, we call this function using <code>boot</code>, passing any arguments required: <code>boot</code> will resample the data, and pass the indices to the function, and evaluate the result. From the result, we can calculate the standard error or estimate of the bootstrap distribution:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="using_r.html#cb38-1" tabindex="-1"></a><span class="co"># Perform 10,000 bootstraps of data</span></span>
+<span id="cb38-2"><a href="using_r.html#cb38-2" tabindex="-1"></a>n_boot_samples <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb38-3"><a href="using_r.html#cb38-3" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="using_r.html#cb38-4" tabindex="-1"></a>mrs_365d_auc_boot <span class="ot">&lt;-</span></span>
+<span id="cb38-5"><a href="using_r.html#cb38-5" tabindex="-1"></a>  boot<span class="sc">::</span><span class="fu">boot</span>(</span>
+<span id="cb38-6"><a href="using_r.html#cb38-6" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">as.data.frame</span>(sim_miii),</span>
+<span id="cb38-7"><a href="using_r.html#cb38-7" tabindex="-1"></a>    <span class="at">statistic =</span> wilcox_to_auc,</span>
+<span id="cb38-8"><a href="using_r.html#cb38-8" tabindex="-1"></a>    <span class="at">R =</span> n_boot_samples,</span>
+<span id="cb38-9"><a href="using_r.html#cb38-9" tabindex="-1"></a>    <span class="at">formula =</span> mrs_365d <span class="sc">~</span> arm</span>
+<span id="cb38-10"><a href="using_r.html#cb38-10" tabindex="-1"></a>  )</span>
+<span id="cb38-11"><a href="using_r.html#cb38-11" tabindex="-1"></a></span>
+<span id="cb38-12"><a href="using_r.html#cb38-12" tabindex="-1"></a><span class="co"># Bootstrap Standard Error</span></span>
+<span id="cb38-13"><a href="using_r.html#cb38-13" tabindex="-1"></a><span class="fu">sd</span>(mrs_365d_auc_boot<span class="sc">$</span>t[,<span class="dv">1</span>])</span></code></pre></div>
+<pre><code>## [1] 0.02515884</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="using_r.html#cb40-1" tabindex="-1"></a><span class="co"># Bootstrap Variance (SE^2)</span></span>
+<span id="cb40-2"><a href="using_r.html#cb40-2" tabindex="-1"></a><span class="fu">var</span>(mrs_365d_auc_boot<span class="sc">$</span>t[,<span class="dv">1</span>])</span></code></pre></div>
+<pre><code>## [1] 0.000632967</code></pre>
+<p>Once the bootstrap procedure is complete, we can view and summarize the results.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="using_r.html#cb42-1" tabindex="-1"></a><span class="co"># Produce a histogram and quantile-quantile plot</span></span>
+<span id="cb42-2"><a href="using_r.html#cb42-2" tabindex="-1"></a><span class="fu">plot</span>(mrs_365d_auc_boot)</span></code></pre></div>
+<p><img src="_main_files/figure-html/Boot-Example-Step-3-Use-Results-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="using_r.html#cb43-1" tabindex="-1"></a>mrs_365d_auc_boot_ci <span class="ot">&lt;-</span></span>
+<span id="cb43-2"><a href="using_r.html#cb43-2" tabindex="-1"></a>  boot<span class="sc">::</span><span class="fu">boot.ci</span>(</span>
+<span id="cb43-3"><a href="using_r.html#cb43-3" tabindex="-1"></a>    <span class="at">boot.out =</span> mrs_365d_auc_boot,</span>
+<span id="cb43-4"><a href="using_r.html#cb43-4" tabindex="-1"></a>    <span class="at">conf =</span> <span class="fl">0.95</span>,</span>
+<span id="cb43-5"><a href="using_r.html#cb43-5" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;bca&quot;</span>,</span>
+<span id="cb43-6"><a href="using_r.html#cb43-6" tabindex="-1"></a>    <span class="at">index =</span> <span class="dv">1</span></span>
+<span id="cb43-7"><a href="using_r.html#cb43-7" tabindex="-1"></a>  )</span>
+<span id="cb43-8"><a href="using_r.html#cb43-8" tabindex="-1"></a></span>
+<span id="cb43-9"><a href="using_r.html#cb43-9" tabindex="-1"></a><span class="co"># boot.ci result</span></span>
+<span id="cb43-10"><a href="using_r.html#cb43-10" tabindex="-1"></a>mrs_365d_auc_boot_ci</span></code></pre></div>
+<pre><code>## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 10000 bootstrap replicates
+## 
+## CALL : 
+## boot::boot.ci(boot.out = mrs_365d_auc_boot, conf = 0.95, type = &quot;bca&quot;, 
+##     index = 1)
+## 
+## Intervals : 
+## Level       BCa          
+## 95%   ( 0.5022,  0.6005 )  
+## Calculations and Intervals on Original Scale</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="using_r.html#cb45-1" tabindex="-1"></a><span class="co"># Extract the lower/upper confidence limits</span></span>
+<span id="cb45-2"><a href="using_r.html#cb45-2" tabindex="-1"></a>mrs_365d_auc_boot_ci_result <span class="ot">&lt;-</span></span>
+<span id="cb45-3"><a href="using_r.html#cb45-3" tabindex="-1"></a>  <span class="fu">tail</span>(<span class="at">x =</span> mrs_365d_auc_boot_ci<span class="sc">$</span>bca[<span class="dv">1</span>,], <span class="at">n =</span> <span class="dv">2</span>)</span>
+<span id="cb45-4"><a href="using_r.html#cb45-4" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="using_r.html#cb45-5" tabindex="-1"></a><span class="co"># Print out result</span></span>
+<span id="cb45-6"><a href="using_r.html#cb45-6" tabindex="-1"></a>mrs_365d_auc_boot_ci_result</span></code></pre></div>
+<pre><code>##                     
+## 0.5022205 0.6005486</code></pre>
+<p>The most straightforward way to calculate a p-value using the bootstrap involves finding the smallest value of <span class="math inline">\(\alpha\)</span> at which the <span class="math inline">\(100(1 - \alpha)\%\)</span> confidence interval does not contain the null value, resulting in a rejection of the null hypothesis. This can be done using a binary search algorithm.</p>
+<hr />
+</div>
+</div>
+<div id="addressing-multiplicity" class="section level2 hasAnchor" number="4.7">
+<h2><span class="header-section-number">4.7</span> Addressing Multiplicity<a href="using_r.html#addressing-multiplicity" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For pivotal trials, it is often required to have an analysis plan that control the probability of rejecting at least one truly null hypothesis, also known as the familywise type I error rate (FWER). When there are more than one primary comparison of interest, due to having multiple pairwise treatment contrasts, endpoints, sequential analyses, or timepoints, a strategy must be used to control the FWER at a pre-specified level.</p>
+<p>A later chapter is devoted to <a href="groupsequential.html#groupsequential">Group Sequential Designs</a>, a methodology for doing pre-planned analyses that allow stopping a randomized trial early for success or futility. When all hypotheses are tested simultaneously, the <a href="https://cran.r-project.org/web/packages/multcomp/index.html">multcomp</a> package allows for decisions and confidence intervals that appropriately control the FWER. When there is a specific ordering to how hypotheses are tested, the <a href="https://cran.r-project.org/web/packages/gMCP/index.html">gMCP</a> package implements graphical methods for addressing multiple comparisons. We will focus mainly on controlling the FWER for one pairwise treatment comparison on a single endpoint, with one or more pre-planned analyses.</p>
+
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-DobsonBarnett2018" class="csl-entry">
+Dobson, Annette J., and Adrian G. Barnett. 2018. <em>An Introduction to Generalized Linear Models, Fourth Edition</em>. Chapman; Hall/<span>CRC</span>. <a href="https://doi.org/10.1201/9781315182780">https://doi.org/10.1201/9781315182780</a>.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="estimands.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ancova.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/covariateadjustment/covariateadjustment.github.io/edit/main/03-using_r.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

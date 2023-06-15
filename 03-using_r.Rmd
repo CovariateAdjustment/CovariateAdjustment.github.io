@@ -1,0 +1,538 @@
+# Using R {#using_r}
+
+The R environment for Statistical Computing is a free, open source environment for managing and visualizing data and performing analyses. Its capabilities can be augmented by downloading software packages from repositories, such as the [Comprehensive R Archival Network (CRAN)](https://cran.r-project.org/), and more recently, [GitHub](https://github.com/). [Rstudio](https://rstudio.com/) is a powerful development environment that makes it easier to use R, expands its functionality, and allows the integration of other tools, such as Git, into an analyst's workflow. If you are new to R or would like additional resources on using R in practice, see [the appendix](#appendix_b_using_r).
+
+In addition to R and Rstudio, we will also need to install [RTools](https://cran.r-project.org/bin/windows/Rtools/), also known as the R toolchain. These are software tools for compiling software packages. Some of the packages we use may have to be compiled after being downloaded, and RTools provides all the software needed to do so. CRAN provides instruction on which version of RTools you should use, depending on your version of R, and how to install it.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Installing Packages
+
+Once we have Rtools installed, we are ready to install the required packages from CRAN and Github. The `install.packages()` function in R can be used to install packages from CRAN, R-Forge, BioC, and other repositories via the command line. In Rstudio, users can also use the 'Packages' tab to see which packages are installed, their current version, and whether or not they have been loaded into the workspace for use. If you have installed the `devtools` package, `devtools::install_github()` can be used to install packages from Github or other version control repositories.
+
+ If you would like to explore which R packages are available for a given application or research area, the [CRAN Task Views](https://cran.r-project.org/web/views/), including the [CRAN Clinical Trials taskview](https://cran.r-project.org/web/views/ClinicalTrials.html), are worth exploring.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Packages from CRAN
+
+Below are some of the packages that we will use from CRAN, along with a brief description of their purposes:
+
+  - [knitr](https://cran.r-project.org/web/packages/knitr/index.html) - Tools for literate programming: including code in reproducible reports
+  - [devtools](https://cloud.r-project.org/web/packages/devtools/index.html) - A suite of tools for R package development
+  - [tidyverse](https://www.tidyverse.org/packages/) - An ecosystem of packages for working with data
+  - [table1](https://cran.r-project.org/web/packages/table1/index.html) - Creating simple tabulations in aggregate and by treatment arm
+  - [cobalt](https://cran.r-project.org/web/packages/cobalt/index.html) - Creating tables and plots for assessing covariate balance
+  - [sandwich](https://cran.r-project.org/web/packages/sandwich/index.html) Robust covariance matrix estimation
+  - [margins](https://cran.r-project.org/web/packages/margins/index.html) Calculating marginal or partial effects from regression models
+  - [survminer](https://cran.r-project.org/web/packages/survminer/index.html) - Creating plots of time-to-event data
+  - [survRM2](https://cran.r-project.org/web/packages/survRM2/index.html) - Calculating the restricted mean survival time (RMST) with and without covariate adjustment.
+
+```{r install-packages, eval = FALSE}
+required_packages <-
+  c("devtools",
+    "cobalt",
+    "knitr",
+    "margins",
+    "sandwich",
+    "survminer",
+    "survRM2"
+    "table1",
+    "tidyverse"
+  )
+
+packages_to_install <-
+  setdiff(
+    x = required_packages,
+    y = installed.packages(.Library)[, "Package"]
+  )
+
+install.packages(packages_to_install)
+```
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Packages from Github
+
+We will also use the following packages from Github:
+
+  - [simul](https://github.com/nt-williams/simul) Inference based on Efficient Influence Function and Multiplier Bootstrap
+  - [adjrct](https://github.com/nt-williams/adjrct) Doubly Robust, Efficient Estimators for Survival and Time to Event Outcomes
+
+```{r install-github, eval = FALSE}
+devtools::install_github("nt-williams/simul")
+devtools::install_github("nt-williams/adjrct")
+```
+
+
+
+
+### Loading Packages into Workspace
+
+Once a package has been successfully installed, we use the `library()` command to load it into the workspace for use:
+
+```{r load-packages}
+library(tidyverse) # Data manipulation: dplyr, tidyr
+library(table1) # Creation of Summary tables
+```
+
+It is possible that different packages contain a function of the same name. For example, the `table1` package contains the function `table1()`: there are other packages that also have a function named `table1()`, such as the [`furniture`](https://cran.r-project.org/web/packages/furniture/index.html) package. If both of these packages are loaded, it can cause confusion about which version should be used when `table1()` is called. R will warn when such conflicts can arise, but as a best practice, it is useful to specify the package and function as as follows: `table1::table1()`. This makes code easier to use and potentially reduces ambiguity.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Loading the Data: MISTIE-III
+
+The [data dictionary](#mistie_iii) and more information about the MISTIE III study were presented earlier. All of the data needed for the examples are available on the web. To load these, we create a file connection to the URL using the `url()` function, and then use `read.csv()` to read in the comma separated values (CSV) file. To load data from a local file path, the `file.path()` function is useful for creating file paths. We can start by loading the simulated MISTIE III data. Once we have loaded the full data, we can use `dplyr::slice` to take the first 500 rows.
+
+```{r Load-MISTIE-III-Data}
+data_url <-
+  paste0("https://github.com/jbetz-jhu/CovariateAdjustmentTutorial",
+         "/raw/main/Simulated_MISTIE_III_v1.2.csv")
+
+sim_miii_full <- read.csv(file = url(data_url))
+
+# Read in data: Recast categorical variables as factors
+sim_miii_full <-
+  sim_miii_full %>% 
+  dplyr::tibble() %>% 
+  dplyr::mutate(
+    # Convert variables from binary indicators to labeled categorical variables
+    male =
+      factor(
+        x = male,
+        levels = 0:1,
+        labels = c("0. Female", "1. Male")
+      ),
+    across(
+      .cols = 
+        all_of(
+          x = c("hx_cvd", "hx_hyperlipidemia",
+                "on_anticoagulants", "on_antiplatelets")
+        ),
+      .fns = function(x) factor(x, levels = 0:1, labels = c("0. No", "1. Yes"))
+    ),
+    # Convert GCS and MRS variables from character data to categorical variables
+    across(
+      .cols = starts_with("gcs") | starts_with("mrs"),
+      .fns = factor
+    ),
+    ich_location =
+      factor(
+        x = ich_location,
+        levels = c("Deep", "Lobar")
+      ),
+    arm =
+      factor(
+        x = arm,
+        levels = c("medical", "surgical")
+      ),
+    tx = 1*(arm == "surgical")
+  )
+
+
+# Take the first 500 rows
+sim_miii <-
+  sim_miii_full %>% 
+  dplyr::slice(1:500)
+```
+
+
+Other useful functions include:
+
+  - `head()`/`tail()` - Looking at the first $n$ rows of a dataset
+  - `nrow()`/`ncol()` - Counting the rows/columns of a dataset
+  - `colnames()`/`rownames()` - Getting the row/column names of a dataset
+
+
+```{r Useful-Functions}
+head(sim_miii)
+nrow(sim_miii)
+ncol(sim_miii)
+colnames(sim_miii)
+```
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Assessing Baseline Balance
+
+While randomization will tend to produce treatment groups that are similar on both measured and unmeasured factors, there will always be some degree of imbalance between groups in some characteristics. It is important to remember that these differences only represent confounding if groups are imbalanced on variables that are associated with the outcome. To assess the degree of imbalance, we can tabulate characteristics by treatment arm, and compute standardized differences to get a scale-free measure of the magnitude of imbalance.
+
+```{r mistie-iii-table-1}
+table1(
+  ~ age + male +
+    on_antiplatelets + ich_location + ich_s_volume + ivh_s_volume +
+    gcs_category | arm, 
+  data = sim_miii
+)
+```
+
+
+This allows us to compare the means, medians, frequencies, and ranges of variables between groups.
+
+
+```{r mistie-iii-standardized-differences}
+library(cobalt)
+
+cobalt::bal.tab(
+  x = 
+    # Only tabulate baseline variables
+    sim_miii %>% 
+    dplyr::select(
+      dplyr::all_of(
+        x = c("age", "male", "on_antiplatelets",
+              "ich_location", "ich_s_volume", "ivh_s_volume", "gcs_category")
+      )
+    ),
+  treat = sim_miii$arm,
+  # Compute standardized differences for both binary and continuous variables
+  binary = "std",
+  continuous = "std"
+)
+```
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Visualizing Data
+
+One of the many strength of R is the powerful and flexible data visualization tools in its software ecosystem: see [the R Graph Gallery](https://r-graph-gallery.com/) for some examples. The [`ggplot2`](https://ggplot2.tidyverse.org/) package, and some related packages like [survminer](https://cran.r-project.org/web/packages/survminer/index.html), are useful for assessing baseline balance and visualizing outcome data.
+
+For example, we may want to assess the cumulative distribution of a baseline covariate instead of just checking the summary statistics.
+
+
+```{r Plot-eCDF-Age}
+library(ggplot2)
+
+ggplot(
+  data = sim_miii,
+  aes(
+    x = age
+  )
+) +
+  stat_ecdf(
+    alpha = 0.6,
+  ) +
+  stat_ecdf(
+    aes(color = arm),
+    alpha = 0.6,
+  ) +
+  theme_bw()
+```
+
+
+Or we may want to create a plot of the Kaplan-Meier estimate of the survival function (see the [estimands](#estimands) section for its definition).
+
+
+```{r Plot-KM-MISTIE-III}
+library(survival)
+library(survminer)
+
+# Create a 'survival object' from event times and indicators
+miii_surv <- 
+  with(sim_miii,
+       survival::Surv(
+         time = days_on_study,
+         event = died_on_study
+       )
+  )
+
+# Use survfit to calculate survival data
+time_to_death_km <-
+  survival::survfit(
+    formula = miii_surv ~ arm,
+    data = sim_miii
+  )
+
+# Create the Kaplan-Meier Plot
+survminer::ggsurvplot(
+  fit = time_to_death_km,
+  conf.int = TRUE,
+  risk.table = TRUE,
+  xlab = "Days", 
+  ylab = "Survival probability"
+)
+```
+
+From this plot, we can see that most of the mortality occurs soon after randomization, with greater mortality in the medical management arm early in the trial. After the first 90 days, the rate of events decreases in both arms.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Fitting Regression Models
+
+While covariate adjustment does involve regression modeling, an in-depth discussion of regression modeling is not needed for the purposes of implementing covariate adjustment. For those wanting a more in-depth presentation of fitting generalized linear models (GLMs) in R see Dobson & Barnett [-@DobsonBarnett2018].
+
+
+
+
+### Generalized Linear Model
+
+Fitting a GLM in R is done using the `glm()` function. For example if we wanted to model the probability of being assigned to the surgical arm in MISTIE III by an individual's age, ICH volume, and IVH volume, the code is as follows: 
+
+```{r Binomial-GLM-MISTIE-III}
+pr_mis_glm <-
+  glm(
+    formula =
+      tx ~ age + ich_s_volume + ivh_s_volume,
+    data = sim_miii,
+    family = binomial(link = "logit")
+  )
+```
+
+
+Once the model has been fit, we can use it for creating summary tables, calculating confidence intervals, or generating fitted values for a new dataset:
+
+
+```{r Using-Fitted-Binomial-GLM-MISTIE-III}
+# Produce GLM Summary Table
+summary(pr_mis_glm)
+
+# Calculate Confidence Intervals for Coefficients
+confint(pr_mis_glm)
+
+# Calculate fitted probabilities for new data:
+# 1. 65 years old, 30 mL ICH, 0 mL IVH
+# 2. 70 years old, 50 mL ICH, 15 mL IVH
+predict(
+  object = pr_mis_glm,
+  newdata = 
+    data.frame(
+      age = c(65, 70),
+      ich_s_volume = c(30, 50),
+      ivh_s_volume = c(0, 15)
+    ),
+  type = "response"
+)
+```
+
+
+
+
+### Logrank Test and Cox Proportional Hazards Model
+
+For time-to-event outcomes, such as mortality, the logrank test and Cox Proportional Hazards (PH) model are commonly used analytic approaches. Using the survival object `miii_surv` created earlier using `survival::Surv()`, we can pass this object to other functions to perform the logrank test (using `survival::survdiff`) and fit the Cox PH model (using `survival::coxph`). 
+
+```{r Logrank-MISTIE-III}
+mortality_logrank <-
+  survival::survdiff(
+    formula = miii_surv ~ arm,
+    data = sim_miii
+  )
+
+mortality_logrank
+```
+
+
+For the Cox PH model, the `ties = "efron"` argument specifies how tied survival times are addressed, and the `robust = TRUE` computes robust estimates of the covariance matrix of regression coefficients:
+
+
+```{r Cox-PH-MISTIE-III}
+mortality_cox <-
+  survival::coxph(
+    formula = miii_surv ~ arm,
+    data = sim_miii,
+    ties = "efron",
+    robust = TRUE
+  )
+
+summary(mortality_cox)
+```
+
+
+This model assumes that the ratio of the rates of events between the treatment and control arm is approximately constant over time. We can assess using the `survival::cox.zph` function:
+
+
+```{r Cox-PH-Test-MISTIE-III}
+# Test Proportionality Assumption: Schoenfeld Residuals
+cox.zph(fit = mortality_cox)
+
+# Plot smoothed residuals
+plot(cox.zph(fit = mortality_cox))
+abline(h = 0, col = "red")
+```
+
+From the plot, we can see that the hazard ratio is initially negative, but increases towards zero as time goes on. It seems as if the treatment has a beneficial effect on mortality for a few weeks after randomization, which then diminishes. This is a violation of the proportional hazards assumption, which is further discussed in the chapter on [estimands](#survival_estimands).
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Variance Estimation
+
+
+
+### Robust Standard Errors
+
+Most of the standard errors reported in software, such as those returned by `vcov()`, are model-based estimates of the standard error, which assume that the model is correctly specified. Robust or "Sandwich" standard errors can be used to obtain a consistent estimate of the standard error in such cases. Note that robust estimates of standard errors are different from robust estimates of the regression coefficients themselves.
+
+The `sandwich::vcovHC()` function can be used to obtain different types of robust standard errors:
+
+```{r HC-Covariance-Estimation}
+library(sandwich)
+
+# Model-based standard errors
+vcov(object = pr_mis_glm)
+
+# Robust standard errors
+sandwich::vcovHC(x = pr_mis_glm, type = "HC3")
+```
+
+These can be passed as an argument to other functions for computing confidence intervals for contrasts and marginal means.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Bootstrap Estimator
+
+The bootstrap procedure uses resampling to obtain an estimate of the variance of the sampling distribution of an estimator. In R, this is done using the `boot` package, which is part of base R.
+
+First, we need to write a function to produce the statistic of interest. In this case, we will bootstrap the Mann-Whitney U statistic: see the [estimands](#ordinal_estimands) for more information on this estimand. The first argument to this function must be the data, and the second argument should be a vector of indices for our bootstrap sample, and any other arguments can be supplied thereafter. 
+
+
+```{r Boot-Example-Step-1-Create-Function}
+# 1. Write a function that produces the test statistic:
+wilcox_to_auc <-
+  function(data, indices = NULL, formula){
+    # Input data must be a data.frame
+    if(!all(class(data) == "data.frame")){
+      stop("`data` must be a data.frame: use `as.data.frame()` for a tibble.")
+    }
+    
+    # If bootstrap indices not supplied, use entire dataset
+    if(is.null(indices)) indices <- 1:nrow(data)
+    
+    # Extract Outcome/Treatment from Formula
+    outcome <- all.vars(update(formula, . ~ 0))
+    treatment <- all.vars(update(formula, 0 ~ .))
+    stopifnot(length(treatment) == 1)
+    
+    # Convert outcome to numeric using levels: Assumes levels are ordered
+    if(!is.numeric(data[, outcome])){
+      data[, outcome] <- as.numeric(data[, outcome])
+    }
+    
+    # Run Wilcoxon Rank Sum on data using the bootstrap indices
+    wrst_result <-
+      wilcox.test(
+        formula = formula,
+        data = data[indices,]
+      )
+    
+    # Compute AUC statistic
+    return(wrst_result$statistic/prod(table(data[indices, treatment])))
+  }
+```
+
+
+Now, we call this function using `boot`, passing any arguments required: `boot` will resample the data, and pass the indices to the function, and evaluate the result. From the result, we can calculate the standard error or estimate of the bootstrap distribution:
+
+
+```{r Boot-Example-Step-2-Call-Boot}
+# Perform 10,000 bootstraps of data
+n_boot_samples <- 10000
+
+mrs_365d_auc_boot <-
+  boot::boot(
+    data = as.data.frame(sim_miii),
+    statistic = wilcox_to_auc,
+    R = n_boot_samples,
+    formula = mrs_365d ~ arm
+  )
+
+# Bootstrap Standard Error
+sd(mrs_365d_auc_boot$t[,1])
+
+# Bootstrap Variance (SE^2)
+var(mrs_365d_auc_boot$t[,1])
+```
+
+
+Once the bootstrap procedure is complete, we can view and summarize the results.
+
+
+```{r Boot-Example-Step-3-Use-Results, fig.height = 0.6*fig_w}
+# Produce a histogram and quantile-quantile plot
+plot(mrs_365d_auc_boot)
+
+mrs_365d_auc_boot_ci <-
+  boot::boot.ci(
+    boot.out = mrs_365d_auc_boot,
+    conf = 0.95,
+    type = "bca",
+    index = 1
+  )
+
+# boot.ci result
+mrs_365d_auc_boot_ci
+
+# Extract the lower/upper confidence limits
+mrs_365d_auc_boot_ci_result <-
+  tail(x = mrs_365d_auc_boot_ci$bca[1,], n = 2)
+
+# Print out result
+mrs_365d_auc_boot_ci_result
+```
+
+The most straightforward way to calculate a p-value using the bootstrap involves finding the smallest value of $\alpha$ at which the $100(1 - \alpha)\%$ confidence interval does not contain the null value, resulting in a rejection of the null hypothesis. This can be done using a binary search algorithm.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Addressing Multiplicity
+
+For pivotal trials, it is often required to have an analysis plan that control the probability of rejecting at least one truly null hypothesis, also known as the familywise type I error rate (FWER). When there are more than one primary comparison of interest, due to having multiple pairwise treatment contrasts, endpoints, sequential analyses, or timepoints, a strategy must be used to control the FWER at a pre-specified level.
+
+A later chapter is devoted to [Group Sequential Designs](#groupsequential), a methodology for doing pre-planned analyses that allow stopping a randomized trial early for success or futility. When all hypotheses are tested simultaneously, the [multcomp](https://cran.r-project.org/web/packages/multcomp/index.html) package allows for decisions and confidence intervals that appropriately control the FWER. When there is a specific ordering to how hypotheses are tested, the [gMCP](https://cran.r-project.org/web/packages/gMCP/index.html) package implements graphical methods for addressing multiple comparisons. We will focus mainly on controlling the FWER for one pairwise treatment comparison on a single endpoint, with one or more pre-planned analyses.

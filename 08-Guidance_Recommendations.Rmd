@@ -1,0 +1,24 @@
+# Guidance on Applying Covariate Adjustment {#recommendations}
+
+## Statistical Analysis Plans
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Sample size for adjusted vs. unadjusted
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Number of parameters vs. sample size
+    

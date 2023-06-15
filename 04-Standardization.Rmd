@@ -1,0 +1,169 @@
+# Analysis of Covariance and its Generalization {#ancova}
+
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Generalizing the ANCOVA Estimator: G-Computation
+
+
+```{r}
+pr_mrs_0_3_glm <-
+  glm(
+    formula =
+      mrs_365d %in% c("0-1", "2", "3") ~ arm +
+       age + male + hx_cvd + hx_hyperlipidemia +
+      on_anticoagulants + on_antiplatelets +
+      ich_location + ich_s_volume + ivh_s_volume,
+    data = sim_miii,
+    family = binomial(link = "logit")
+  )
+
+pr_mrs_0_3_tx <-
+  predict(
+    object = pr_mrs_0_3_glm,
+    newdata =
+      within(
+        data = sim_miii,
+        expr = {arm = "surgical"}
+      ),
+    type = "response"
+  )
+
+pr_mrs_0_3_control <-
+  predict(
+    object = pr_mrs_0_3_glm,
+    newdata =
+      within(
+        data = sim_miii,
+        expr = {arm = "medical"}
+      ),
+    type = "response"
+  )
+
+# Risk Difference
+mean(pr_mrs_0_3_tx) - mean(pr_mrs_0_3_control)
+
+# Risk Ratio
+mean(pr_mrs_0_3_tx)/mean(pr_mrs_0_3_control)
+```
+
+```{r G-Computation-Margins-Robust-SE}
+library(margins)
+
+pr_mrs_0_3_margins <-
+  margins::margins(
+    model = pr_mrs_0_3_glm,
+    # Specify treatment variable
+    variables = "arm",
+    # Convert to outcome scale, not link scale
+    type = "response",
+    # Obtain robust standard errors
+    vcov = sandwich::vcovHC(pr_mrs_0_3_glm)
+  )
+
+# Standard Error:
+sqrt(vcov(pr_mrs_0_3_margins))
+
+# Variance:
+vcov(pr_mrs_0_3_margins)
+
+# 95% Confidence Interval
+confint(object = pr_mrs_0_3_margins, level = 0.95)
+```
+
+```{r G-Computation-Boot-SE}
+margins_fun <-
+  function(data, indices = NULL, formula, family, term){
+    # Input data must be a data.frame
+    if(!all(class(data) == "data.frame")){
+      stop("`data` must be a data.frame: use `as.data.frame()` for a tibble.")
+    }
+    
+    # If bootstrap indices not supplied, use entire dataset
+    if(is.null(indices)) indices <- 1:nrow(data)
+    
+    data <- data[indices,]
+    
+    glm_fit <-
+      glm(
+        formula = formula,
+        family = family,
+        data = data
+      )
+    
+    tx_levels <- levels(data[, term])
+    
+    e_y_1 <-
+      predict(
+        object = glm_fit,
+        newdata = 
+          within(
+            data,
+            expr = assign(x = term, value = tx_levels[2])
+          ),
+        
+        type = "response"
+      )
+    
+    e_y_0 <-
+      predict(
+        object = glm_fit,
+        newdata = 
+          within(
+            data,
+            expr = assign(x = term, value = tx_levels[1])
+          ),
+        
+        type = "response"
+      )
+    
+    return(mean(e_y_1) - mean(e_y_0))
+  }
+
+
+pr_mrs_0_3_glm_boot <-
+  boot::boot(
+    data = as.data.frame(sim_miii),
+    statistic = margins_fun,
+    R = 10000,
+    formula =
+      mrs_365d %in% c("0-1", "2", "3") ~ arm,
+    family = binomial(link = "logit"),
+    term = "arm"
+  )
+```
+
+
+We can compare the results between `margins::margins` and using `boot` to produce the predictions:
+
+```{r Compare-SE-Margins-vs-Boot}
+# HC3 Robust Standard Error: Margins
+sqrt(vcov(pr_mrs_0_3_margins))
+
+# Bootstrap Standard Error
+sd(pr_mrs_0_3_glm_boot$t[,1])
+
+# Compare their relative magnitudes
+sqrt(vcov(pr_mrs_0_3_margins))/sd(pr_mrs_0_3_glm_boot$t[,1])
+```
+
+The estimated standard errors from nonparametric bootstrap and the robust standard errors are extremely similar to one another.
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Inverse Weighting: Doubly Robust Weighted Least Squares
+
+
+
+

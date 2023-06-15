@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Targets of Inference: Estimands | Covariate Adjustment in Randomized Trials</title>
+  <meta name="description" content="<p>This a series of tutorials meant to help investigators apply covariate
+adjusted analyses in randomized trials.</p>" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Targets of Inference: Estimands | Covariate Adjustment in Randomized Trials" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="<p>This a series of tutorials meant to help investigators apply covariate
+adjusted analyses in randomized trials.</p>" />
+  <meta name="github-repo" content="covariateadjustment/covariateadjustment.github.io" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Targets of Inference: Estimands | Covariate Adjustment in Randomized Trials" />
+  
+  <meta name="twitter:description" content="<p>This a series of tutorials meant to help investigators apply covariate
+adjusted analyses in randomized trials.</p>" />
+  
+
+<meta name="author" content="Josh Betz, Kelly van Lancker, and Michael Rosenblum" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="intro.html"/>
+<link rel="next" href="using_r.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/table1-1.0/table1_defaults.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Covariate Adjustment in Randomized Trials</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> The Book</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-this-book"><i class="fa fa-check"></i><b>1.1</b> Using this Book</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#case-studies"><i class="fa fa-check"></i><b>1.2</b> Case Studies</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="index.html"><a href="index.html#ctn_03"><i class="fa fa-check"></i><b>1.2.1</b> Buprenorphine tapering schedule and illicit opioid use: CTN-03</a></li>
+<li class="chapter" data-level="1.2.2" data-path="index.html"><a href="index.html#mistie_iii"><i class="fa fa-check"></i><b>1.2.2</b> Functional Outcome in Hemorrhagic Stroke: MISTIE III</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#notation-and-assumptions"><i class="fa fa-check"></i><b>2.1</b> Notation and Assumptions</a></li>
+<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#the-analysis-of-covariance-ancova"><i class="fa fa-check"></i><b>2.2</b> The Analysis of Covariance (ANCOVA)</a></li>
+<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#generalizing-the-ancova-g-computation"><i class="fa fa-check"></i><b>2.3</b> Generalizing the ANCOVA: G-computation</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="estimands.html"><a href="estimands.html"><i class="fa fa-check"></i><b>3</b> Targets of Inference: Estimands</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="estimands.html"><a href="estimands.html#estimands-for-continuous-and-binary-outcomes"><i class="fa fa-check"></i><b>3.1</b> Estimands for Continuous and Binary Outcomes</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="estimands.html"><a href="estimands.html#difference-in-means"><i class="fa fa-check"></i><b>3.1.1</b> Difference in Means</a></li>
+<li class="chapter" data-level="3.1.2" data-path="estimands.html"><a href="estimands.html#ratio-of-means"><i class="fa fa-check"></i><b>3.1.2</b> Ratio of Means</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="estimands.html"><a href="estimands.html#ordinal_estimands"><i class="fa fa-check"></i><b>3.2</b> Estimands for Ordinal Outcomes</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="estimands.html"><a href="estimands.html#difference-in-mean-utility"><i class="fa fa-check"></i><b>3.2.1</b> Difference in Mean Utility</a></li>
+<li class="chapter" data-level="3.2.2" data-path="estimands.html"><a href="estimands.html#mann-whitney-m-w-estimand"><i class="fa fa-check"></i><b>3.2.2</b> Mann-Whitney (M-W) Estimand</a></li>
+<li class="chapter" data-level="3.2.3" data-path="estimands.html"><a href="estimands.html#log-odds-ratio-lor"><i class="fa fa-check"></i><b>3.2.3</b> Log Odds Ratio (LOR)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="estimands.html"><a href="estimands.html#survival_estimands"><i class="fa fa-check"></i><b>3.3</b> Survival/Time-To-Event Outcomes</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="estimands.html"><a href="estimands.html#kaplan-meier-survival-function"><i class="fa fa-check"></i><b>3.3.1</b> Kaplan Meier Survival Function</a></li>
+<li class="chapter" data-level="3.3.2" data-path="estimands.html"><a href="estimands.html#restricted-mean-survival-time"><i class="fa fa-check"></i><b>3.3.2</b> Restricted Mean Survival Time</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="using_r.html"><a href="using_r.html"><i class="fa fa-check"></i><b>4</b> Using R</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="using_r.html"><a href="using_r.html#installing-packages"><i class="fa fa-check"></i><b>4.1</b> Installing Packages</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="using_r.html"><a href="using_r.html#packages-from-cran"><i class="fa fa-check"></i><b>4.1.1</b> Packages from CRAN</a></li>
+<li class="chapter" data-level="4.1.2" data-path="using_r.html"><a href="using_r.html#packages-from-github"><i class="fa fa-check"></i><b>4.1.2</b> Packages from Github</a></li>
+<li class="chapter" data-level="4.1.3" data-path="using_r.html"><a href="using_r.html#loading-packages-into-workspace"><i class="fa fa-check"></i><b>4.1.3</b> Loading Packages into Workspace</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="using_r.html"><a href="using_r.html#loading-the-data-mistie-iii"><i class="fa fa-check"></i><b>4.2</b> Loading the Data: MISTIE-III</a></li>
+<li class="chapter" data-level="4.3" data-path="using_r.html"><a href="using_r.html#assessing-baseline-balance"><i class="fa fa-check"></i><b>4.3</b> Assessing Baseline Balance</a></li>
+<li class="chapter" data-level="4.4" data-path="using_r.html"><a href="using_r.html#visualizing-data"><i class="fa fa-check"></i><b>4.4</b> Visualizing Data</a></li>
+<li class="chapter" data-level="4.5" data-path="using_r.html"><a href="using_r.html#fitting-regression-models"><i class="fa fa-check"></i><b>4.5</b> Fitting Regression Models</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="using_r.html"><a href="using_r.html#generalized-linear-model"><i class="fa fa-check"></i><b>4.5.1</b> Generalized Linear Model</a></li>
+<li class="chapter" data-level="4.5.2" data-path="using_r.html"><a href="using_r.html#logrank-test-and-cox-proportional-hazards-model"><i class="fa fa-check"></i><b>4.5.2</b> Logrank Test and Cox Proportional Hazards Model</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="using_r.html"><a href="using_r.html#variance-estimation"><i class="fa fa-check"></i><b>4.6</b> Variance Estimation</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="using_r.html"><a href="using_r.html#robust-standard-errors"><i class="fa fa-check"></i><b>4.6.1</b> Robust Standard Errors</a></li>
+<li class="chapter" data-level="4.6.2" data-path="using_r.html"><a href="using_r.html#bootstrap-estimator"><i class="fa fa-check"></i><b>4.6.2</b> Bootstrap Estimator</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="using_r.html"><a href="using_r.html#addressing-multiplicity"><i class="fa fa-check"></i><b>4.7</b> Addressing Multiplicity</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="ancova.html"><a href="ancova.html"><i class="fa fa-check"></i><b>5</b> Analysis of Covariance and its Generalization</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="ancova.html"><a href="ancova.html#generalizing-the-ancova-estimator-g-computation"><i class="fa fa-check"></i><b>5.1</b> Generalizing the ANCOVA Estimator: G-Computation</a></li>
+<li class="chapter" data-level="5.2" data-path="ancova.html"><a href="ancova.html#inverse-weighting-doubly-robust-weighted-least-squares"><i class="fa fa-check"></i><b>5.2</b> Inverse Weighting: Doubly Robust Weighted Least Squares</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="doublyrobust.html"><a href="doublyrobust.html"><i class="fa fa-check"></i><b>6</b> Doubly Robust Estimators</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="doublyrobust.html"><a href="doublyrobust.html#augmented-inverse-probability-weighted-estimation"><i class="fa fa-check"></i><b>6.1</b> Augmented Inverse Probability Weighted Estimation</a></li>
+<li class="chapter" data-level="6.2" data-path="doublyrobust.html"><a href="doublyrobust.html#targeted-maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.2</b> Targeted Maximum Likelihood Estimation</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="groupsequential.html"><a href="groupsequential.html"><i class="fa fa-check"></i><b>7</b> Group Sequential Designs</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="groupsequential.html"><a href="groupsequential.html#group-sequential-designs"><i class="fa fa-check"></i><b>7.1</b> Group Sequential Designs</a></li>
+<li class="chapter" data-level="7.2" data-path="groupsequential.html"><a href="groupsequential.html#power-sample-size-calculations"><i class="fa fa-check"></i><b>7.2</b> Power &amp; Sample Size Calculations</a></li>
+<li class="chapter" data-level="7.3" data-path="groupsequential.html"><a href="groupsequential.html#analyses-unadjusted-and-adjusted"><i class="fa fa-check"></i><b>7.3</b> Analyses: Unadjusted and Adjusted</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="informationadaptive.html"><a href="informationadaptive.html"><i class="fa fa-check"></i><b>8</b> Information Adaptive Designs</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="informationadaptive.html"><a href="informationadaptive.html#information-adaptive-designs"><i class="fa fa-check"></i><b>8.1</b> Information Adaptive Designs</a></li>
+<li class="chapter" data-level="8.2" data-path="informationadaptive.html"><a href="informationadaptive.html#power-sample-size-calculations-1"><i class="fa fa-check"></i><b>8.2</b> Power &amp; Sample Size Calculations</a></li>
+<li class="chapter" data-level="8.3" data-path="informationadaptive.html"><a href="informationadaptive.html#analyses-unadjusted-and-adjusted-1"><i class="fa fa-check"></i><b>8.3</b> Analyses: Unadjusted and Adjusted</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="recommendations.html"><a href="recommendations.html"><i class="fa fa-check"></i><b>9</b> Guidance on Applying Covariate Adjustment</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="recommendations.html"><a href="recommendations.html#statistical-analysis-plans"><i class="fa fa-check"></i><b>9.1</b> Statistical Analysis Plans</a></li>
+<li class="chapter" data-level="9.2" data-path="recommendations.html"><a href="recommendations.html#sample-size-for-adjusted-vs.-unadjusted"><i class="fa fa-check"></i><b>9.2</b> Sample size for adjusted vs. unadjusted</a></li>
+<li class="chapter" data-level="9.3" data-path="recommendations.html"><a href="recommendations.html#number-of-parameters-vs.-sample-size"><i class="fa fa-check"></i><b>9.3</b> Number of parameters vs. sample size</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="appendices.html"><a href="appendices.html"><i class="fa fa-check"></i><b>10</b> Appendices</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="appendices.html"><a href="appendices.html#appendix_a_glossary"><i class="fa fa-check"></i><b>10.1</b> Appendix A: Glossary of Terms</a></li>
+<li class="chapter" data-level="10.2" data-path="appendices.html"><a href="appendices.html#appendix_b_using_r"><i class="fa fa-check"></i><b>10.2</b> Appendix B: Resources for Using R</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Covariate Adjustment in Randomized Trials</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="estimands" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Targets of Inference: Estimands<a href="estimands.html#estimands" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="estimands-for-continuous-and-binary-outcomes" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Estimands for Continuous and Binary Outcomes<a href="estimands.html#estimands-for-continuous-and-binary-outcomes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="difference-in-means" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Difference in Means<a href="estimands.html#difference-in-means" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When an outcome is continuous or binary, one meaningful summary may be the mean of the outcome, and a meaningful comparison may be the difference in means estimand:</p>
+<p><span class="math display">\[\theta_{DIM} = E[Y \vert A = 1] - E[Y \vert A = 0]\]</span></p>
+<p>This estimand compares the mean outcome in the population of interest if all individuals received the treatment of interest to the the mean outcome in the population of interest if all individuals received the control or comparator intervention. Note that in binary outcomes, this is a difference in proportions (or risk difference) between the population where all individuals received the treatment of interest compared to receiving the control or comparator intervention.</p>
+</div>
+<div id="ratio-of-means" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Ratio of Means<a href="estimands.html#ratio-of-means" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The Difference in Means gives an absolute measure of an effect. For a relative measure of an effect, such as the relative risk, we can compare the ratio of these means:</p>
+<p><span class="math display">\[\theta_{ROM} = E[Y \vert A = 1]/E[Y \vert A = 0]\]</span></p>
+<hr />
+</div>
+</div>
+<div id="ordinal_estimands" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Estimands for Ordinal Outcomes<a href="estimands.html#ordinal_estimands" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Let <span class="math inline">\(Y\)</span> be an ordinal outcome with <span class="math inline">\(k\)</span> ordered categories. For each outcome category <span class="math inline">\(j \in \{1, \ldots, K\}\)</span>, the cumulative distribution function of <span class="math inline">\(Y\)</span> given treatment <span class="math inline">\(A\)</span> is denoted as:</p>
+<p><span class="math display">\[Pr \left\{Y \le j\right\} = F(j \vert a)\]</span></p>
+<p>The probability mass function of <span class="math inline">\(Y\)</span> given treatment <span class="math inline">\(A\)</span> is denoted as:</p>
+<p><span class="math display">\[Pr \left\{Y = j\right\} = f(j \vert a) = F(j \vert a) - F(j-1 \vert a)\]</span></p>
+<p>Although this notation involves numeric labels for levels, this is merely to simplify notation. Clarifications will be made as needed when distinguishing between outcomes with and without a numeric levels.</p>
+<hr />
+<div id="difference-in-mean-utility" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Difference in Mean Utility<a href="estimands.html#difference-in-mean-utility" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>If the levels of <span class="math inline">\(Y\)</span> have numeric labels, and the mean value of this ordinal variable is meaningful, the difference in means estimand may still be meaningful and useful. Alternatively, if either the labels do not have a numeric interpretation, or the mean of these values is not particularly meaningful, it may be possible to create a meaningful numeric value by assigning ‘utilities’ or ‘weights’ to each level of the outcome. The quantitative and clinical meanings of the difference in means estimator will depend on the utilities assigned to the outcome scale. This allows the difference in means to be used, even if the levels of the outcome are not numeric (e.g. the Glasgow Outcome Scale, ranging from ‘Dead’, ‘Vegetative state’, ‘Severely disabled’, ‘Moderately disabled’, and ‘Good recovery’).</p>
+<p>Let <span class="math inline">\(u(\cdot)\)</span> denote a pre-specified mapping from the outcome labels to utility values. The estimand is defined as:</p>
+<p><span class="math display">\[\theta_{DIM} = E[u(Y) \vert A=1] - E[u(Y) \vert A=0] = \sum_{i=1}^{k}u(j)\left(f( j \vert 1) - f(j \vert 0)\right)\]</span></p>
+<p>When all outcomes at or above a threshold <span class="math inline">\(t \in \{2, \ldots, k\}\)</span> are given a utility of 1, and all others are given a utility of 0, this collapses the ordinal outcome into a binary one. The resulting estimand is the risk difference estimator of the outcome being at or above <span class="math inline">\(t\)</span>:</p>
+<p><span class="math display">\[
+    u(Y)=
+\begin{cases}
+    1: &amp; Y \geq t \\
+    0: &amp; Y &lt; t
+\end{cases}
+\]</span></p>
+<p>While a risk difference may be more familiar to implement and conceptually easier to interpret, it treats all outcome states either below or above the threshold identically, ignoring potential information in such outcome states.</p>
+<p>When utilities can be assigned according to patient preferences or other considerations, the estimand is the difference in mean utility between treatment arms.</p>
+<p><span class="math display">\[
+    u(Y)=
+\begin{cases}
+    u_{1} := \text{utility of } Y = 1\\
+    u_{2} := \text{utility of } Y = 2\\
+    \vdots \\
+    u_{k} := \text{utility of } Y = k
+\end{cases}
+\]</span></p>
+<p>The utilities will usually be monotone increasing, such that each succesive level of the outcome is associated with equal or better utility. Alternatively, if lower values of the outcome are preferable (such as the NYHA class), utilities will usually be monotone decreasing.</p>
+<hr />
+</div>
+<div id="mann-whitney-m-w-estimand" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Mann-Whitney (M-W) Estimand<a href="estimands.html#mann-whitney-m-w-estimand" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The Mann-Whitney estimand gives the probability that a randomly-selected person assigned to treatment of interest will have an outcome on the same level or a higher level than a randomly-selected person assigned to the comparator group, with ties broken at random:</p>
+<p><span class="math display">\[\theta_{MW} = P(\tilde{Y} &gt; Y \vert \tilde{A} = 1, A = 0) + \frac{1}{2}P(\tilde{Y} = Y \vert \tilde{A} = 1, A = 0) = \\ \sum_{j=1}^{K} \left\{ F(j-1 \vert 0) + \frac{1}{2} f(j \vert 0) \right\} f(j \vert 1)\]</span></p>
+<p>If there is no difference in treatments, we would expect a randomly selected individual from one group to have a higher outcome than a randomly selected individual from the other group about half the time: the null value for this estimand is <span class="math inline">\(1/2\)</span>.</p>
+<p>Note that if higher numerical values indicate worse outcomes, the outcome scale can be reversed prior to analysis, so that the estimand can be interpreted as the probability that a randomly-selected person assigned to treatment of interest will have an outcome as good or better than a randomly-selected person assigned to the comparator group.</p>
+<p>This estimand addresses a common concern of those choosing between treatment options, and may be easier to communicate to a lay audience.</p>
+<hr />
+</div>
+<div id="log-odds-ratio-lor" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Log Odds Ratio (LOR)<a href="estimands.html#log-odds-ratio-lor" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In the case of a binary outcome, the odds ratio of a “good” outcome (<span class="math inline">\(Y=1\)</span>) is <span class="math inline">\(OR = odds(Y = 1 \vert A = 1)/odds(Y = 1 \vert A = 0)\)</span>: a value greater than 1 indicates a greater likelihood of a “good” outcome in the treatment of interest relative to the comparator group, and the log of the odds ratio will be positive.</p>
+<p>In the case of an ordinal outcome with categories <span class="math inline">\(1, \ldots, K\)</span>, these categories can be collapsed into <span class="math inline">\((K-1)\)</span> binary outcomes: <span class="math inline">\(Y \le j\)</span> for <span class="math inline">\(j \in \{1, \ldots, (K-1) \}\)</span>. The odds ratio at threshold <span class="math inline">\(j\)</span> compares the odds of falling at or below level <span class="math inline">\(j\)</span> between the treatment of interest and the comparator group:</p>
+<p><span class="math display">\[OR_{j} = \frac{odds(Y \le j \vert A = 1)}{odds(Y \le j \vert A = 0)}\]</span></p>
+<p>When this odds ratio is greater than 1, individuals assigned to the treatment of interest are more likely to have outcomes at or below level <span class="math inline">\(j\)</span> than those in the comparator group: the log of this odds ratio will be positive. The log odds ratio estimand combines information across the levels of an ordinal outcome by averaging the log odds of an outcome at or below each threshold across all thresholds of the outcome:</p>
+<p><span class="math display">\[\theta_{LOR} = \frac{1}{K-1} \sum_{j=1}^{K-1} log \left( \frac{odds(Y \le j \vert A = 1)}{odds(Y \le j \vert A = 0)} \right) = \frac{1}{K-1} \sum_{j=1}^{K-1} log \left( \frac{F(j \vert 1)/ \left( 1 - F(j \vert 1) \right) } {F(j \vert 0)/ \left( 1 - F(j \vert 0) \right) } \right)\]</span></p>
+<p>This estimand is related to the proportional odds logistic regression model, a common parametric model for analyzing ordinal outcomes. In the proportional odds model, a regression coefficient for treatment group gives the increase in the odds of being at or below a given level of the outcome associated with a unit increase in that variable holding all else constant:</p>
+<p><span class="math display">\[log(odds(Y \le j \vert A)) = logit \left(P(Y \le j \vert A) \right) =  \alpha_{j} + \beta A: \quad j \in \{1, \ldots, (K-1)\}\]</span></p>
+<p>A positive slope indicates greater likelihood of lower scores in those assigned to receive the treatment of interest relative to the comparator group. The proportional odds assumption involves assuming that the treatment has the same effect across each binary threshold (i.e. that <span class="math inline">\(\beta\)</span> does not vary across the <span class="math inline">\(K-1\)</span> thresholds). When this assumption holds, the log odds ratio estimand is the same as the coefficient in the proportional odds model, but importantly, the validity of the LOR estimand does not depend on this assumption. As in binary and ordinal logistic regression, the null value for this estimand is 0.</p>
+<p>Since <span class="math inline">\(-log(a/b) = log(b/a)\)</span> and <span class="math inline">\(odds(Y &gt; j \vert A = 1) = 1/odds(Y \le j \vert A = 1)\)</span>, changing the sign of the log odds ratio estimator tells us about the average log odds of having scores higher than level <span class="math inline">\(j\)</span> in the treatment of interest relative to the comparator group:</p>
+<p><span class="math display">\[-\theta_{LOR} = \frac{1}{K-1} \sum_{j=1}^{K-1} log \left( \frac{odds(Y &gt; j \vert A = 1)}{odds(Y &gt; j \vert A = 0)} \right)\]</span></p>
+<hr />
+</div>
+</div>
+<div id="survival_estimands" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Survival/Time-To-Event Outcomes<a href="estimands.html#survival_estimands" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>When the outcome is the time from randomization until an event of interest occurs, let <span class="math inline">\(U\)</span> denote the time at which the event occurs, and <span class="math inline">\(M\)</span> denote the time at which an individual’s outcome is censored.</p>
+<hr />
+<div id="kaplan-meier-survival-function" class="section level3 hasAnchor" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Kaplan Meier Survival Function<a href="estimands.html#kaplan-meier-survival-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When the outcome is a time-to-event, the usual target of inference is the survival function, which is the marginal probability of being event-free through time <span class="math inline">\(t\)</span> if the entire population were assigned to study arm <span class="math inline">\(A = a\)</span>:</p>
+<p><span class="math display">\[S_{0}^{(a)}(t) = Pr\{Y &gt; t \vert A = a\}\]</span></p>
+<p>This is typically estimated using the Kaplan-Meier (K-M) estimator, defined as:</p>
+<p><span class="math display">\[\hat{S}_{n}^{(a)}(t) = \prod_{j: \, T_{j} \le t} \left( 1 - \frac{\sum_{i = 1}^{n} \delta_{i} I_{\{A_{i} = a\}} I_{\{U_{i} = T_{j}\}}} {\sum_{i = 1}^{n} I_{\{A_{i} = a\}} I_{\{U_{i} \ge T_{j}\}}} \right)\]</span></p>
+<hr />
+</div>
+<div id="restricted-mean-survival-time" class="section level3 hasAnchor" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> Restricted Mean Survival Time<a href="estimands.html#restricted-mean-survival-time" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Another estimand that may be of interest is the restricted mean survival time (RMST). This estimand is the average time-to-event (e.g. life expectancy when mortality is the event of interest) from baseline to a pre-specified point in time, denoted <span class="math inline">\(\tau\)</span>. The interval <span class="math inline">\([0, \tau]\)</span> is called the time horizon. This is given by taking the area under the survival function over the time horizon:</p>
+<p><span class="math display">\[RMST = E[min\{ Y, \tau \} \vert a] = \int_{0}^{\tau} S_{0}^{(a)}(t) dt\]</span></p>
+<p>Treatments can be compared using a difference in RMST in the population where everyone receives treatment and that same population where everyone receives the control/comparator intervention. This contrast assesses the area between the survival curves under each treatment scenario.</p>
+<p><span class="math display">\[\theta_{RMST} = E[min\{ Y, \tau \} \vert A = 1] - E[min\{ Y, \tau \} \vert A = 0]\]</span></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="using_r.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/covariateadjustment/covariateadjustment.github.io/edit/main/02-Estimands.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
