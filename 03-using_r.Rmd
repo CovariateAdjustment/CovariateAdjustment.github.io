@@ -30,15 +30,16 @@ Once we have Rtools installed, we are ready to install the required packages fro
 
 Below are some of the packages that we will use from CRAN, along with a brief description of their purposes:
 
-  - [knitr](https://cran.r-project.org/web/packages/knitr/index.html) - Tools for literate programming: including code in reproducible reports
   - [devtools](https://cloud.r-project.org/web/packages/devtools/index.html) - A suite of tools for R package development
-  - [tidyverse](https://www.tidyverse.org/packages/) - An ecosystem of packages for working with data
-  - [table1](https://cran.r-project.org/web/packages/table1/index.html) - Creating simple tabulations in aggregate and by treatment arm
   - [cobalt](https://cran.r-project.org/web/packages/cobalt/index.html) - Creating tables and plots for assessing covariate balance
+  - [knitr](https://cran.r-project.org/web/packages/knitr/index.html) - Tools for literate programming: including code in reproducible reports
+  - [margins](https://cran.r-project.org/web/packages/margins/index.html) - Calculating marginal or partial effects from regression models
+  - [mgcv](https://cran.r-project.org/web/packages/mgcv/index.html) - Fitting generalized additive models
   - [sandwich](https://cran.r-project.org/web/packages/sandwich/index.html) Robust covariance matrix estimation
-  - [margins](https://cran.r-project.org/web/packages/margins/index.html) Calculating marginal or partial effects from regression models
   - [survminer](https://cran.r-project.org/web/packages/survminer/index.html) - Creating plots of time-to-event data
   - [survRM2](https://cran.r-project.org/web/packages/survRM2/index.html) - Calculating the restricted mean survival time (RMST) with and without covariate adjustment.
+  - [table1](https://cran.r-project.org/web/packages/table1/index.html) - Creating simple tabulations in aggregate and by treatment arm
+  - [tidyverse](https://www.tidyverse.org/packages/) - An ecosystem of packages for working with data
 
 ```{r install-packages, eval = FALSE}
 required_packages <-
@@ -46,6 +47,7 @@ required_packages <-
     "cobalt",
     "knitr",
     "margins",
+    "mgcv",
     "sandwich",
     "survminer",
     "survRM2"

@@ -1,4 +1,4 @@
-# Introduction {#intro}
+# Introduction {#introduction}
 
 In this section, we will lay out the notation for the following chapters, discuss what assumptions are required for these methods to be applied, and survey the literature on covariate adjustment.
 
@@ -10,9 +10,9 @@ In this section, we will lay out the notation for the following chapters, discus
 
 
 
-## Notation and Assumptions
+## Notation and Assumptions {#notation}
 
-Let $A$ denote a binary treatment assignment: $A = 1$ indicates assignment to receive the treatment of interest, and $A = 0$ indicates assignment to the control or comparator group. Let $Y$ denote the outcome of interest, and $X$ denote a vector of baseline covariates. If stratified randomization is used, let $X_{S}$ denote the stratification variables, and $X_{\bar{S}}$ denote the other baseline covariates, and $X = (X_{S}, X_{\bar{S}})$.We assume that treatment assignment is independent of the baseline covariates, i.e. $A \perp X$, or if stratified randomization is used, that the treatment assignment is conditionally independent of the other covariates, i.e. $A \perp\!\!\!\perp X_{\bar{S}} \vert X_{S}$. Each participant's data is assumed to be independent, identically distributed (IID) draws from an unknown distribution $P(X, A, Y)$.
+Let $A$ denote a binary treatment assignment: $A = 1$ indicates assignment to receive the treatment of interest, and $A = 0$ indicates assignment to the control or comparator group. Let $Y$ denote the outcome of interest, and $X$ denote a vector of baseline covariates. If stratified randomization is used, let $X_{S}$ denote the stratification variables, and $X_{\bar{S}}$ denote the other baseline covariates, and $X = (X_{S}, X_{\bar{S}})$. We assume that treatment assignment is independent of the baseline covariates, i.e. $A \perp X$, or if stratified randomization is used, that the treatment assignment is conditionally independent of the other covariates given the stratification variables, i.e. $A \perp\!\!\!\perp X_{\bar{S}} \vert X_{S}$. Each participant's data is assumed to be independent, identically distributed (IID) draws from an unknown distribution $P(X, A, Y)$.
 
 In order to include covariate information in an analysis, we have to specify how these covariates relate to the outcome in a regression model, which models a conditional distribution of the outcome as as a function of the covariates. In most circumstances, the validity of our inference from regression models depends on how close the regression model's specification reflects the true data generation mechanism, which is almost always unknown. This may make investigators understandably reluctant to use covariate adjusted methods, as they do not want the validity of the analysis to depend on assumptions of a correctly specified model.
 
@@ -27,7 +27,7 @@ What may be surprising is that there are covariate adjustment methods that provi
 
 
 
-## The Analysis of Covariance (ANCOVA)
+## The Analysis of Covariance (ANCOVA) {#ancova}
 
 
 The ANCOVA is perhaps the best known method for covariate adjustment with a continuous outcome. The simplest version of an ANCOVA is a linear regression of the final outcome $Y$ on the baseline covariate $X$, usually the outcome measured at baseline, and treatment assignment $A$:
@@ -65,7 +65,7 @@ The procedure for gives us the same result as we would have otherwise used to es
 In general, if we have a regression model $\hat{f}(X, A) = \hat{E}[Y \vert A, X]$, we can obtain the average treatment effect by respectively computing the marginal mean under treatment and control, and taking a contrast between these quantities:
 
 $$\hat{\theta}_{ATE} = \hat{\mu_{1}} - \hat{\mu_{0}} = \left(\frac{1}{n} \sum_{i=1}^{n} \hat{f}(X, A = 1) \right) - \left(\frac{1}{n} \sum_{i=1}^{n} \hat{f}(X, A = 0) \right)$$
-This approach is known as G-computation or the standardization estimator.
+This approach is known as G-computation or the standardization estimator. This allows us to obtain the average treatment effect for regression models which may include interactions or use a nonlinear link function, such as logistic regression.
 
 
 

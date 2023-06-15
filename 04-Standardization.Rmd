@@ -1,83 +1,103 @@
-# Analysis of Covariance and its Generalization {#ancova}
+# Applying Covariate Adjustment: ANCOVA, G-Computation, DR-WLS
 
+In this next section, we will use R to produce the ANCOVA estimator, get an estimate of its standard error, and compare its precision to an unadjusted analysis using R. For this example we will use the Buprenorphine tapering trial data (CTN-03).
 
+```{r Load-CTN-03-Data}
+data_url <-
+  "https://github.com/jbetz-jhu/CovariateAdjustmentTutorial/raw/main/SIMULATED_CTN03_220506.Rdata"
 
-
-
---------------------------------------------------------------------------------
-
-
-
-
-## Generalizing the ANCOVA Estimator: G-Computation
-
-
-```{r}
-pr_mrs_0_3_glm <-
-  glm(
-    formula =
-      mrs_365d %in% c("0-1", "2", "3") ~ arm +
-       age + male + hx_cvd + hx_hyperlipidemia +
-      on_anticoagulants + on_antiplatelets +
-      ich_location + ich_s_volume + ivh_s_volume,
-    data = sim_miii,
-    family = binomial(link = "logit")
-  )
-
-pr_mrs_0_3_tx <-
-  predict(
-    object = pr_mrs_0_3_glm,
-    newdata =
-      within(
-        data = sim_miii,
-        expr = {arm = "surgical"}
-      ),
-    type = "response"
-  )
-
-pr_mrs_0_3_control <-
-  predict(
-    object = pr_mrs_0_3_glm,
-    newdata =
-      within(
-        data = sim_miii,
-        expr = {arm = "medical"}
-      ),
-    type = "response"
-  )
-
-# Risk Difference
-mean(pr_mrs_0_3_tx) - mean(pr_mrs_0_3_control)
-
-# Risk Ratio
-mean(pr_mrs_0_3_tx)/mean(pr_mrs_0_3_control)
+load(file = url(data_url))
 ```
 
-```{r G-Computation-Margins-Robust-SE}
-library(margins)
+This .Rdata file contains two datasets: `ctn03_sim`, which has no missing data, and `ctn03_sim_mar`, where a simulated missing data mechanism has been applied.
 
-pr_mrs_0_3_margins <-
+
+```{r ANCOVA-CTN03-Step-1-Fit-Model}
+# 1. Regress final outcome (VAS at end of taper) on treatment assignment and
+# outcome assessed at baseline (VAS at baseline)
+vas_ancova_1 <-
+  lm(
+    formula = vas_crave_opiates_eot ~ arm + vas_crave_opiates_bl,
+    data = ctn03_sim_mar
+  )
+
+summary(vas_ancova_1)
+```
+
+
+Note that the standard error reported by `lm()` is the model-based standard error, not a robust standard error or bootstrap standard error.
+
+
+```{r ANCOVA-CTN03-Step-2-Predict-Outcomes}
+# 2. Generate predictions based on fitted model:
+# Their predicted outcome if they were assigned to treatment (7-day taper)
+# Their predicted outcome if they were assigned to control (28-day taper)
+expected_vas_7_day <-
+  predict(
+    object = vas_ancova_1,
+    newdata =
+      within(
+        data = ctn03_sim_mar,
+        expr = {arm = "7-day"}
+      ),
+    type = "response"
+  )
+
+expected_vas_28_day <-
+  predict(
+    object = vas_ancova_1,
+    newdata =
+      within(
+        data = ctn03_sim_mar,
+        expr = {arm = "28-day"}
+      ),
+    type = "response"
+  )
+
+
+data.frame(
+  expected_vas_7_day,
+  expected_vas_28_day,
+  ctn03_sim_mar[, c("arm", "vas_crave_opiates_eot", "vas_crave_opiates_bl")]
+) %>% 
+  head()
+```
+
+
+Once we've generated these predictions, we can compute the ANCOVA estimate of the average treatment effect:
+
+
+```{r ANCOVA-CTN03-Step-3-Compute-Estimand}
+mean(expected_vas_7_day)
+mean(expected_vas_28_day)
+vas_ancova_estimate <- mean(expected_vas_7_day) - mean(expected_vas_28_day)
+vas_ancova_estimate
+```
+
+
+Notice this is the exact same as the regression coefficient for `arm` in the regression model, since there's no treatment-covariate interactions and an identity link function. We can obtain the standard error of the estimate two ways. The first way is using the `margins::margins()` command, using the robust standard errors from `sandwich::vcovHC`:
+
+```{r ANCOVA-CTN03-Compute-SE-Margins}
+vas_ancova_margins <-
   margins::margins(
-    model = pr_mrs_0_3_glm,
+    model = vas_ancova_1,
     # Specify treatment variable
     variables = "arm",
     # Convert to outcome scale, not link scale
     type = "response",
     # Obtain robust standard errors
-    vcov = sandwich::vcovHC(pr_mrs_0_3_glm)
+    vcov = sandwich::vcovHC(x = vas_ancova_1, type = "HC3")
   )
 
-# Standard Error:
-sqrt(vcov(pr_mrs_0_3_margins))
-
-# Variance:
-vcov(pr_mrs_0_3_margins)
-
-# 95% Confidence Interval
-confint(object = pr_mrs_0_3_margins, level = 0.95)
+summary(object = vas_ancova_margins, level = 0.95)
 ```
 
-```{r G-Computation-Boot-SE}
+
+You'll see that we now have a standard error, p-value under the hypothesis that the marginal effect is 0, and a 95% Confidence Interval for the estimate. Another way to obtain these is the bias corrected and accelerated (BCa) non-parametric bootstrap:
+
+
+```{r ANCOVA-CTN03-Compute-SE-Boot}
+# Write a function to produce the ANCOVA estimate
 margins_fun <-
   function(data, indices = NULL, formula, family, term){
     # Input data must be a data.frame
@@ -126,34 +146,58 @@ margins_fun <-
     return(mean(e_y_1) - mean(e_y_0))
   }
 
-
-pr_mrs_0_3_glm_boot <-
+vas_ancova_boot <-
   boot::boot(
-    data = as.data.frame(sim_miii),
+    data = ctn03_sim_mar,
     statistic = margins_fun,
     R = 10000,
-    formula =
-      mrs_365d %in% c("0-1", "2", "3") ~ arm,
-    family = binomial(link = "logit"),
+      formula = vas_crave_opiates_eot ~ arm + vas_crave_opiates_bl,
+    family = gaussian(link = "identity"),
     term = "arm"
   )
+
+vas_ancova_boot
 ```
 
 
-We can compare the results between `margins::margins` and using `boot` to produce the predictions:
+We can extract the standard error and produce a 95% confidence interval:
 
-```{r Compare-SE-Margins-vs-Boot}
-# HC3 Robust Standard Error: Margins
-sqrt(vcov(pr_mrs_0_3_margins))
 
+```{r ANCOVA-CTN03-Compute-CI-Boot}
 # Bootstrap Standard Error
-sd(pr_mrs_0_3_glm_boot$t[,1])
+sd(vas_ancova_boot$t[,1])
 
-# Compare their relative magnitudes
-sqrt(vcov(pr_mrs_0_3_margins))/sd(pr_mrs_0_3_glm_boot$t[,1])
+vas_ancova_boot_ci <-
+  boot::boot.ci(
+    boot.out = vas_ancova_boot,
+    conf = 0.95,
+    type = "bca"
+  )
+
+vas_ancova_boot_ci
 ```
 
-The estimated standard errors from nonparametric bootstrap and the robust standard errors are extremely similar to one another.
+
+We can compare these to the results from `margins::margins()`:
+
+
+
+```{r Compare-Margins-Boot}
+# Margins SE
+ancova_margins_se <- summary(object = vas_ancova_margins, level = 0.95)$SE
+ancova_margins_se
+
+# Bootstrap SE
+ancova_boot_se <- sd(vas_ancova_boot$t[,1])
+ancova_boot_se
+
+# Compare as ratio
+ancova_margins_se/ancova_boot_se
+```
+
+
+The standard errors are nearly identical using the estimated marginal effect with robust standard errors or the bootstrap.
+
 
 
 
@@ -162,8 +206,96 @@ The estimated standard errors from nonparametric bootstrap and the robust standa
 
 
 
-## Inverse Weighting: Doubly Robust Weighted Least Squares
+## Calculating Precision Gain
+
+Asymptotically, the ANCOVA estimate should have precision that is equal or better than an unadjusted analysis. We can calculate the precision gain by taking the ratio of the variances, i.e. the squared standard errors, of the adjusted estimator to the unadjusted estimator.
+
+```{r Compute-Unadjusted-Estimator}
+vas_t_test <-
+  t.test(
+    formula = vas_crave_opiates_eot ~ arm,
+    data = ctn03_sim_mar,
+    var.equal = FALSE
+  )
+
+vas_t_test
+
+# Get unadjusted standard error
+t_test_se <- vas_t_test$stderr
+t_test_se
+```
+
+
+The precision gain is equal to the ratio of the variance, which is the square of the standard error:
+
+
+```{r Compute-Ratio-Variances}
+# Percentage reduction in variance adjusting for baseline outcome
+100*(1 - (ancova_margins_se/t_test_se)^2)
+```
+
+
+The precision gain in this particular example is rather small, but we have only adjusted for one potential covariate. However, there are several other baseline variables we did not include in the model. We can see if the gain in precision is larger when these other variables are included. We should also include the stability dose in the outcome, since randomization was stratified by this variable:
+
+
+```{r ANCOVA-CTN03-Larger-Model}
+vas_ancova_2 <-
+  glm(
+    formula = vas_crave_opiates_eot ~ 
+      arm + vas_crave_opiates_bl + stability_dose +
+      arsw_score_bl + cows_total_score_bl +
+      vas_current_withdrawal_bl + vas_study_tx_help_bl + uds_any_positive_bl,
+    data = ctn03_sim_mar
+  )
+
+vas_ancova_margins_2 <-
+  margins::margins(
+    model = vas_ancova_2,
+    # Specify treatment variable
+    variables = "arm",
+    # Convert to outcome scale, not link scale
+    type = "response",
+    # Obtain robust standard errors
+    vcov = sandwich::vcovHC(x = vas_ancova_2, type = "HC3")
+  )
+
+ancova_margins_2_se <- summary(object = vas_ancova_margins_2, level = 0.95)$SE
+
+# Percentage reduction in variance adjusting for baseline outcome
+100*(1 - (ancova_margins_2_se/t_test_se)^2)
+```
+
+
+Including these other covariates leads to a larger gain in precision.
 
 
 
 
+--------------------------------------------------------------------------------
+
+
+
+
+## Missing Outcome Data: Inverse Weighting
+
+So far, we have not discussed the issue of missing outcome data. While the G-computation estimator is robust to arbitrary model misspecification, it is only valid if data are missing completely at random (MCAR): missingness is unrelated to either the observed or unobserved data. If this were the case, we should not see any association between the baseline covariates and missingness in the VAS opiate craving scores at the end-of-taper visit. We can assess this using a generalized additive model (GAM):
+
+```{r Fit-GAM-Missingness-VAS-Opiate-Cravings}
+vas_mar_glm <-
+  mgcv::gam(
+    formula = 
+      is.na(vas_crave_opiates_eot) ~
+      arm + stability_dose +
+      s(age) + sex +
+      s(vas_crave_opiates_bl) + s(arsw_score_bl) + s(cows_total_score_bl) +
+      s(vas_current_withdrawal_bl) + s(vas_study_tx_help_bl) +
+      uds_any_positive_bl,
+    family = binomial(link = "logit"),
+    data = ctn03_sim_mar
+  )
+
+summary(vas_mar_glm)
+```
+
+
+The GAM model shows that, all other things being equal, missingness was lower in the 7-day arm, higher in individuals on 16 or 24 mg stability doses, and was associated with some of the baseline outcome measures. In the next section, we will discuss methods that can be robust to model misspecification and do not require the MCAR assumption.

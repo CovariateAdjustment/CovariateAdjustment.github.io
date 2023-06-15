@@ -3,9 +3,9 @@ using-this-book
 case-studies
 ctn_03
 mistie_iii
-intro
-notation-and-assumptions
-the-analysis-of-covariance-ancova
+introduction
+notation
+ancova
 generalizing-the-ancova-g-computation
 estimands
 estimands-for-continuous-and-binary-outcomes
@@ -33,9 +33,9 @@ variance-estimation
 robust-standard-errors
 bootstrap-estimator
 addressing-multiplicity
-ancova
-generalizing-the-ancova-estimator-g-computation
-inverse-weighting-doubly-robust-weighted-least-squares
+applying-covariate-adjustment-ancova-g-computation-dr-wls
+calculating-precision-gain
+missing-outcome-data-inverse-weighting
 doublyrobust
 augmented-inverse-probability-weighted-estimation
 targeted-maximum-likelihood-estimation
