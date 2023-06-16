@@ -2,6 +2,7 @@
 
 
 
+
 ## Estimands for Continuous and Binary Outcomes
 
 ### Difference in Means
@@ -11,6 +12,13 @@ When an outcome is continuous or binary, one meaningful summary may be the mean 
 $$\theta_{DIM} = E[Y \vert A = 1] - E[Y \vert A = 0]$$
 
 This estimand compares the mean outcome in the population of interest if all individuals received the treatment of interest to the the mean outcome in the population of interest if all individuals received the control or comparator intervention. Note that in binary outcomes, this is a difference in proportions (or risk difference) between the population where all individuals received the treatment of interest compared to receiving the control or comparator intervention.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
 
 
 ### Ratio of Means
@@ -51,7 +59,22 @@ Although this notation involves numeric labels for levels, this is merely to sim
 
 If the levels of $Y$ have numeric labels, and the mean value of this ordinal variable is meaningful, the difference in means estimand may still be meaningful and useful. Alternatively, if either the labels do not have a numeric interpretation, or the mean of these values is not particularly meaningful, it may be possible to create a meaningful numeric value by assigning 'utilities' or 'weights' to each level of the outcome. The quantitative and clinical meanings of the difference in means estimator will depend on the utilities assigned to the outcome scale. This allows the difference in means to be used, even if the levels of the outcome are not numeric (e.g. the Glasgow Outcome Scale, ranging from 'Dead', 'Vegetative state', 'Severely disabled', 'Moderately disabled', and 'Good recovery').
 
-Let $u(\cdot)$ denote a pre-specified mapping from the outcome labels to utility values. The estimand is defined as:
+Let $u(\cdot)$ denote a pre-specified mapping from the outcome labels to utility values:
+
+$$
+    u(Y)= 
+\begin{cases}
+    u_{1} := \text{utility of } Y = 1\\
+    u_{2} := \text{utility of } Y = 2\\
+    \vdots \\
+    u_{k} := \text{utility of } Y = k
+\end{cases}
+$$
+
+The utilities will usually be monotone increasing, such that each succesive level of the outcome is associated with equal or better utility. Alternatively, if lower values of the outcome are preferable, utilities will usually be monotone decreasing. 
+
+
+Once the utilities have been defined, the estimand is defined as:
 
 $$\theta_{DIM} = E[u(Y) \vert A=1] - E[u(Y) \vert A=0] = \sum_{i=1}^{k}u(j)\left(f( j \vert 1) - f(j \vert 0)\right)$$
 
@@ -66,21 +89,6 @@ $$
 $$
 
 While a risk difference may be more familiar to implement and conceptually easier to interpret, it treats all outcome states either below or above the threshold identically, ignoring potential information in such outcome states.
-
-When utilities can be assigned according to patient preferences or other considerations, the estimand is the difference in mean utility between treatment arms.
-
-$$
-    u(Y)= 
-\begin{cases}
-    u_{1} := \text{utility of } Y = 1\\
-    u_{2} := \text{utility of } Y = 2\\
-    \vdots \\
-    u_{k} := \text{utility of } Y = k
-\end{cases}
-$$
-
-The utilities will usually be monotone increasing, such that each succesive level of the outcome is associated with equal or better utility. Alternatively, if lower values of the outcome are preferable (such as the NYHA class), utilities will usually be monotone decreasing.
-
 
 
 
@@ -142,7 +150,7 @@ $$-\theta_{LOR} = \frac{1}{K-1} \sum_{j=1}^{K-1} log \left( \frac{odds(Y > j \ve
 
 ## Survival/Time-To-Event Outcomes {#survival_estimands}
 
-When the outcome is the time from randomization until an event of interest occurs, let $U$ denote the time at which the event occurs, and $M$ denote the time at which an individual's outcome is censored.
+When the outcome is the time from randomization until an event of interest occurs, let $Y$ denote the time at which the event occurs, and $C$ denote the time at which individuals would be censored. For each individual, we observe $\delta_{i} = I_{\{Y_{i} \le C_{i}\}}$, whether an individual is censored or the event is observed, and $T_{i} = min\{Y_{i}, C_{i}\}$, the time at which the event or censoring occurs. Often we are interested in a particular time window after randomization, known as the time horizon. Let $\tau$ denote the time horizon of interest for inference.
 
 
 
@@ -152,15 +160,42 @@ When the outcome is the time from randomization until an event of interest occur
 
 
 
-### Kaplan Meier Survival Function
+### Survival Function
 
 When the outcome is a time-to-event, the usual target of inference is the survival function, which is the marginal probability of being event-free through time $t$ if the entire population were assigned to study arm $A = a$:
 
 $$S_{0}^{(a)}(t) = Pr\{Y > t \vert A = a\}$$
 
-This is typically estimated using the Kaplan-Meier (K-M) estimator, defined as:
+Estimands of interest may include the difference in survival probability at time $\tau$:
 
-$$\hat{S}_{n}^{(a)}(t) = \prod_{j: \, T_{j} \le t} \left( 1 - \frac{\sum_{i = 1}^{n} \delta_{i} I_{\{A_{i} = a\}} I_{\{U_{i} = T_{j}\}}} {\sum_{i = 1}^{n} I_{\{A_{i} = a\}} I_{\{U_{i} \ge T_{j}\}}} \right)$$
+$$\theta_{DSP} = Pr(Y \ge \tau \vert A = 1) - Pr(Y \ge \tau \vert A = 0)$$
+Instead of an additive estimand, a relative estimand can be obtained by taking the ratio of survival probabilities at time $\tau$:
+
+
+$$\theta_{RSP} = \frac{Pr(Y \ge \tau \vert A = 1)}{Pr(Y \ge \tau \vert A = 0)}$$
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Hazard Ratio
+
+The hazard rate for individuals receiving treatment $A = a$, denoted $h^{(a)}(t)$, is the instantaneous rate of the event of interest at time $t$ among individuals who have not yet experienced the event:
+
+
+$$ h^{(a)}(t) = \lim_{ \Delta t \to 0} \frac{ P(t \le Y < t + \Delta t \; \vert \; Y \ge t, A = a) }{\Delta t} = \frac{d}{dt}ln\left(S_{0}^{(a)}(t)\right)$$
+
+The hazard ratio compares the ratio of two hazard functions: 
+
+$$\theta_{HR}(t) = \frac{h^{(1)}(t)}{h^{(0)}(t)}$$
+
+Since both hazard function can vary over time, the true hazard ratio can vary over time. Commonly used approaches in time-to-event analysis often require the hazard rate being approximately constant over the time interval of interest, either unconditionally or conditional on covariates. It may not be known in practice whether such an assumption is reasonable, but this assumption can be empirically assessed.
+
+When the hazard ratio varies appreciably in time, methods that make a conditional or unconditional assumption of proportional hazards are less efficient and give effect estimates whose interpretation is unclear. Even when the assumption of proportional hazards is approximately true, the hazard ratio cannot easily be translated into easily communicated, meaningful effects, such as the number of years an individual can expect to be free of the event if they were assigned to one treatment or another.
 
 
 

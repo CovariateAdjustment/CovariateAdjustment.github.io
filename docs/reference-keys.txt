@@ -16,7 +16,8 @@ difference-in-mean-utility
 mann-whitney-m-w-estimand
 log-odds-ratio-lor
 survival_estimands
-kaplan-meier-survival-function
+survival-function
+hazard-ratio
 restricted-mean-survival-time
 using_r
 installing-packages
