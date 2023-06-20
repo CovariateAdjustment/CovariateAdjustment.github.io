@@ -211,6 +211,9 @@ Another estimand that may be of interest is the restricted mean survival time (R
 
 $$RMST = E[min\{ Y, \tau \} \vert a] = \int_{0}^{\tau} S_{0}^{(a)}(t) dt$$
 
-Treatments can be compared using a difference in RMST in the population where everyone receives treatment and that same population where everyone receives the control/comparator intervention. This contrast assesses the area between the survival curves under each treatment scenario.
+Treatments can be compared using a contrast of the RMST in the population where everyone receives treatment and that same population where everyone receives the control/comparator intervention. The difference in RMST contrast assesses the area between the survival curves under each treatment scenario.
 
-$$\theta_{RMST} = E[min\{ Y, \tau \} \vert A = 1] - E[min\{ Y, \tau \} \vert A = 0]$$
+$$\theta_{DRMST} = E[min\{ Y, \tau \} \vert A = 1] - E[min\{ Y, \tau \} \vert A = 0]$$
+A relative estimand is given by the ratio of RMST:
+
+$$\theta_{RRMST} = \frac{E[min\{ Y, \tau \} \vert A = 1]}{E[min\{ Y, \tau \} \vert A = 0]}$$

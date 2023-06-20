@@ -40,6 +40,17 @@ missing-outcome-data-inverse-weighting
 doublyrobust
 augmented-inverse-probability-weighted-estimation
 targeted-maximum-likelihood-estimation
+timetoevent
+unadjusted-estimators
+kaplan-meier-estimator
+logrank-test
+survival-probability
+restricted-mean-survival-time-rmst
+event-driven-trials
+covariate-adjusted-estimators
+kaplan-meier-estimator-1
+survival-probability-1
+restricted-mean-survival-time-rmst-1
 groupsequential
 group-sequential-designs
 power-sample-size-calculations
@@ -55,3 +66,4 @@ number-of-parameters-vs.-sample-size
 appendices
 appendix_a_glossary
 appendix_b_using_r
+references

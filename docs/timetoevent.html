@@ -4,12 +4,12 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 6 Doubly Robust Estimators | Covariate Adjustment in Randomized Trials</title>
+  <title>Chapter 7 Time-To-Event Outcomes | Covariate Adjustment in Randomized Trials</title>
   <meta name="description" content="<p>This a series of tutorials meant to help investigators apply covariate
 adjusted analyses in randomized trials.</p>" />
   <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 6 Doubly Robust Estimators | Covariate Adjustment in Randomized Trials" />
+  <meta property="og:title" content="Chapter 7 Time-To-Event Outcomes | Covariate Adjustment in Randomized Trials" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="<p>This a series of tutorials meant to help investigators apply covariate
@@ -17,7 +17,7 @@ adjusted analyses in randomized trials.</p>" />
   <meta name="github-repo" content="covariateadjustment/covariateadjustment.github.io" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 Doubly Robust Estimators | Covariate Adjustment in Randomized Trials" />
+  <meta name="twitter:title" content="Chapter 7 Time-To-Event Outcomes | Covariate Adjustment in Randomized Trials" />
   
   <meta name="twitter:description" content="<p>This a series of tutorials meant to help investigators apply covariate
 adjusted analyses in randomized trials.</p>" />
@@ -32,8 +32,8 @@ adjusted analyses in randomized trials.</p>" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"/>
-<link rel="next" href="timetoevent.html"/>
+<link rel="prev" href="doublyrobust.html"/>
+<link rel="next" href="groupsequential.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -294,15 +294,48 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="doublyrobust" class="section level1 hasAnchor" number="6">
-<h1><span class="header-section-number">Chapter 6</span> Doubly Robust Estimators<a href="doublyrobust.html#doublyrobust" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="augmented-inverse-probability-weighted-estimation" class="section level2 hasAnchor" number="6.1">
-<h2><span class="header-section-number">6.1</span> Augmented Inverse Probability Weighted Estimation<a href="doublyrobust.html#augmented-inverse-probability-weighted-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="timetoevent" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Chapter 7</span> Time-To-Event Outcomes<a href="timetoevent.html#timetoevent" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<hr />
+<div id="unadjusted-estimators" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Unadjusted Estimators<a href="timetoevent.html#unadjusted-estimators" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<hr />
+<div id="kaplan-meier-estimator" class="section level3 hasAnchor" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> Kaplan-Meier Estimator<a href="timetoevent.html#kaplan-meier-estimator" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <hr />
 </div>
-<div id="targeted-maximum-likelihood-estimation" class="section level2 hasAnchor" number="6.2">
-<h2><span class="header-section-number">6.2</span> Targeted Maximum Likelihood Estimation<a href="doublyrobust.html#targeted-maximum-likelihood-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="logrank-test" class="section level3 hasAnchor" number="7.1.2">
+<h3><span class="header-section-number">7.1.2</span> Logrank Test<a href="timetoevent.html#logrank-test" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<hr />
+</div>
+<div id="survival-probability" class="section level3 hasAnchor" number="7.1.3">
+<h3><span class="header-section-number">7.1.3</span> Survival Probability<a href="timetoevent.html#survival-probability" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<hr />
+</div>
+<div id="restricted-mean-survival-time-rmst" class="section level3 hasAnchor" number="7.1.4">
+<h3><span class="header-section-number">7.1.4</span> Restricted Mean Survival Time (RMST)<a href="timetoevent.html#restricted-mean-survival-time-rmst" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<hr />
+</div>
+</div>
+<div id="event-driven-trials" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Event-Driven Trials<a href="timetoevent.html#event-driven-trials" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<hr />
+</div>
+<div id="covariate-adjusted-estimators" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> Covariate-Adjusted Estimators<a href="timetoevent.html#covariate-adjusted-estimators" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<hr />
+<div id="kaplan-meier-estimator-1" class="section level3 hasAnchor" number="7.3.1">
+<h3><span class="header-section-number">7.3.1</span> Kaplan-Meier Estimator<a href="timetoevent.html#kaplan-meier-estimator-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<hr />
+</div>
+<div id="survival-probability-1" class="section level3 hasAnchor" number="7.3.2">
+<h3><span class="header-section-number">7.3.2</span> Survival Probability<a href="timetoevent.html#survival-probability-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<hr />
+</div>
+<div id="restricted-mean-survival-time-rmst-1" class="section level3 hasAnchor" number="7.3.3">
+<h3><span class="header-section-number">7.3.3</span> Restricted Mean Survival Time (RMST)<a href="timetoevent.html#restricted-mean-survival-time-rmst-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 
+</div>
 </div>
 </div>
             </section>
@@ -310,8 +343,8 @@ div.csl-indent {
           </div>
         </div>
       </div>
-<a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="timetoevent.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="doublyrobust.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="groupsequential.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -342,7 +375,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/covariateadjustment/covariateadjustment.github.io/edit/main/05-Doubly_Robust_Estimators.Rmd",
+"link": "https://github.com/covariateadjustment/covariateadjustment.github.io/edit/main/06-Time-To-Event-Outcomes.Rmd",
 "text": "Edit"
 },
 "history": {
