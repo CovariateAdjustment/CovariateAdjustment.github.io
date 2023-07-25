@@ -69,3 +69,18 @@ This approach is known as G-computation or the standardization estimator. This a
 
 
 
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Combining Covariate Adjustment and Stratified Randomization
+
+Stratified randomization is a way of addressing the potential for baseline imbalance in covariates at the design phase by having a separate randomization sequence for each stratum of baseline variables. Each randomization sequence is constructed by randomly choosing a block size (e.g. 1, 2, or 4 participants per treatment arm), and then permuting the order of the treatment labels in each block. For example, below is a sequence of four blocks, the first with size 3, the second with size 2, and the rest of size 1.
+
+`[ABBABA][BABA][BA][AB]`
+
+Randomly choosing block sizes makes it difficult to anticipate when blocks begin and end and which treatment the next participant will receive. Balance between treatment arms within a stratum is achieved whenever a block is completed. Stratifying randomization on too many variables can lead to many incomplete blocks, and thus poor within-stratum balance in treatment allocation. Stratified randomization generally provides the greatest benefit in efficiency when there is high variability between strata and lower variability within strata.
+
+When stratified randomization is utilized, it is generally recommended to adjust for the stratification variables in the analysis. Unfortunately, this may not be done in practice. Additional improvements in efficiency can be realized using a variance estimator specifically designed for stratified randomization designs.

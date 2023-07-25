@@ -7,6 +7,7 @@ introduction
 notation
 ancova
 generalizing-the-ancova-g-computation
+combining-covariate-adjustment-and-stratified-randomization
 estimands
 estimands-for-continuous-and-binary-outcomes
 difference-in-means
@@ -36,6 +37,7 @@ bootstrap-estimator
 addressing-multiplicity
 applying-covariate-adjustment-ancova-g-computation-dr-wls
 calculating-precision-gain
+stratified-randomization-covariate-adjustment
 missing-outcome-data-inverse-weighting
 doublyrobust
 augmented-inverse-probability-weighted-estimation
@@ -69,3 +71,4 @@ appendices
 appendix_a_glossary
 appendix_b_using_r
 references
+cover-image-path-to-the-social-sharing-image-like-imagescover.jpg

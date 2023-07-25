@@ -5,7 +5,6 @@ site: bookdown::bookdown_site
 documentclass: book
 bibliography: covariate_adjustment.bib
 url: https://covariateadjustment.github.io
-# cover-image: path to the social sharing image like images/cover.jpg
 description: |
   This a series of tutorials meant to help investigators apply covariate
   adjusted analyses in randomized trials.
@@ -40,7 +39,7 @@ if(!file.exists(file.path(getwd(), "docs", ".nojekyll"))){
 } 
 ```
 
-## Covariate Adjustment: Opportunities and Challenges
+# Covariate Adjustment: Opportunities and Challenges
 
 Randomized trials are an important tool for generating evidence to inform practice in medicine, public health, science, and industry. Planning ethical, informative, and cost-effective studies requires many careful considerations when deciding on the study design and analysis plan. One of these considerations should be how to utilize the information about study participants which is known before randomization takes place. Variables observed prior to randomization, known as baseline covariates, can provide information about the outcomes that are observed during the study. Leveraging the information in baseline covariates could improve our inference about the potential benefits or harms of an intervention. Utilizing this information effectively in the study design and analysis plan has the potential to reduce the number of participants required or the duration of the study without sacrificing the precision of our inference. Such methods can make evaluating interventions more ethical and cost effective, and is generally supported by regulatory agencies.
 
@@ -54,7 +53,7 @@ Statisticians rely on regression models in many contexts to relate covariate inf
 
 Since regression models are used to perform covariate adjustment, it is natural to ask whether using such models also requires assumptions about how closely the specified model is to the true data generating process. What may be surprising to some is that covariate adjusted analyses can be valid under arbitrary model misspecification. Even though covariate adjustment may use regression models to construct an estimator, the validity of the resulting estimator does not require that the model is correctly specified. This is particularly important if we are to have covariate-adjusted methods that do not require stronger assumptions than an unadjusted analysis. Use of regression models allow us to do covariate-adjusted analyses for continuous, binary, ordinal, or time-to-event outcomes, allowing them to be applied to many research areas and questions.  
 
-While covariate adjustment has the potential to improve precision and make research more ethical and cost effective, there are still challenges to be addressed in practice. Firstly, the amount of precision gained by using covariate adjustment is not known a priori. We need study designs and analysis plans that guarantee the desired level of statistical power and control of error rates irrespective of the amount of precision gained by using covariate adjustment. Secondly, we need a theoretical framework which includes a broad class of estimators in a single framework. The methods employed must address missing data due to dropout, and incomplete data from participants whose outcomes have yet to be collected. Investigators need the information to effectively advocate for the use of these methods with stakeholders, regulators, and reviewers. Practitioners need validated, freely available software to make applying these methods straightforward. Finally, general guidance and best practices need to be established so as to make covariate adjusted analyses as well understood and trusted as their unadjusted counterparts. 
+While covariate adjustment has the potential to improve precision and make research more ethical and cost effective, there are still challenges to be addressed in practice. Firstly, the amount of precision gained by using covariate adjustment is not known a priori. We need study designs and analysis plans that guarantee the desired level of statistical power and control of error rates irrespective of the amount of precision gained by using covariate adjustment. Secondly, we need a theoretical framework which includes a broad class of estimators in a single framework. The methods employed must address missing data due to dropout, and incomplete data from participants whose outcomes have yet to be collected. Investigators need the information to effectively advocate for the use of these methods with stakeholders, regulators, and reviewers. Practitioners need validated, freely available software to make applying these methods straightforward. Finally, general guidance and best practices need to be established so as to make covariate adjusted analyses as well understood and trusted as their unadjusted counterparts. We will address each of these challenges in the material ahead.
 
 
 

@@ -274,6 +274,49 @@ Including these other covariates leads to a larger gain in precision.
 --------------------------------------------------------------------------------
 
 
+## Stratified Randomization & Covariate Adjustment
+
+When stratified randomization is employed, additional benefits in precision can be realized by using covariate adjustment and a variance estimator designed for covariate adaptive designs. First, source the ICAD code from Github:
+
+
+```{r Load-ICAD}
+icad_link <-
+  "https://raw.githubusercontent.com/BingkaiWang/covariate-adaptive/master/R/ICAD.R"
+source(url(icad_link))
+```
+
+
+Next, we specify which covariates are included in the model, excluding those in the strata variable, and call ICAD:
+
+
+```{r DR-WLS-CTN03}
+library(tidyverse)
+
+# 1. Create a character vector with the names of the baseline covariates
+baseline_covariates <-
+  c("vas_crave_opiates_bl", "arsw_score_bl",
+    "cows_total_score_bl", "vas_current_withdrawal_bl", "vas_study_tx_help_bl",
+    "uds_any_positive_bl")
+
+arsw_icad <-
+  ICAD(
+    Y = ctn03_sim_mar$vas_crave_opiates_eot, 
+    A = 1*(ctn03_sim_mar$arm == "7-day"), # Treatment indicator - Must be 1/0
+    Strata = ctn03_sim_mar$stability_dose, # Randomization Stratum
+    W = ctn03_sim_mar[, baseline_covariates], # Baseline Covariates
+    pi = 0.5 # 1:1 Randomization
+  )
+
+arsw_icad
+```
+
+We can see that the 'adjusted-for-all' estimator, which uses a specialized variance estimator for covariate adaptive designs, has a lower variance than the covariate adjusted estimator obtained using `margins`, even though we are adjusting for the same covariates. This is the result of the additional precision gains from the covariate-adaptive variance estimator.
+
+
+
+--------------------------------------------------------------------------------
+
+
 
 
 ## Missing Outcome Data: Inverse Weighting

@@ -165,7 +165,7 @@ div.csl-indent {
 <li><a href="./">Covariate Adjustment in Randomized Trials</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> The Book</a>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Covariate Adjustment: Opportunities and Challenges</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-this-book"><i class="fa fa-check"></i><b>1.1</b> Using this Book</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#case-studies"><i class="fa fa-check"></i><b>1.2</b> Case Studies</a>
@@ -179,6 +179,7 @@ div.csl-indent {
 <li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#notation"><i class="fa fa-check"></i><b>2.1</b> Notation and Assumptions</a></li>
 <li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#ancova"><i class="fa fa-check"></i><b>2.2</b> The Analysis of Covariance (ANCOVA)</a></li>
 <li class="chapter" data-level="2.3" data-path="introduction.html"><a href="introduction.html#generalizing-the-ancova-g-computation"><i class="fa fa-check"></i><b>2.3</b> Generalizing the ANCOVA: G-computation</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction.html"><a href="introduction.html#combining-covariate-adjustment-and-stratified-randomization"><i class="fa fa-check"></i><b>2.4</b> Combining Covariate Adjustment and Stratified Randomization</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="estimands.html"><a href="estimands.html"><i class="fa fa-check"></i><b>3</b> Targets of Inference: Estimands</a>
 <ul>
@@ -226,7 +227,8 @@ div.csl-indent {
 <li class="chapter" data-level="5" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><i class="fa fa-check"></i><b>5</b> Applying Covariate Adjustment: ANCOVA, G-Computation, DR-WLS</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#calculating-precision-gain"><i class="fa fa-check"></i><b>5.1</b> Calculating Precision Gain</a></li>
-<li class="chapter" data-level="5.2" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#missing-outcome-data-inverse-weighting"><i class="fa fa-check"></i><b>5.2</b> Missing Outcome Data: Inverse Weighting</a></li>
+<li class="chapter" data-level="5.2" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#stratified-randomization-covariate-adjustment"><i class="fa fa-check"></i><b>5.2</b> Stratified Randomization &amp; Covariate Adjustment</a></li>
+<li class="chapter" data-level="5.3" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#missing-outcome-data-inverse-weighting"><i class="fa fa-check"></i><b>5.3</b> Missing Outcome Data: Inverse Weighting</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="doublyrobust.html"><a href="doublyrobust.html"><i class="fa fa-check"></i><b>6</b> Doubly Robust Estimators</a>
 <ul>
@@ -375,15 +377,15 @@ div.csl-indent {
 </div>
 <div id="survival_estimands" class="section level2 hasAnchor" number="3.3">
 <h2><span class="header-section-number">3.3</span> Survival/Time-To-Event Outcomes<a href="estimands.html#survival_estimands" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>When the outcome is the time from randomization until an event of interest occurs, let <span class="math inline">\(Y\)</span> denote the time at which the event occurs, and <span class="math inline">\(C\)</span> denote the time at which individuals would be censored. For each individual, we observe <span class="math inline">\(\delta_{i} = I_{\{Y_{i} \le C_{i}\}}\)</span>, whether an individual is censored or the event is observed, and <span class="math inline">\(T_{i} = min\{Y_{i}, C_{i}\}\)</span>, the time at which the event or censoring occurs. Often we are interested in a particular time window after randomization, known as the time horizon. Let <span class="math inline">\(\tau\)</span> denote the time horizon of interest for inference.</p>
+<p>When the outcome is the time from randomization until an event of interest occurs, let <span class="math inline">\(Y\)</span> denote the time at which the event occurs, and <span class="math inline">\(C\)</span> denote the time at which individuals would be censored. For each individual, we observe <span class="math inline">\(\delta_{i} = I_{\{Y_{i} \le C_{i}\}}\)</span>, whether an individual is censored or the event is observed, and <span class="math inline">\(T_{i} = min\{Y_{i}, C_{i}\}\)</span>, the time at which the event or censoring occurs. Often we are interested in a pre-specified time window from randomization to a scientifically relevant point in time, known as the time horizon. Let <span class="math inline">\(\tau\)</span> denote the time horizon of interest for inference.</p>
 <hr />
 <div id="survival-function" class="section level3 hasAnchor" number="3.3.1">
 <h3><span class="header-section-number">3.3.1</span> Survival Function<a href="estimands.html#survival-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>When the outcome is a time-to-event, the usual target of inference is the survival function, which is the marginal probability of being event-free through time <span class="math inline">\(t\)</span> if the entire population were assigned to study arm <span class="math inline">\(A = a\)</span>:</p>
 <p><span class="math display">\[S_{0}^{(a)}(t) = Pr\{Y &gt; t \vert A = a\}\]</span></p>
-<p>Estimands of interest may include the difference in survival probability at time <span class="math inline">\(\tau\)</span>:</p>
+<p>Estimands of interest may include the difference in survival probability up to the time horizon <span class="math inline">\(\tau\)</span>:</p>
 <p><span class="math display">\[\theta_{DSP} = Pr(Y \ge \tau \vert A = 1) - Pr(Y \ge \tau \vert A = 0)\]</span>
-Instead of an additive estimand, a relative estimand can be obtained by taking the ratio of survival probabilities at time <span class="math inline">\(\tau\)</span>:</p>
+Instead of an additive estimand, a relative estimand can be obtained by taking the ratio of survival probabilities at the time horizon <span class="math inline">\(\tau\)</span>:</p>
 <p><span class="math display">\[\theta_{RSP} = \frac{Pr(Y \ge \tau \vert A = 1)}{Pr(Y \ge \tau \vert A = 0)}\]</span></p>
 <hr />
 </div>
@@ -393,13 +395,13 @@ Instead of an additive estimand, a relative estimand can be obtained by taking t
 <p><span class="math display">\[ h^{(a)}(t) = \lim_{ \Delta t \to 0} \frac{ P(t \le Y &lt; t + \Delta t \; \vert \; Y \ge t, A = a) }{\Delta t} = \frac{d}{dt}ln\left(S_{0}^{(a)}(t)\right)\]</span></p>
 <p>The hazard ratio compares the ratio of two hazard functions:</p>
 <p><span class="math display">\[\theta_{HR}(t) = \frac{h^{(1)}(t)}{h^{(0)}(t)}\]</span></p>
-<p>Since both hazard function can vary over time, the true hazard ratio can vary over time. Commonly used approaches in time-to-event analysis often require the hazard rate being approximately constant over the time interval of interest, either unconditionally or conditional on covariates. It may not be known in practice whether such an assumption is reasonable, but this assumption can be empirically assessed.</p>
-<p>When the hazard ratio varies appreciably in time, methods that make a conditional or unconditional assumption of proportional hazards are less efficient and give effect estimates whose interpretation is unclear. Even when the assumption of proportional hazards is approximately true, the hazard ratio cannot easily be translated into easily communicated, meaningful effects, such as the number of years an individual can expect to be free of the event if they were assigned to one treatment or another.</p>
+<p>Since both hazard functions can vary over time, the true hazard ratio can vary over time. Commonly used approaches in time-to-event analysis often require the hazard rate being approximately constant over the time interval of interest, either unconditionally or conditional on covariates. It may not be known a priori in practice whether such an assumption is reasonable, but this assumption can be empirically assessed.</p>
+<p>When the hazard ratio varies appreciably in time, methods that make a conditional or unconditional assumption of proportional hazards are less efficient and give effect estimates whose interpretation is unclear. Even when the assumption of proportional hazards is approximately true, the hazard ratio cannot easily be translated into an easily communicated metric, such as the number of years an individual can expect to be free of the event if they were assigned to one treatment or another.</p>
 <hr />
 </div>
 <div id="restricted-mean-survival-time" class="section level3 hasAnchor" number="3.3.3">
 <h3><span class="header-section-number">3.3.3</span> Restricted Mean Survival Time<a href="estimands.html#restricted-mean-survival-time" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Another estimand that may be of interest is the restricted mean survival time (RMST). This estimand is the average time-to-event (e.g. life expectancy when mortality is the event of interest) from baseline to a pre-specified point in time, denoted <span class="math inline">\(\tau\)</span>. The interval <span class="math inline">\([0, \tau]\)</span> is called the time horizon. This is given by taking the area under the survival function over the time horizon:</p>
+<p>Another estimand that may be of interest is the restricted mean survival time (RMST). This estimand is the average time-to-event from randomization to the time horizon <span class="math inline">\(\tau\)</span> (e.g. life expectancy up to <span class="math inline">\(\tau\)</span> when mortality is the event of interest). This is given by taking the area under the survival function from randomization to the time horizon:</p>
 <p><span class="math display">\[RMST = E[min\{ Y, \tau \} \vert a] = \int_{0}^{\tau} S_{0}^{(a)}(t) dt\]</span></p>
 <p>Treatments can be compared using a contrast of the RMST in the population where everyone receives treatment and that same population where everyone receives the control/comparator intervention. The difference in RMST contrast assesses the area between the survival curves under each treatment scenario.</p>
 <p><span class="math display">\[\theta_{DRMST} = E[min\{ Y, \tau \} \vert A = 1] - E[min\{ Y, \tau \} \vert A = 0]\]</span>

@@ -165,7 +165,7 @@ div.csl-indent {
 <li><a href="./">Covariate Adjustment in Randomized Trials</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> The Book</a>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Covariate Adjustment: Opportunities and Challenges</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-this-book"><i class="fa fa-check"></i><b>1.1</b> Using this Book</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#case-studies"><i class="fa fa-check"></i><b>1.2</b> Case Studies</a>
@@ -179,6 +179,7 @@ div.csl-indent {
 <li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#notation"><i class="fa fa-check"></i><b>2.1</b> Notation and Assumptions</a></li>
 <li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#ancova"><i class="fa fa-check"></i><b>2.2</b> The Analysis of Covariance (ANCOVA)</a></li>
 <li class="chapter" data-level="2.3" data-path="introduction.html"><a href="introduction.html#generalizing-the-ancova-g-computation"><i class="fa fa-check"></i><b>2.3</b> Generalizing the ANCOVA: G-computation</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction.html"><a href="introduction.html#combining-covariate-adjustment-and-stratified-randomization"><i class="fa fa-check"></i><b>2.4</b> Combining Covariate Adjustment and Stratified Randomization</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="estimands.html"><a href="estimands.html"><i class="fa fa-check"></i><b>3</b> Targets of Inference: Estimands</a>
 <ul>
@@ -226,7 +227,8 @@ div.csl-indent {
 <li class="chapter" data-level="5" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><i class="fa fa-check"></i><b>5</b> Applying Covariate Adjustment: ANCOVA, G-Computation, DR-WLS</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#calculating-precision-gain"><i class="fa fa-check"></i><b>5.1</b> Calculating Precision Gain</a></li>
-<li class="chapter" data-level="5.2" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#missing-outcome-data-inverse-weighting"><i class="fa fa-check"></i><b>5.2</b> Missing Outcome Data: Inverse Weighting</a></li>
+<li class="chapter" data-level="5.2" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#stratified-randomization-covariate-adjustment"><i class="fa fa-check"></i><b>5.2</b> Stratified Randomization &amp; Covariate Adjustment</a></li>
+<li class="chapter" data-level="5.3" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#missing-outcome-data-inverse-weighting"><i class="fa fa-check"></i><b>5.3</b> Missing Outcome Data: Inverse Weighting</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="doublyrobust.html"><a href="doublyrobust.html"><i class="fa fa-check"></i><b>6</b> Doubly Robust Estimators</a>
 <ul>
@@ -573,23 +575,56 @@ div.csl-indent {
 <p>Including these other covariates leads to a larger gain in precision.</p>
 <hr />
 </div>
-<div id="missing-outcome-data-inverse-weighting" class="section level2 hasAnchor" number="5.2">
-<h2><span class="header-section-number">5.2</span> Missing Outcome Data: Inverse Weighting<a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#missing-outcome-data-inverse-weighting" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="stratified-randomization-covariate-adjustment" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Stratified Randomization &amp; Covariate Adjustment<a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#stratified-randomization-covariate-adjustment" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>When stratified randomization is employed, additional benefits in precision can be realized by using covariate adjustment and a variance estimator designed for covariate adaptive designs. First, source the ICAD code from Github:</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-1" tabindex="-1"></a>icad_link <span class="ot">&lt;-</span></span>
+<span id="cb79-2"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-2" tabindex="-1"></a>  <span class="st">&quot;https://raw.githubusercontent.com/BingkaiWang/covariate-adaptive/master/R/ICAD.R&quot;</span></span>
+<span id="cb79-3"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-3" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">url</span>(icad_link))</span></code></pre></div>
+<p>Next, we specify which covariates are included in the model, excluding those in the strata variable, and call ICAD:</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb80-2"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-2" tabindex="-1"></a></span>
+<span id="cb80-3"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-3" tabindex="-1"></a><span class="co"># 1. Create a character vector with the names of the baseline covariates</span></span>
+<span id="cb80-4"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-4" tabindex="-1"></a>baseline_covariates <span class="ot">&lt;-</span></span>
+<span id="cb80-5"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-5" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;vas_crave_opiates_bl&quot;</span>, <span class="st">&quot;arsw_score_bl&quot;</span>,</span>
+<span id="cb80-6"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-6" tabindex="-1"></a>    <span class="st">&quot;cows_total_score_bl&quot;</span>, <span class="st">&quot;vas_current_withdrawal_bl&quot;</span>, <span class="st">&quot;vas_study_tx_help_bl&quot;</span>,</span>
+<span id="cb80-7"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-7" tabindex="-1"></a>    <span class="st">&quot;uds_any_positive_bl&quot;</span>)</span>
+<span id="cb80-8"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-8" tabindex="-1"></a></span>
+<span id="cb80-9"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-9" tabindex="-1"></a>arsw_icad <span class="ot">&lt;-</span></span>
+<span id="cb80-10"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-10" tabindex="-1"></a>  <span class="fu">ICAD</span>(</span>
+<span id="cb80-11"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-11" tabindex="-1"></a>    <span class="at">Y =</span> ctn03_sim_mar<span class="sc">$</span>vas_crave_opiates_eot, </span>
+<span id="cb80-12"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-12" tabindex="-1"></a>    <span class="at">A =</span> <span class="dv">1</span><span class="sc">*</span>(ctn03_sim_mar<span class="sc">$</span>arm <span class="sc">==</span> <span class="st">&quot;7-day&quot;</span>), <span class="co"># Treatment indicator - Must be 1/0</span></span>
+<span id="cb80-13"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-13" tabindex="-1"></a>    <span class="at">Strata =</span> ctn03_sim_mar<span class="sc">$</span>stability_dose, <span class="co"># Randomization Stratum</span></span>
+<span id="cb80-14"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-14" tabindex="-1"></a>    <span class="at">W =</span> ctn03_sim_mar[, baseline_covariates], <span class="co"># Baseline Covariates</span></span>
+<span id="cb80-15"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-15" tabindex="-1"></a>    <span class="at">pi =</span> <span class="fl">0.5</span> <span class="co"># 1:1 Randomization</span></span>
+<span id="cb80-16"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-16" tabindex="-1"></a>  )</span>
+<span id="cb80-17"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-17" tabindex="-1"></a></span>
+<span id="cb80-18"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb80-18" tabindex="-1"></a>arsw_icad</span></code></pre></div>
+<pre><code>##                            est      var  CI.lower CI.upper
+## unadjsed            -0.2706708 8.068289 -5.837896 5.296555
+## adjusted-for-strata -0.5224149 8.068084 -6.089570 5.044740
+## adjusted-for-all    -0.9106801 6.581495 -5.938855 4.117495
+## drwls               -0.9485718 6.956200 -6.117900 4.220757</code></pre>
+<p>We can see that the ‘adjusted-for-all’ estimator, which uses a specialized variance estimator for covariate adaptive designs, has a lower variance than the covariate adjusted estimator obtained using margins, even though we are adjusting for the same covariates.</p>
+<hr />
+</div>
+<div id="missing-outcome-data-inverse-weighting" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Missing Outcome Data: Inverse Weighting<a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#missing-outcome-data-inverse-weighting" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>So far, we have not discussed the issue of missing outcome data. While the G-computation estimator is robust to arbitrary model misspecification, it is only valid if data are missing completely at random (MCAR): missingness is unrelated to either the observed or unobserved data. If this were the case, we should not see any association between the baseline covariates and missingness in the VAS opiate craving scores at the end-of-taper visit. We can assess this using a generalized additive model (GAM):</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-1" tabindex="-1"></a>vas_mar_glm <span class="ot">&lt;-</span></span>
-<span id="cb79-2"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-2" tabindex="-1"></a>  mgcv<span class="sc">::</span><span class="fu">gam</span>(</span>
-<span id="cb79-3"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-3" tabindex="-1"></a>    <span class="at">formula =</span> </span>
-<span id="cb79-4"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-4" tabindex="-1"></a>      <span class="fu">is.na</span>(vas_crave_opiates_eot) <span class="sc">~</span></span>
-<span id="cb79-5"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-5" tabindex="-1"></a>      arm <span class="sc">+</span> stability_dose <span class="sc">+</span></span>
-<span id="cb79-6"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-6" tabindex="-1"></a>      <span class="fu">s</span>(age) <span class="sc">+</span> sex <span class="sc">+</span></span>
-<span id="cb79-7"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-7" tabindex="-1"></a>      <span class="fu">s</span>(vas_crave_opiates_bl) <span class="sc">+</span> <span class="fu">s</span>(arsw_score_bl) <span class="sc">+</span> <span class="fu">s</span>(cows_total_score_bl) <span class="sc">+</span></span>
-<span id="cb79-8"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-8" tabindex="-1"></a>      <span class="fu">s</span>(vas_current_withdrawal_bl) <span class="sc">+</span> <span class="fu">s</span>(vas_study_tx_help_bl) <span class="sc">+</span></span>
-<span id="cb79-9"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-9" tabindex="-1"></a>      uds_any_positive_bl,</span>
-<span id="cb79-10"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-10" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>),</span>
-<span id="cb79-11"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-11" tabindex="-1"></a>    <span class="at">data =</span> ctn03_sim_mar</span>
-<span id="cb79-12"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-12" tabindex="-1"></a>  )</span>
-<span id="cb79-13"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-13" tabindex="-1"></a></span>
-<span id="cb79-14"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb79-14" tabindex="-1"></a><span class="fu">summary</span>(vas_mar_glm)</span></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-1" tabindex="-1"></a>vas_mar_glm <span class="ot">&lt;-</span></span>
+<span id="cb82-2"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-2" tabindex="-1"></a>  mgcv<span class="sc">::</span><span class="fu">gam</span>(</span>
+<span id="cb82-3"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-3" tabindex="-1"></a>    <span class="at">formula =</span> </span>
+<span id="cb82-4"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-4" tabindex="-1"></a>      <span class="fu">is.na</span>(vas_crave_opiates_eot) <span class="sc">~</span></span>
+<span id="cb82-5"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-5" tabindex="-1"></a>      arm <span class="sc">+</span> stability_dose <span class="sc">+</span></span>
+<span id="cb82-6"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-6" tabindex="-1"></a>      <span class="fu">s</span>(age) <span class="sc">+</span> sex <span class="sc">+</span></span>
+<span id="cb82-7"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-7" tabindex="-1"></a>      <span class="fu">s</span>(vas_crave_opiates_bl) <span class="sc">+</span> <span class="fu">s</span>(arsw_score_bl) <span class="sc">+</span> <span class="fu">s</span>(cows_total_score_bl) <span class="sc">+</span></span>
+<span id="cb82-8"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-8" tabindex="-1"></a>      <span class="fu">s</span>(vas_current_withdrawal_bl) <span class="sc">+</span> <span class="fu">s</span>(vas_study_tx_help_bl) <span class="sc">+</span></span>
+<span id="cb82-9"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-9" tabindex="-1"></a>      uds_any_positive_bl,</span>
+<span id="cb82-10"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-10" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>),</span>
+<span id="cb82-11"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-11" tabindex="-1"></a>    <span class="at">data =</span> ctn03_sim_mar</span>
+<span id="cb82-12"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-12" tabindex="-1"></a>  )</span>
+<span id="cb82-13"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-13" tabindex="-1"></a></span>
+<span id="cb82-14"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#cb82-14" tabindex="-1"></a><span class="fu">summary</span>(vas_mar_glm)</span></code></pre></div>
 <pre><code>## 
 ## Family: binomial 
 ## Link function: logit 
