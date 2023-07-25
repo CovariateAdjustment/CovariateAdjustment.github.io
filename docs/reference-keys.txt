@@ -1,4 +1,4 @@
-the-book
+covariate-adjustment-opportunities-and-challenges
 using-this-book
 case-studies
 ctn_03
@@ -60,9 +60,11 @@ information-adaptive-designs
 power-sample-size-calculations-1
 analyses-unadjusted-and-adjusted-1
 recommendations
+missing-covariates
 statistical-analysis-plans
 sample-size-for-adjusted-vs.-unadjusted
 number-of-parameters-vs.-sample-size
+data-adaptive-covariate-adjustment
 appendices
 appendix_a_glossary
 appendix_b_using_r

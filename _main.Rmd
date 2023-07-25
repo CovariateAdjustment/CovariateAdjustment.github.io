@@ -1,0 +1,1588 @@
+--- 
+title: "Covariate Adjustment in Randomized Trials"
+author: "Josh Betz, Kelly van Lancker, and Michael Rosenblum"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: covariate_adjustment.bib
+url: https://covariateadjustment.github.io
+# cover-image: path to the social sharing image like images/cover.jpg
+description: |
+  This a series of tutorials meant to help investigators apply covariate
+  adjusted analyses in randomized trials.
+link-citations: yes
+github-repo: covariateadjustment/covariateadjustment.github.io
+---
+
+```{r Book-Setup, echo = FALSE, message = FALSE}
+library(tidyverse)
+library(table1)
+
+### Set Default Options ########################################################
+fig_w <- 8
+fig_h <- 8
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  results = "markup",
+  fig.width = fig_w,
+  fig.height = fig_h,
+  fig.align = "center",
+  out.width = "80%",
+  dpi = 300,
+  dev = "CairoPNG"
+)
+
+set.seed(54321)
+
+if(!file.exists(file.path(getwd(), "docs", ".nojekyll"))){
+  file.create(file.path(getwd(), "docs", ".nojekyll"))
+} 
+```
+
+## Covariate Adjustment: Opportunities and Challenges
+
+Randomized trials are an important tool for generating evidence to inform practice in medicine, public health, science, and industry. Planning ethical, informative, and cost-effective studies requires many careful considerations when deciding on the study design and analysis plan. One of these considerations should be how to utilize the information about study participants which is known before randomization takes place. Variables observed prior to randomization, known as baseline covariates, can provide information about the outcomes that are observed during the study. Leveraging the information in baseline covariates could improve our inference about the potential benefits or harms of an intervention. Utilizing this information effectively in the study design and analysis plan has the potential to reduce the number of participants required or the duration of the study without sacrificing the precision of our inference. Such methods can make evaluating interventions more ethical and cost effective, and is generally supported by regulatory agencies.
+
+This book is about the practice of applying covariate adjustment in randomized trials. While there are many approaches for covariate adjustment, our focus will be on estimating the average outcome in a population under different potential treatment assignments, known as marginal treatment effects. Investigators may be interested in comparing the average outcome within strata of a population under different potential treatment assignments, which are known as conditional treatment effects. While conditional treatment effects will arise in our discussion along the way, they will not be our primary focus.
+
+Since randomized trials serve such an important role in policy and practice, stakeholders may be understandably cautious about changing how such research is carried out. It is important that investigators, regulators, reviewers, and readers trust the methods chosen for an application and understand how they compare to potential alternative approaches. It is natural to ask what assumptions are required for the validity of a covariate adjusted analysis, how such results should be interpreted, and how these differ from an unadjusted approach.
+
+The methods that we consider should meet certain acceptability criteria. Firstly, an acceptable approach must not change the statistical and scientific focus of investigation. In other words, our covariate-adjusted approach should infer about the same quantities of interest, or estimands, as an unadjusted approach. Secondly, an acceptable approach must not require stronger, more restrictive assumptions: the assumptions for the validity of a covariate-adjusted approach should be the same or less stringent than an unadjusted approach. Finally, a covariate-adjusted approach should have the same or better precision than the unadjusted estimator.
+
+Statisticians rely on regression models in many contexts to relate covariate information to an outcome of interest. Before interpreting regression coefficients, there is often a great deal of consideration put into choosing an appropriate specification for the model: which variables should be included in the model, how they should be included, and how to link the covariates to the scale of the outcome. Appropriate interpretation and application of models requires some assumptions about how closely the fitted model is to the true data generating process, which is unknown in practice.
+
+Since regression models are used to perform covariate adjustment, it is natural to ask whether using such models also requires assumptions about how closely the specified model is to the true data generating process. What may be surprising to some is that covariate adjusted analyses can be valid under arbitrary model misspecification. Even though covariate adjustment may use regression models to construct an estimator, the validity of the resulting estimator does not require that the model is correctly specified. This is particularly important if we are to have covariate-adjusted methods that do not require stronger assumptions than an unadjusted analysis. Use of regression models allow us to do covariate-adjusted analyses for continuous, binary, ordinal, or time-to-event outcomes, allowing them to be applied to many research areas and questions.  
+
+While covariate adjustment has the potential to improve precision and make research more ethical and cost effective, there are still challenges to be addressed in practice. Firstly, the amount of precision gained by using covariate adjustment is not known a priori. We need study designs and analysis plans that guarantee the desired level of statistical power and control of error rates irrespective of the amount of precision gained by using covariate adjustment. Secondly, we need a theoretical framework which includes a broad class of estimators in a single framework. The methods employed must address missing data due to dropout, and incomplete data from participants whose outcomes have yet to be collected. Investigators need the information to effectively advocate for the use of these methods with stakeholders, regulators, and reviewers. Practitioners need validated, freely available software to make applying these methods straightforward. Finally, general guidance and best practices need to be established so as to make covariate adjusted analyses as well understood and trusted as their unadjusted counterparts. 
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Using this Book
+
+This book is meant to provide worked examples to help practitioners apply covariate adjustment in practice. The material will be most accessible to a reader who has a good understanding of probability and statistics (confidence intervals, hypothesis testing), generalized linear models, and survival analysis. Some familiarity with concepts in randomized trials and causal inference is helpful, but not required. In order to make these methods broadly available, we provide worked examples using the R environment for statistical computing, which is free and open source software. While not all users may be familiar with R, we provide example code and links to additional resources to help users understand how to apply it in practice. The data in our examples are simulated from actual randomized trial data, meant to mimic key features such as missingness patterns and the distribution of outcomes and covariates.
+
+We will start with an overview of key ideas and findings from research in randomized trial methodology. From there, we will discuss different targets of inference, or estimands, that may be of interest to investigators. Afterwards, we provide a brief overview of using R, and how to install the necessary software to perform covariate adjustment. With the necessary background in place, we will begin with the most simple and commonly used approach for covariate adjustment, the analysis of covariance (ANCOVA), show how this approach can be generalized to binary and other types of outcomes. From there, we will discuss how to address the issues of missing data in baseline covariates and outcomes using doubly robust methods.
+
+Since randomized trials are often designed with incomplete and imprecise information, the study design should incorporate pre-planned analyses to determine if the study should continue or be stopped for either success or futility. We discuss how covariate adjustment can be integrated into such analysis plans. Finally, we discuss some recommendations for applying these methods in practice.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Case Studies
+
+The datasets used in our examples are simulated data based on actual randomized trials, with considerable effort spent making the data as realistic as possible. The original study data was used to create regression models for the outcomes of interest and missingness patterns. Next, simulated covariate data were created by resampling the original covariate data, and perturbing the resampled data. Simulated outcome data and missingness patterns were generated using predictions from the outcome regression models, using the simulated covariates as input.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Buprenorphine tapering schedule and illicit opioid use: CTN-03 {#ctn_03}
+
+[CTN-03](https://pubmed.ncbi.nlm.nih.gov/19149822) ([NCT00078117](https://clinicaltrials.gov/show/NCT00078117)) was two-arm a phase III trial to compare two potential tapering schedules of the drug buprenorphine, a pharmacotherapy for opioid dependence. At the time of the study design, there was considerable variation in tapering schedules in practice, and a knowledge gap in terms of the best way to administer buprenorphine to control withdrawal symptoms and give the greatest chance of abstinence at the end of treatment. It was hypothesized that a longer taper schedule would result in greater likelihood of a participant being retained on study and providing opioid-free urine samples at the end of the drug taper schedule.
+
+Participants were randomized 1:1 to a 7-day or 28-day taper using stratified block randomization across 11 sites in 10 US cities. Randomization was stratified by the maintenance dose of buprenorphine at stabilization: 8, 16, or 24 mg. The structure of the CTN-03 simulated data is as follows:
+
+  - Baseline Covariates
+    - `age`: Participant age at baseline
+    - `sex`: Participant sex
+    - `race`: Participant race
+    - `ethnic`: Participant ethnicity
+    - `marital`: Participant marital status
+  - Randomization Information
+    - `arm`: Treatment Arm
+    - `stability_dose`: Stratification Factor
+  - Baseline (`_bl`) & End-Of-Taper (`_eot`) Outcomes:
+    - `arsw_score`: Adjective Rating Scale for Withdrawal (ARSW) Score at baseline
+    - `cows_score`: Clinical Opiate Withdrawal Scale (COWS) Score at baseline
+    - `cows_category`: COWS Severity Category - Ordinal
+    - `vas_crave_opiates`: Visual Analog Scale (VAS) - Self report of opiate cravings
+    - `vas_current_withdrawal`: Visual Analog Scale (VAS) - Current withdrawal symptoms
+    - `vas_study_tx_help`: Visual Analog Scale (VAS) - Study treatment helping symptoms
+    - `uds_opioids`: Urine Drug Screen Result - Opioids
+    - `uds_oxycodone`: Urine Drug Screen Result - Oxycodone
+    - `uds_any_positive`: Urine Drug Screen - Any positive result
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Functional Outcome in Hemorrhagic Stroke: MISTIE III {#mistie_iii}
+
+Hemorrhagic stroke occurs when a blood vessel in the brain ruptures, causing a bleed inside the skull. The bleeding from an ICH can occur in the brain tissue itself (an intracerebral hemorrhage, or ICH), or in the fluid-filled channels in the brain (an intraventricular hemorrhage, or IVH). The [MISTIE III](https://doi.org/10.1016/s0140-6736(19)30195-3) trial ([NCT01827046](https://clinicaltrials.gov/show/NCT01827046)) was a phase III study comparing a minimally invasive surgical intervention to conventional medical management for the treatment of spontaneous, non-traumatic ICH.
+
+In this study, participants were randomized 1:1 to receive either standard-of-care medical management or a minimal invasive surgery with Alteplase for ICH removal. Outcomes were measured at 30, 180, and 365-days post-randomization using the Modified Rankin Scale (MRS), which measures functional outcome on a scale ranging from 0 (no residual symptoms) to 6 (death). The MRS was collapsed into a binary variable, representing a score of 0-3 (no symptoms to moderate disability but able to walk without assistance) or 4-6 (unable to walk or attend to daily activities without assistance to death). Survival was also assessed, with patients administratively censored on the date of their final MRS assessment.
+
+The data from MISTIE III was used to create a synthetic dataset for educational purposes. Baseline covariates include demographics, medications and comorbidities, characteristics of the stroke (location of the ICH lesion, the size of the ICH and IVH lesions on CT scans), and neurological status on presentation to the hospital (the Glasgow Coma Scale, or GCS).
+
+In addition to the longitudinal measures of the MRS at 30-, 180-, and 365-days post randomization, mortality data are included. The structure of the data is as follows:
+
+  - `sim_participant_id`: Patient id
+  - Baseline Covariates
+    - `age`: Age in years
+    - `male`: male sex
+    - `hx_cvd`:	cardiovascular disease history
+    - `hx_hyperlipidemia`:	hyperlipidemia history
+    - `on_anticoagulants`:	on anticoagulant medication
+    - `on_antiplatelets`:	on antiplatelet medication
+    - `ich_location`: intracerebral hemorrhage location: (`Lobar`, `Deep`)
+    - `ich_s_volume`:	intracerebral hemorrhage volume on stability scan
+    - `ivh_s_volume`:	intraventricular hemorrhage volume on stability scan
+    - `gcs_category`: presenting Glasgow Coma Score (GCS)
+  - Treatment:
+    - `arm`: treatment arm
+    - `ich_eot_volume`: intracerebral hemorrhage volume on end-of-treatment scan
+  - Outcome:
+    - `mrs_30d`: MRS at 30 days (`0-3`, `4`, `5`, `6`)
+    - `mrs_30d_complete`: MRS at 30 days if no data were missing
+    - `mrs_180d`: MRS at 180 days (`0-2`, `3`, `4`, `5`, `6`)
+    - `mrs_180d_complete`: MRS at 180 days if no data were missing
+    - `mrs_365d`: MRS at 365 days (`0-1`, `2`, `3`, `4`, `5`, `6`)
+    - `mrs_365d_complete`: MRS at 365 days if no data were missing
+    - `days_on_study`: days until death or administrative censoring
+    - `died_on_study`: participant died (`1`) or is censored (`0`)
+
+<!--chapter:end:index.Rmd-->
+
+# Introduction {#introduction}
+
+In this section, we will lay out the notation for the following chapters, discuss what assumptions are required for these methods to be applied, and survey the literature on covariate adjustment.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Notation and Assumptions {#notation}
+
+Let $A$ denote a binary treatment assignment: $A = 1$ indicates assignment to receive the treatment of interest, and $A = 0$ indicates assignment to the control or comparator group. Let $Y$ denote the outcome of interest, and $X$ denote a vector of baseline covariates. If stratified randomization is used, let $X_{S}$ denote the stratification variables, and $X_{\bar{S}}$ denote the other baseline covariates, and $X = (X_{S}, X_{\bar{S}})$. We assume that treatment assignment is independent of the baseline covariates, i.e. $A \perp X$, or if stratified randomization is used, that the treatment assignment is conditionally independent of the other covariates given the stratification variables, i.e. $A \perp\!\!\!\perp X_{\bar{S}} \vert X_{S}$. Each participant's data is assumed to be independent, identically distributed (IID) draws from an unknown distribution $P(X, A, Y)$.
+
+In order to include covariate information in an analysis, we have to specify how these covariates relate to the outcome in a regression model, which models a conditional distribution of the outcome as as a function of the covariates. In most circumstances, the validity of our inference from regression models depends on how close the regression model's specification reflects the true data generation mechanism, which is almost always unknown. This may make investigators understandably reluctant to use covariate adjusted methods, as they do not want the validity of the analysis to depend on assumptions of a correctly specified model.
+
+What may be surprising is that there are covariate adjustment methods that provide valid estimates of the treatment effect, even if the models used to obtain these estimates are arbitrarily misspecified. Having models that more closely reflect the underlying data generating mechanism improves precision and power. Additionally, covariate adjusted estimators also can have precision that is equal or better than the unadjusted estimators.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+
+## The Analysis of Covariance (ANCOVA) {#ancova}
+
+
+The ANCOVA is perhaps the best known method for covariate adjustment with a continuous outcome. The simplest version of an ANCOVA is a linear regression of the final outcome $Y$ on the baseline covariate $X$, usually the outcome measured at baseline, and treatment assignment $A$:
+
+$$Y_{i} = \beta_{0} + \beta_{X}X_{i} + \beta_{A}A_{i} + \epsilon_{i}$$
+
+This regression model assumes that the final outcome is linearly related to the outcome at baseline, with an additive effect of treatment. Even if the true relationship between the final outcome and the baseline covariate is nonlinear, includes interactions, and includes other variables that are omitted from the model, the ANCOVA estimate will provide a consistent estimate of the treatment effect that is as precise or even more precise than an unadjusted estimate. An outcome model that more accurately reflects the data generating mechanism will improve precision, but is not required for a consistent estimate of the outcome.
+
+Linear regression involves the conditional mean, but we are interested in a marginal treatment effect. In order to obtain a marginal treatment effect, we need to marginalize (i.e. average over) the variation in the covariates:
+
+$$\hat{\mu}_{1} = \hat{E}[Y \vert A = 1] = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y \vert A = 1, X]$$
+
+In the case of the simple ANCOVA model with only one covariate, the marginal mean under treatment would be:
+
+$$\hat{\mu}_{1} = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y \vert A = 1, X] = \frac{1}{n} \sum_{i=1}^{n} (\hat{\beta}_{0} + \hat{\beta}_{X}X_{i} + \hat{\beta}_{A}) = \hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n} + \hat{\beta}_{A}$$
+Note that this utilizes the covariate data from the entire sample, not just those who were assigned to receive the active treatment. The marginal mean under control would be:
+
+$$\hat{\mu}_{0} = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y \vert A = 0, X] = \frac{1}{n} \sum_{i=1}^{n} (\hat{\beta}_{0} + \hat{\beta}_{X}X_{i}) = \hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n}$$
+Likewise, our marginal estimate of the mean under control utilizes the covariate data from the entire sample, not just those who were assigned to receive the control treatment. Our estimate of the average treatment effect would be the contrast between these quantities:
+
+$$\hat{\theta}_{ATE} = \hat{\mu}_{1} - \hat{\mu}_{0} = (\hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n} + \hat{\beta}_{A}) - (\hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n}) = \hat{\beta}_{A}$$
+
+The procedure for gives us the same result as we would have otherwise used to estimate the treatment effect: the regression coefficient associated with treatment. When there are no treatment-by-covariate interactions and the model does not use a nonlinear link function, the conditional effect and the marginal effect coincide. However, the approach outlined here is applicable to a wide range of outcome models, including those using link functions, like logistic regression, or models that include treatment-by-covariate interactions. Computing the variance or standard errors of the estimate involves the use of the nonparametric bootstrap or appropriate robust standard errors for the study design and model specification.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Generalizing the ANCOVA: G-computation
+
+In general, if we have a regression model $\hat{f}(X, A) = \hat{E}[Y \vert A, X]$, we can obtain the average treatment effect by respectively computing the marginal mean under treatment and control, and taking a contrast between these quantities:
+
+$$\hat{\theta}_{ATE} = \hat{\mu_{1}} - \hat{\mu_{0}} = \left(\frac{1}{n} \sum_{i=1}^{n} \hat{f}(X, A = 1) \right) - \left(\frac{1}{n} \sum_{i=1}^{n} \hat{f}(X, A = 0) \right)$$
+This approach is known as G-computation or the standardization estimator. This allows us to obtain the average treatment effect for regression models which may include interactions or use a nonlinear link function, such as logistic regression.
+
+
+
+
+<!--chapter:end:01-Introduction.Rmd-->
+
+# Targets of Inference: Estimands {#estimands}
+
+
+
+
+## Estimands for Continuous and Binary Outcomes
+
+### Difference in Means
+
+When an outcome is continuous or binary, one meaningful summary may be the mean of the outcome, and a meaningful comparison may be the difference in means estimand:
+
+$$\theta_{DIM} = E[Y \vert A = 1] - E[Y \vert A = 0]$$
+
+This estimand compares the mean outcome in the population of interest if all individuals received the treatment of interest to the the mean outcome in the population of interest if all individuals received the control or comparator intervention. Note that in binary outcomes, this is a difference in proportions (or risk difference) between the population where all individuals received the treatment of interest compared to receiving the control or comparator intervention.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Ratio of Means
+
+The Difference in Means gives an absolute measure of an effect. For a relative measure of an effect, such as the relative risk, we can compare the ratio of these means:
+
+$$\theta_{ROM} = E[Y \vert A = 1]/E[Y \vert A = 0]$$
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Estimands for Ordinal Outcomes {#ordinal_estimands}
+
+Let $Y$ be an ordinal outcome with $k$ ordered categories. For each outcome category $j \in \{1, \ldots, K\}$, the cumulative distribution function of $Y$ given treatment $A$ is denoted as:
+
+$$Pr \left\{Y \le j\right\} = F(j \vert a)$$
+
+The probability mass function of $Y$ given treatment $A$ is denoted as:
+
+$$Pr \left\{Y = j\right\} = f(j \vert a) = F(j \vert a) - F(j-1 \vert a)$$
+
+Although this notation involves numeric labels for levels, this is merely to simplify notation. Clarifications will be made as needed when distinguishing between outcomes with and without a numeric levels.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Difference in Mean Utility
+
+If the levels of $Y$ have numeric labels, and the mean value of this ordinal variable is meaningful, the difference in means estimand may still be meaningful and useful. Alternatively, if either the labels do not have a numeric interpretation, or the mean of these values is not particularly meaningful, it may be possible to create a meaningful numeric value by assigning 'utilities' or 'weights' to each level of the outcome. The quantitative and clinical meanings of the difference in means estimator will depend on the utilities assigned to the outcome scale. This allows the difference in means to be used, even if the levels of the outcome are not numeric (e.g. the Glasgow Outcome Scale, ranging from 'Dead', 'Vegetative state', 'Severely disabled', 'Moderately disabled', and 'Good recovery').
+
+Let $u(\cdot)$ denote a pre-specified mapping from the outcome labels to utility values:
+
+$$
+    u(Y)= 
+\begin{cases}
+    u_{1} := \text{utility of } Y = 1\\
+    u_{2} := \text{utility of } Y = 2\\
+    \vdots \\
+    u_{k} := \text{utility of } Y = k
+\end{cases}
+$$
+
+The utilities will usually be monotone increasing, such that each succesive level of the outcome is associated with equal or better utility. Alternatively, if lower values of the outcome are preferable, utilities will usually be monotone decreasing. 
+
+
+Once the utilities have been defined, the estimand is defined as:
+
+$$\theta_{DIM} = E[u(Y) \vert A=1] - E[u(Y) \vert A=0] = \sum_{i=1}^{k}u(j)\left(f( j \vert 1) - f(j \vert 0)\right)$$
+
+When all outcomes at or above a threshold $t \in \{2, \ldots, k\}$ are given a utility of 1, and all others are given a utility of 0, this collapses the ordinal outcome into a binary one. The resulting estimand is the risk difference estimator of the outcome being at or above $t$:
+
+$$
+    u(Y)= 
+\begin{cases}
+    1: & Y \geq t \\
+    0: & Y < t
+\end{cases}
+$$
+
+While a risk difference may be more familiar to implement and conceptually easier to interpret, it treats all outcome states either below or above the threshold identically, ignoring potential information in such outcome states.
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Mann-Whitney (M-W) Estimand
+
+The Mann-Whitney estimand gives the probability that a randomly-selected person assigned to treatment of interest will have an outcome on the same level or a higher level than a randomly-selected person assigned to the comparator group, with ties broken at random:
+
+$$\theta_{MW} = P(\tilde{Y} > Y \vert \tilde{A} = 1, A = 0) + \frac{1}{2}P(\tilde{Y} = Y \vert \tilde{A} = 1, A = 0) = \\ \sum_{j=1}^{K} \left\{ F(j-1 \vert 0) + \frac{1}{2} f(j \vert 0) \right\} f(j \vert 1)$$
+
+If there is no difference in treatments, we would expect a randomly selected individual from one group to have a higher outcome than a randomly selected individual from the other group about half the time: the null value for this estimand is $1/2$.
+
+Note that if higher numerical values indicate worse outcomes, the outcome scale can be reversed prior to analysis, so that the estimand can be interpreted as the probability that a randomly-selected person assigned to treatment of interest will have an outcome as good or better than a randomly-selected person assigned to the comparator group.
+
+This estimand addresses a common concern of those choosing between treatment options, and may be easier to communicate to a lay audience.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Log Odds Ratio (LOR)
+
+In the case of a binary outcome, the odds ratio of a "good" outcome ($Y=1$) is $OR = odds(Y = 1 \vert A = 1)/odds(Y = 1 \vert A = 0)$: a value greater than 1 indicates a greater likelihood of a "good" outcome in the treatment of interest relative to the comparator group, and the log of the odds ratio will be positive. 
+
+In the case of an ordinal outcome with categories $1, \ldots, K$, these categories can be collapsed into $(K-1)$ binary outcomes: $Y \le j$ for $j \in \{1, \ldots, (K-1) \}$. The odds ratio at threshold $j$ compares the odds of falling at or below level $j$ between the treatment of interest and the comparator group: 
+
+$$OR_{j} = \frac{odds(Y \le j \vert A = 1)}{odds(Y \le j \vert A = 0)}$$
+
+When this odds ratio is greater than 1, individuals assigned to the treatment of interest are more likely to have outcomes at or below level $j$ than those in the comparator group: the log of this odds ratio will be positive. The log odds ratio estimand combines information across the levels of an ordinal outcome by averaging the log odds of an outcome at or below each threshold across all thresholds of the outcome:
+
+$$\theta_{LOR} = \frac{1}{K-1} \sum_{j=1}^{K-1} log \left( \frac{odds(Y \le j \vert A = 1)}{odds(Y \le j \vert A = 0)} \right) = \frac{1}{K-1} \sum_{j=1}^{K-1} log \left( \frac{F(j \vert 1)/ \left( 1 - F(j \vert 1) \right) } {F(j \vert 0)/ \left( 1 - F(j \vert 0) \right) } \right)$$
+
+This estimand is related to the proportional odds logistic regression model, a common parametric model for analyzing ordinal outcomes. In the proportional odds model, a regression coefficient for treatment group gives the increase in the odds of being at or below a given level of the outcome associated with a unit increase in that variable holding all else constant:
+
+$$log(odds(Y \le j \vert A)) = logit \left(P(Y \le j \vert A) \right) =  \alpha_{j} + \beta A: \quad j \in \{1, \ldots, (K-1)\}$$
+
+A positive slope indicates greater likelihood of lower scores in those assigned to receive the treatment of interest relative to the comparator group. The proportional odds assumption involves assuming that the treatment has the same effect across each binary threshold (i.e. that $\beta$ does not vary across the $K-1$ thresholds). When this assumption holds, the log odds ratio estimand is the same as the coefficient in the proportional odds model, but importantly, the validity of the LOR estimand does not depend on this assumption. As in binary and ordinal logistic regression, the null value for this estimand is 0.
+
+
+Since $-log(a/b) = log(b/a)$ and $odds(Y > j \vert A = 1) = 1/odds(Y \le j \vert A = 1)$, changing the sign of the log odds ratio estimator tells us about the average log odds of having scores higher than level $j$ in the treatment of interest relative to the comparator group:
+
+$$-\theta_{LOR} = \frac{1}{K-1} \sum_{j=1}^{K-1} log \left( \frac{odds(Y > j \vert A = 1)}{odds(Y > j \vert A = 0)} \right)$$
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Survival/Time-To-Event Outcomes {#survival_estimands}
+
+When the outcome is the time from randomization until an event of interest occurs, let $Y$ denote the time at which the event occurs, and $C$ denote the time at which individuals would be censored. For each individual, we observe $\delta_{i} = I_{\{Y_{i} \le C_{i}\}}$, whether an individual is censored or the event is observed, and $T_{i} = min\{Y_{i}, C_{i}\}$, the time at which the event or censoring occurs. Often we are interested in a particular time window after randomization, known as the time horizon. Let $\tau$ denote the time horizon of interest for inference.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Survival Function
+
+When the outcome is a time-to-event, the usual target of inference is the survival function, which is the marginal probability of being event-free through time $t$ if the entire population were assigned to study arm $A = a$:
+
+$$S_{0}^{(a)}(t) = Pr\{Y > t \vert A = a\}$$
+
+Estimands of interest may include the difference in survival probability at time $\tau$:
+
+$$\theta_{DSP} = Pr(Y \ge \tau \vert A = 1) - Pr(Y \ge \tau \vert A = 0)$$
+Instead of an additive estimand, a relative estimand can be obtained by taking the ratio of survival probabilities at time $\tau$:
+
+
+$$\theta_{RSP} = \frac{Pr(Y \ge \tau \vert A = 1)}{Pr(Y \ge \tau \vert A = 0)}$$
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Hazard Ratio
+
+The hazard rate for individuals receiving treatment $A = a$, denoted $h^{(a)}(t)$, is the instantaneous rate of the event of interest at time $t$ among individuals who have not yet experienced the event:
+
+
+$$ h^{(a)}(t) = \lim_{ \Delta t \to 0} \frac{ P(t \le Y < t + \Delta t \; \vert \; Y \ge t, A = a) }{\Delta t} = \frac{d}{dt}ln\left(S_{0}^{(a)}(t)\right)$$
+
+The hazard ratio compares the ratio of two hazard functions: 
+
+$$\theta_{HR}(t) = \frac{h^{(1)}(t)}{h^{(0)}(t)}$$
+
+Since both hazard function can vary over time, the true hazard ratio can vary over time. Commonly used approaches in time-to-event analysis often require the hazard rate being approximately constant over the time interval of interest, either unconditionally or conditional on covariates. It may not be known in practice whether such an assumption is reasonable, but this assumption can be empirically assessed.
+
+When the hazard ratio varies appreciably in time, methods that make a conditional or unconditional assumption of proportional hazards are less efficient and give effect estimates whose interpretation is unclear. Even when the assumption of proportional hazards is approximately true, the hazard ratio cannot easily be translated into easily communicated, meaningful effects, such as the number of years an individual can expect to be free of the event if they were assigned to one treatment or another.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Restricted Mean Survival Time
+
+Another estimand that may be of interest is the restricted mean survival time (RMST). This estimand is the average time-to-event (e.g. life expectancy when mortality is the event of interest) from baseline to a pre-specified point in time, denoted $\tau$. The interval $[0, \tau]$ is called the time horizon. This is given by taking the area under the survival function over the time horizon:
+
+$$RMST = E[min\{ Y, \tau \} \vert a] = \int_{0}^{\tau} S_{0}^{(a)}(t) dt$$
+
+Treatments can be compared using a contrast of the RMST in the population where everyone receives treatment and that same population where everyone receives the control/comparator intervention. The difference in RMST contrast assesses the area between the survival curves under each treatment scenario.
+
+$$\theta_{DRMST} = E[min\{ Y, \tau \} \vert A = 1] - E[min\{ Y, \tau \} \vert A = 0]$$
+A relative estimand is given by the ratio of RMST:
+
+$$\theta_{RRMST} = \frac{E[min\{ Y, \tau \} \vert A = 1]}{E[min\{ Y, \tau \} \vert A = 0]}$$
+
+<!--chapter:end:02-Estimands.Rmd-->
+
+# Using R {#using_r}
+
+The R environment for Statistical Computing is a free, open source environment for managing and visualizing data and performing analyses. Its capabilities can be augmented by downloading software packages from repositories, such as the [Comprehensive R Archival Network (CRAN)](https://cran.r-project.org/), and more recently, [GitHub](https://github.com/). [Rstudio](https://rstudio.com/) is a powerful development environment that makes it easier to use R, expands its functionality, and allows the integration of other tools, such as Git, into an analyst's workflow. If you are new to R or would like additional resources on using R in practice, see [the appendix](#appendix_b_using_r).
+
+In addition to R and Rstudio, we will also need to install [RTools](https://cran.r-project.org/bin/windows/Rtools/), also known as the R toolchain. These are software tools for compiling software packages. Some of the packages we use may have to be compiled after being downloaded, and RTools provides all the software needed to do so. CRAN provides instruction on which version of RTools you should use, depending on your version of R, and how to install it.
+
+This section is primarily about how to use R and associated software packages. While this does include demonstration of how to implement statistical models and hypothesis tests, a larger discussion of their appropriate use and interpretation will take place in later sections.
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Installing Packages
+
+Once we have Rtools installed, we are ready to install the required packages from CRAN and Github. The `install.packages()` function in R can be used to install packages from CRAN, R-Forge, BioC, and other repositories via the command line. In Rstudio, users can also use the 'Packages' tab to see which packages are installed, their current version, and whether or not they have been loaded into the workspace for use. If you have installed the `devtools` package, `devtools::install_github()` can be used to install packages from Github or other version control repositories.
+
+ If you would like to explore which R packages are available for a given application or research area, the [CRAN Task Views](https://cran.r-project.org/web/views/), including the [CRAN Clinical Trials taskview](https://cran.r-project.org/web/views/ClinicalTrials.html), are worth exploring.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Packages from CRAN
+
+Below are some of the packages that we will use from CRAN, along with a brief description of their purposes:
+
+  - [devtools](https://cloud.r-project.org/web/packages/devtools/index.html) - A suite of tools for R package development
+  - [cobalt](https://cran.r-project.org/web/packages/cobalt/index.html) - Creating tables and plots for assessing covariate balance
+  - [knitr](https://cran.r-project.org/web/packages/knitr/index.html) - Tools for literate programming: including code in reproducible reports
+  - [margins](https://cran.r-project.org/web/packages/margins/index.html) - Calculating marginal or partial effects from regression models
+  - [mgcv](https://cran.r-project.org/web/packages/mgcv/index.html) - Fitting generalized additive models
+  - [sandwich](https://cran.r-project.org/web/packages/sandwich/index.html) Robust covariance matrix estimation
+  - [survminer](https://cran.r-project.org/web/packages/survminer/index.html) - Creating plots of time-to-event data
+  - [survRM2](https://cran.r-project.org/web/packages/survRM2/index.html) - Calculating the restricted mean survival time (RMST) with and without covariate adjustment.
+  - [table1](https://cran.r-project.org/web/packages/table1/index.html) - Creating simple tabulations in aggregate and by treatment arm
+  - [tidyverse](https://www.tidyverse.org/packages/) - An ecosystem of packages for working with data
+
+```{r install-packages, eval = FALSE}
+required_packages <-
+  c("devtools",
+    "cobalt",
+    "knitr",
+    "margins",
+    "mgcv",
+    "sandwich",
+    "survminer",
+    "survRM2"
+    "table1",
+    "tidyverse"
+  )
+
+packages_to_install <-
+  setdiff(
+    x = required_packages,
+    y = installed.packages(.Library)[, "Package"]
+  )
+
+install.packages(packages_to_install)
+```
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Packages from Github
+
+We will also use the following packages from Github:
+
+  - [simul](https://github.com/nt-williams/simul) Inference based on Efficient Influence Function and Multiplier Bootstrap
+  - [adjrct](https://github.com/nt-williams/adjrct) Doubly Robust, Efficient Estimators for Survival and Time to Event Outcomes
+
+```{r install-github, eval = FALSE}
+devtools::install_github("nt-williams/simul")
+devtools::install_github("nt-williams/adjrct")
+```
+
+
+
+
+### Loading Packages into Workspace
+
+Once a package has been successfully installed, we use the `library()` command to load it into the workspace for use:
+
+```{r load-packages}
+library(tidyverse) # Data manipulation: dplyr, tidyr
+library(table1) # Creation of Summary tables
+```
+
+It is possible that different packages contain a function of the same name. For example, the `table1` package contains the function `table1()`: there are other packages that also have a function named `table1()`, such as the [`furniture`](https://cran.r-project.org/web/packages/furniture/index.html) package. If both of these packages are loaded, it can cause confusion about which version should be used when `table1()` is called. R will warn when such conflicts can arise, but as a best practice, it is useful to specify the package and function as as follows: `table1::table1()`. This makes code easier to use and potentially reduces ambiguity.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Loading the Data: MISTIE-III
+
+The [data dictionary](#mistie_iii) and more information about the MISTIE III study were presented earlier. All of the data needed for the examples are available on the web. To load these, we create a file connection to the URL using the `url()` function, and then use `read.csv()` to read in the comma separated values (CSV) file. To load data from a local file path, the `file.path()` function is useful for creating file paths. We can start by loading the simulated MISTIE III data. Once we have loaded the full data, we can use `dplyr::slice` to take the first 500 rows.
+
+```{r Load-MISTIE-III-Data}
+data_url <-
+  paste0("https://github.com/jbetz-jhu/CovariateAdjustmentTutorial",
+         "/raw/main/Simulated_MISTIE_III_v1.2.csv")
+
+sim_miii_full <- read.csv(file = url(data_url))
+
+# Read in data: Recast categorical variables as factors
+sim_miii_full <-
+  sim_miii_full %>% 
+  dplyr::tibble() %>% 
+  dplyr::mutate(
+    # Convert variables from binary indicators to labeled categorical variables
+    male =
+      factor(
+        x = male,
+        levels = 0:1,
+        labels = c("0. Female", "1. Male")
+      ),
+    across(
+      .cols = 
+        all_of(
+          x = c("hx_cvd", "hx_hyperlipidemia",
+                "on_anticoagulants", "on_antiplatelets")
+        ),
+      .fns = function(x) factor(x, levels = 0:1, labels = c("0. No", "1. Yes"))
+    ),
+    # Convert GCS and MRS variables from character data to categorical variables
+    across(
+      .cols = starts_with("gcs") | starts_with("mrs"),
+      .fns = factor
+    ),
+    ich_location =
+      factor(
+        x = ich_location,
+        levels = c("Deep", "Lobar")
+      ),
+    arm =
+      factor(
+        x = arm,
+        levels = c("medical", "surgical")
+      ),
+    tx = 1*(arm == "surgical")
+  )
+
+
+# Take the first 500 rows
+sim_miii <-
+  sim_miii_full %>% 
+  dplyr::slice(1:500)
+```
+
+
+Other useful functions include:
+
+  - `head()`/`tail()` - Looking at the first $n$ rows of a dataset
+  - `nrow()`/`ncol()` - Counting the rows/columns of a dataset
+  - `colnames()`/`rownames()` - Getting the row/column names of a dataset
+
+
+```{r Useful-Functions}
+head(sim_miii)
+nrow(sim_miii)
+ncol(sim_miii)
+colnames(sim_miii)
+```
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Assessing Baseline Balance
+
+While randomization will tend to produce treatment groups that are similar on both measured and unmeasured factors, there will always be some degree of imbalance between groups in some characteristics. It is important to remember that these differences only represent confounding if groups are imbalanced on variables that are associated with the outcome. To assess the degree of imbalance, we can tabulate characteristics by treatment arm, and compute standardized differences to get a scale-free measure of the magnitude of imbalance.
+
+```{r mistie-iii-table-1}
+table1(
+  ~ age + male +
+    on_antiplatelets + ich_location + ich_s_volume + ivh_s_volume +
+    gcs_category | arm, 
+  data = sim_miii
+)
+```
+
+
+This allows us to compare the means, medians, frequencies, and ranges of variables between groups.
+
+
+```{r mistie-iii-standardized-differences}
+library(cobalt)
+
+cobalt::bal.tab(
+  x = 
+    # Only tabulate baseline variables
+    sim_miii %>% 
+    dplyr::select(
+      dplyr::all_of(
+        x = c("age", "male", "on_antiplatelets",
+              "ich_location", "ich_s_volume", "ivh_s_volume", "gcs_category")
+      )
+    ),
+  treat = sim_miii$arm,
+  # Compute standardized differences for both binary and continuous variables
+  binary = "std",
+  continuous = "std"
+)
+```
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Visualizing Data
+
+One of the many strength of R is the powerful and flexible data visualization tools in its software ecosystem: see [the R Graph Gallery](https://r-graph-gallery.com/) for some examples. The [`ggplot2`](https://ggplot2.tidyverse.org/) package, and some related packages like [survminer](https://cran.r-project.org/web/packages/survminer/index.html), are useful for assessing baseline balance and visualizing outcome data.
+
+For example, we may want to assess the cumulative distribution of a baseline covariate instead of just checking the summary statistics.
+
+
+```{r Plot-eCDF-Age}
+library(ggplot2)
+
+ggplot(
+  data = sim_miii,
+  aes(
+    x = age
+  )
+) +
+  stat_ecdf(
+    alpha = 0.6,
+  ) +
+  stat_ecdf(
+    aes(color = arm),
+    alpha = 0.6,
+  ) +
+  theme_bw()
+```
+
+
+Or we may want to create a plot of the Kaplan-Meier estimate of the survival function (see the [estimands](#estimands) section for its definition, and the [time-to-event](#timetoevent) section for further discussion).
+
+
+```{r Plot-KM-MISTIE-III}
+library(survival)
+library(survminer)
+
+# Create a 'survival object' from event times and indicators
+miii_surv <- 
+  with(sim_miii,
+       survival::Surv(
+         time = days_on_study,
+         event = died_on_study
+       )
+  )
+
+# Use survfit to calculate survival data
+time_to_death_km <-
+  survival::survfit(
+    formula = miii_surv ~ arm,
+    data = sim_miii
+  )
+
+# Create the Kaplan-Meier Plot
+survminer::ggsurvplot(
+  fit = time_to_death_km,
+  conf.int = TRUE,
+  risk.table = TRUE,
+  xlab = "Days", 
+  ylab = "Survival probability"
+)
+```
+
+From this plot, we can see that most of the mortality occurs soon after randomization, with greater mortality in the medical management arm early in the trial. After the first 90 days, the rate of events decreases in both arms.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Fitting Regression Models
+
+While covariate adjustment does involve regression modeling, an in-depth discussion of regression modeling is not needed for the purposes of implementing covariate adjustment. For those wanting a more in-depth presentation of fitting generalized linear models (GLMs) in R see Dobson & Barnett [-@DobsonBarnett2018].
+
+
+
+
+### Generalized Linear Model
+
+Fitting a GLM in R is done using the `glm()` function. For example if we wanted to model the probability of being assigned to the surgical arm in MISTIE III by an individual's age, ICH volume, and IVH volume, the code is as follows: 
+
+```{r Binomial-GLM-MISTIE-III}
+pr_mis_glm <-
+  glm(
+    formula =
+      tx ~ age + ich_s_volume + ivh_s_volume,
+    data = sim_miii,
+    family = binomial(link = "logit")
+  )
+```
+
+
+Once the model has been fit, we can use it for creating summary tables, calculating confidence intervals, or generating fitted values for a new dataset:
+
+
+```{r Using-Fitted-Binomial-GLM-MISTIE-III}
+# Produce GLM Summary Table
+summary(pr_mis_glm)
+
+# Calculate Confidence Intervals for Coefficients
+confint(pr_mis_glm)
+
+# Calculate fitted probabilities for new data:
+# 1. 65 years old, 30 mL ICH, 0 mL IVH
+# 2. 70 years old, 50 mL ICH, 15 mL IVH
+predict(
+  object = pr_mis_glm,
+  newdata = 
+    data.frame(
+      age = c(65, 70),
+      ich_s_volume = c(30, 50),
+      ivh_s_volume = c(0, 15)
+    ),
+  type = "response"
+)
+```
+
+
+
+
+### Logrank Test and Cox Proportional Hazards Model
+
+For time-to-event outcomes, such as mortality, the logrank test and Cox Proportional Hazards (PH) model are commonly used analytic approaches. Using the survival object `miii_surv` created earlier using `survival::Surv()`, we can pass this object to other functions to perform the logrank test (using `survival::survdiff`) and fit the Cox PH model (using `survival::coxph`). 
+
+```{r Logrank-MISTIE-III}
+mortality_logrank <-
+  survival::survdiff(
+    formula = miii_surv ~ arm,
+    data = sim_miii
+  )
+
+mortality_logrank
+```
+
+
+For the Cox PH model, the `ties = "efron"` argument specifies how tied survival times are addressed, and the `robust = TRUE` computes robust estimates of the covariance matrix of regression coefficients:
+
+
+```{r Cox-PH-MISTIE-III}
+mortality_cox <-
+  survival::coxph(
+    formula = miii_surv ~ arm,
+    data = sim_miii,
+    ties = "efron",
+    robust = TRUE
+  )
+
+summary(mortality_cox)
+```
+
+
+This model assumes that the ratio of the rates of events between the treatment and control arm is approximately constant over time. We can assess using the `survival::cox.zph` function:
+
+
+```{r Cox-PH-Test-MISTIE-III}
+# Test Proportionality Assumption: Schoenfeld Residuals
+cox.zph(fit = mortality_cox)
+
+# Plot smoothed residuals
+plot(cox.zph(fit = mortality_cox))
+abline(h = 0, col = "red")
+```
+
+From the plot, we can see that the hazard ratio is initially negative, but increases towards zero as time goes on. It seems as if the treatment has a beneficial effect on mortality for a few weeks after randomization, which then diminishes. This is a violation of the proportional hazards assumption, which is further discussed in the chapter on [estimands](#survival_estimands).
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Variance Estimation
+
+
+
+### Robust Standard Errors
+
+Most of the standard errors reported in software, such as those returned by `vcov()`, are model-based estimates of the standard error, which assume that the model is correctly specified. Robust or "Sandwich" standard errors can be used to obtain a consistent estimate of the standard error in such cases. Note that robust estimates of standard errors are different from robust estimates of the regression coefficients themselves.
+
+The `sandwich::vcovHC()` function can be used to obtain different types of robust standard errors:
+
+```{r HC-Covariance-Estimation}
+library(sandwich)
+
+# Model-based standard errors
+vcov(object = pr_mis_glm)
+
+# Robust standard errors
+sandwich::vcovHC(x = pr_mis_glm, type = "HC3")
+```
+
+These can be passed as an argument to other functions for computing confidence intervals for contrasts and marginal means.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Bootstrap Estimator
+
+The bootstrap procedure uses resampling to obtain an estimate of the variance of the sampling distribution of an estimator. In R, this is done using the `boot` package, which is part of base R.
+
+First, we need to write a function to produce the statistic of interest. In this case, we will bootstrap the Mann-Whitney U statistic: see the [estimands](#ordinal_estimands) for more information on this estimand. The first argument to this function must be the data, and the second argument should be a vector of indices for our bootstrap sample, and any other arguments can be supplied thereafter. 
+
+
+```{r Boot-Example-Step-1-Create-Function}
+# 1. Write a function that produces the test statistic:
+wilcox_to_auc <-
+  function(data, indices = NULL, formula){
+    # Input data must be a data.frame
+    if(!all(class(data) == "data.frame")){
+      stop("`data` must be a data.frame: use `as.data.frame()` for a tibble.")
+    }
+    
+    # If bootstrap indices not supplied, use entire dataset
+    if(is.null(indices)) indices <- 1:nrow(data)
+    
+    # Extract Outcome/Treatment from Formula
+    outcome <- all.vars(update(formula, . ~ 0))
+    treatment <- all.vars(update(formula, 0 ~ .))
+    stopifnot(length(treatment) == 1)
+    
+    # Convert outcome to numeric using levels: Assumes levels are ordered
+    if(!is.numeric(data[, outcome])){
+      data[, outcome] <- as.numeric(data[, outcome])
+    }
+    
+    # Run Wilcoxon Rank Sum on data using the bootstrap indices
+    wrst_result <-
+      wilcox.test(
+        formula = formula,
+        data = data[indices,]
+      )
+    
+    # Compute AUC statistic
+    return(wrst_result$statistic/prod(table(data[indices, treatment])))
+  }
+```
+
+
+Now, we call this function using `boot`, passing any arguments required: `boot` will resample the data, and pass the indices to the function, and evaluate the result. From the result, we can calculate the standard error or estimate of the bootstrap distribution:
+
+
+```{r Boot-Example-Step-2-Call-Boot}
+# Perform 10,000 bootstraps of data
+n_boot_samples <- 10000
+
+mrs_365d_auc_boot <-
+  boot::boot(
+    data = as.data.frame(sim_miii),
+    statistic = wilcox_to_auc,
+    R = n_boot_samples,
+    formula = mrs_365d ~ arm
+  )
+
+# Bootstrap Standard Error
+sd(mrs_365d_auc_boot$t[,1])
+
+# Bootstrap Variance (SE^2)
+var(mrs_365d_auc_boot$t[,1])
+```
+
+
+Once the bootstrap procedure is complete, we can view and summarize the results.
+
+
+```{r Boot-Example-Step-3-Use-Results, fig.height = 0.6*fig_w}
+# Produce a histogram and quantile-quantile plot
+plot(mrs_365d_auc_boot)
+
+mrs_365d_auc_boot_ci <-
+  boot::boot.ci(
+    boot.out = mrs_365d_auc_boot,
+    conf = 0.95,
+    type = "bca",
+    index = 1
+  )
+
+# boot.ci result
+mrs_365d_auc_boot_ci
+
+# Extract the lower/upper confidence limits
+mrs_365d_auc_boot_ci_result <-
+  tail(x = mrs_365d_auc_boot_ci$bca[1,], n = 2)
+
+# Print out result
+mrs_365d_auc_boot_ci_result
+```
+
+The most straightforward way to calculate a p-value using the bootstrap involves finding the smallest value of $\alpha$ at which the $100(1 - \alpha)\%$ confidence interval does not contain the null value, resulting in a rejection of the null hypothesis. This can be done using a binary search algorithm.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Addressing Multiplicity
+
+For pivotal trials, it is often required to have an analysis plan that control the probability of rejecting at least one truly null hypothesis, also known as the familywise type I error rate (FWER). When there are more than one primary comparison of interest, due to having multiple pairwise treatment contrasts, endpoints, sequential analyses, or timepoints, a strategy must be used to control the FWER at a pre-specified level.
+
+A later chapter is devoted to [Group Sequential Designs](#groupsequential), a methodology for doing pre-planned analyses that allow stopping a randomized trial early for success or futility. When all hypotheses are tested simultaneously, the [multcomp](https://cran.r-project.org/web/packages/multcomp/index.html) package allows for decisions and confidence intervals that appropriately control the FWER. When there is a specific ordering to how hypotheses are tested, the [gMCP](https://cran.r-project.org/web/packages/gMCP/index.html) package implements graphical methods for addressing multiple comparisons. We will focus mainly on controlling the FWER for one pairwise treatment comparison on a single endpoint, with one or more pre-planned analyses.
+
+<!--chapter:end:03-Using-R.Rmd-->
+
+# Applying Covariate Adjustment: ANCOVA, G-Computation, DR-WLS
+
+In this next section, we will use R to produce the ANCOVA estimator, get an estimate of its standard error, and compare its precision to an unadjusted analysis using R. For this example we will use the Buprenorphine tapering trial data (CTN-03).
+
+```{r Load-CTN-03-Data}
+data_url <-
+  "https://github.com/jbetz-jhu/CovariateAdjustmentTutorial/raw/main/SIMULATED_CTN03_220506.Rdata"
+
+load(file = url(data_url))
+```
+
+This .Rdata file contains two datasets: `ctn03_sim`, which has no missing data, and `ctn03_sim_mar`, where a simulated missing data mechanism has been applied.
+
+
+```{r ANCOVA-CTN03-Step-1-Fit-Model}
+# 1. Regress final outcome (VAS at end of taper) on treatment assignment and
+# outcome assessed at baseline (VAS at baseline)
+vas_ancova_1 <-
+  lm(
+    formula = vas_crave_opiates_eot ~ arm + vas_crave_opiates_bl,
+    data = ctn03_sim_mar
+  )
+
+summary(vas_ancova_1)
+```
+
+
+Note that the standard error reported by `lm()` is the model-based standard error, not a robust standard error or bootstrap standard error.
+
+
+```{r ANCOVA-CTN03-Step-2-Predict-Outcomes}
+# 2. Generate predictions based on fitted model:
+# Their predicted outcome if they were assigned to treatment (7-day taper)
+# Their predicted outcome if they were assigned to control (28-day taper)
+expected_vas_7_day <-
+  predict(
+    object = vas_ancova_1,
+    newdata =
+      within(
+        data = ctn03_sim_mar,
+        expr = {arm = "7-day"}
+      ),
+    type = "response"
+  )
+
+expected_vas_28_day <-
+  predict(
+    object = vas_ancova_1,
+    newdata =
+      within(
+        data = ctn03_sim_mar,
+        expr = {arm = "28-day"}
+      ),
+    type = "response"
+  )
+
+
+data.frame(
+  expected_vas_7_day,
+  expected_vas_28_day,
+  ctn03_sim_mar[, c("arm", "vas_crave_opiates_eot", "vas_crave_opiates_bl")]
+) %>% 
+  head()
+```
+
+
+Once we've generated these predictions, we can compute the ANCOVA estimate of the average treatment effect:
+
+
+```{r ANCOVA-CTN03-Step-3-Compute-Estimand}
+mean(expected_vas_7_day)
+mean(expected_vas_28_day)
+vas_ancova_estimate <- mean(expected_vas_7_day) - mean(expected_vas_28_day)
+vas_ancova_estimate
+```
+
+
+Notice this is the exact same as the regression coefficient for `arm` in the regression model, since there's no treatment-covariate interactions and an identity link function. We can obtain the standard error of the estimate two ways. The first way is using the `margins::margins()` command, using the robust standard errors from `sandwich::vcovHC`:
+
+```{r ANCOVA-CTN03-Compute-SE-Margins}
+vas_ancova_margins <-
+  margins::margins(
+    model = vas_ancova_1,
+    # Specify treatment variable
+    variables = "arm",
+    # Convert to outcome scale, not link scale
+    type = "response",
+    # Obtain robust standard errors
+    vcov = sandwich::vcovHC(x = vas_ancova_1, type = "HC3")
+  )
+
+summary(object = vas_ancova_margins, level = 0.95)
+```
+
+
+You'll see that we now have a standard error, p-value under the hypothesis that the marginal effect is 0, and a 95% Confidence Interval for the estimate. Another way to obtain these is the bias corrected and accelerated (BCa) non-parametric bootstrap:
+
+
+```{r ANCOVA-CTN03-Compute-SE-Boot}
+# Write a function to produce the ANCOVA estimate
+margins_fun <-
+  function(data, indices = NULL, formula, family, term){
+    # Input data must be a data.frame
+    if(!all(class(data) == "data.frame")){
+      stop("`data` must be a data.frame: use `as.data.frame()` for a tibble.")
+    }
+    
+    # If bootstrap indices not supplied, use entire dataset
+    if(is.null(indices)) indices <- 1:nrow(data)
+    
+    data <- data[indices,]
+    
+    glm_fit <-
+      glm(
+        formula = formula,
+        family = family,
+        data = data
+      )
+    
+    tx_levels <- levels(data[, term])
+    
+    e_y_1 <-
+      predict(
+        object = glm_fit,
+        newdata = 
+          within(
+            data,
+            expr = assign(x = term, value = tx_levels[2])
+          ),
+        
+        type = "response"
+      )
+    
+    e_y_0 <-
+      predict(
+        object = glm_fit,
+        newdata = 
+          within(
+            data,
+            expr = assign(x = term, value = tx_levels[1])
+          ),
+        
+        type = "response"
+      )
+    
+    return(mean(e_y_1) - mean(e_y_0))
+  }
+
+vas_ancova_boot <-
+  boot::boot(
+    data = ctn03_sim_mar,
+    statistic = margins_fun,
+    R = 10000,
+      formula = vas_crave_opiates_eot ~ arm + vas_crave_opiates_bl,
+    family = gaussian(link = "identity"),
+    term = "arm"
+  )
+
+vas_ancova_boot
+```
+
+
+We can extract the standard error and produce a 95% confidence interval:
+
+
+```{r ANCOVA-CTN03-Compute-CI-Boot}
+# Bootstrap Standard Error
+sd(vas_ancova_boot$t[,1])
+
+vas_ancova_boot_ci <-
+  boot::boot.ci(
+    boot.out = vas_ancova_boot,
+    conf = 0.95,
+    type = "bca"
+  )
+
+vas_ancova_boot_ci
+```
+
+
+We can compare these to the results from `margins::margins()`:
+
+
+
+```{r Compare-Margins-Boot}
+# Margins SE
+ancova_margins_se <- summary(object = vas_ancova_margins, level = 0.95)$SE
+ancova_margins_se
+
+# Bootstrap SE
+ancova_boot_se <- sd(vas_ancova_boot$t[,1])
+ancova_boot_se
+
+# Compare as ratio
+ancova_margins_se/ancova_boot_se
+```
+
+
+The standard errors are nearly identical using the estimated marginal effect with robust standard errors or the bootstrap.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Calculating Precision Gain
+
+Asymptotically, the ANCOVA estimate should have precision that is equal or better than an unadjusted analysis. We can calculate the precision gain by taking the ratio of the variances, i.e. the squared standard errors, of the adjusted estimator to the unadjusted estimator.
+
+```{r Compute-Unadjusted-Estimator}
+vas_t_test <-
+  t.test(
+    formula = vas_crave_opiates_eot ~ arm,
+    data = ctn03_sim_mar,
+    var.equal = FALSE
+  )
+
+vas_t_test
+
+# Get unadjusted standard error
+t_test_se <- vas_t_test$stderr
+t_test_se
+```
+
+
+The precision gain is equal to the ratio of the variance, which is the square of the standard error:
+
+
+```{r Compute-Ratio-Variances}
+# Percentage reduction in variance adjusting for baseline outcome
+100*(1 - (ancova_margins_se/t_test_se)^2)
+```
+
+
+The precision gain in this particular example is rather small, but we have only adjusted for one potential covariate. However, there are several other baseline variables we did not include in the model. We can see if the gain in precision is larger when these other variables are included. We should also include the stability dose in the outcome, since randomization was stratified by this variable:
+
+
+```{r ANCOVA-CTN03-Larger-Model}
+vas_ancova_2 <-
+  glm(
+    formula = vas_crave_opiates_eot ~ 
+      arm + vas_crave_opiates_bl + stability_dose +
+      arsw_score_bl + cows_total_score_bl +
+      vas_current_withdrawal_bl + vas_study_tx_help_bl + uds_any_positive_bl,
+    data = ctn03_sim_mar
+  )
+
+vas_ancova_margins_2 <-
+  margins::margins(
+    model = vas_ancova_2,
+    # Specify treatment variable
+    variables = "arm",
+    # Convert to outcome scale, not link scale
+    type = "response",
+    # Obtain robust standard errors
+    vcov = sandwich::vcovHC(x = vas_ancova_2, type = "HC3")
+  )
+
+ancova_margins_2_se <- summary(object = vas_ancova_margins_2, level = 0.95)$SE
+
+# Percentage reduction in variance adjusting for baseline outcome
+100*(1 - (ancova_margins_2_se/t_test_se)^2)
+```
+
+
+Including these other covariates leads to a larger gain in precision.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Missing Outcome Data: Inverse Weighting
+
+So far, we have not discussed the issue of missing outcome data. While the G-computation estimator is robust to arbitrary model misspecification, it is only valid if data are missing completely at random (MCAR): missingness is unrelated to either the observed or unobserved data. If this were the case, we should not see any association between the baseline covariates and missingness in the VAS opiate craving scores at the end-of-taper visit. We can assess this using a generalized additive model (GAM):
+
+```{r Fit-GAM-Missingness-VAS-Opiate-Cravings}
+vas_mar_glm <-
+  mgcv::gam(
+    formula = 
+      is.na(vas_crave_opiates_eot) ~
+      arm + stability_dose +
+      s(age) + sex +
+      s(vas_crave_opiates_bl) + s(arsw_score_bl) + s(cows_total_score_bl) +
+      s(vas_current_withdrawal_bl) + s(vas_study_tx_help_bl) +
+      uds_any_positive_bl,
+    family = binomial(link = "logit"),
+    data = ctn03_sim_mar
+  )
+
+summary(vas_mar_glm)
+```
+
+
+The GAM model shows that, all other things being equal, missingness was lower in the 7-day arm, higher in individuals on 16 or 24 mg stability doses, and was associated with some of the baseline outcome measures. In the next section, we will discuss methods that can be robust to model misspecification and do not require the MCAR assumption.
+
+<!--chapter:end:04-Standardization.Rmd-->
+
+# Doubly Robust Estimators {#doublyrobust}
+
+
+
+
+## Augmented Inverse Probability Weighted Estimation
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Targeted Maximum Likelihood Estimation
+
+<!--chapter:end:05-Doubly_Robust_Estimators.Rmd-->
+
+# Time-To-Event Outcomes {#timetoevent}
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Unadjusted Estimators
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Kaplan-Meier Estimator
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Logrank Test
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Survival Probability
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Restricted Mean Survival Time (RMST)
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Event-Driven Trials
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Covariate-Adjusted Estimators
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Kaplan-Meier Estimator
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Survival Probability
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Restricted Mean Survival Time (RMST)
+
+
+
+
+
+<!--chapter:end:06-Time-To-Event-Outcomes.Rmd-->
+
+# Group Sequential Designs {#groupsequential}
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Group Sequential Designs
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Power & Sample Size Calculations
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Analyses: Unadjusted and Adjusted
+
+
+<!--chapter:end:07-Group-Sequential-Designs.Rmd-->
+
+# Information Adaptive Designs {#informationadaptive}
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Information Adaptive Designs
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Power & Sample Size Calculations
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Analyses: Unadjusted and Adjusted
+
+
+<!--chapter:end:08-Information_Adaptive_Designs.Rmd-->
+
+# Guidance on Applying Covariate Adjustment {#recommendations}
+
+
+## Missing Covariates
+
+  - How much missingness is too much
+  - Approaches and justification for missing covariates
+  - Preserving independence of covariates and treatment
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Statistical Analysis Plans
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Sample size for adjusted vs. unadjusted
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Number of parameters vs. sample size
+
+
+  - Adjusting for sites in multi-site trial
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Data-Adaptive Covariate Adjustment
+
+<!--chapter:end:09-Guidance_Recommendations.Rmd-->
+
+# Appendices {#appendices}
+
+## Appendix A: Glossary of Terms {#appendix_a_glossary}
+
+
+## Appendix B: Resources for Using R {#appendix_b_using_r}
+
+There are a lot of excellent existing resources on learning and using R in practice. A non-exhaustive list of these resources are below.
+
+  - Getting Started
+    - [R Project: An Introduction to R](https://cran.r-project.org/doc/manuals/r-release/R-intro.html)
+    - [Rstudio Educational Resources](https://education.rstudio.com/)
+    - [Rstudio Primers](https://rstudio.cloud/learn/primers)
+    - [R for Data Science](https://r4ds.had.co.nz/)
+    - [Introduction to Data Science](https://rafalab.github.io/dsbook/)
+    - [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/)
+    - [Coursera Data Science Foundations using R](https://www.coursera.org/specializations/data-science-foundations-r)
+    - [edX Data Science: R Basics](https://www.edx.org/course/data-science-r-basics)
+    - [Happy Git and GitHub for the useR](https://happygitwithr.com/)
+    - [The R Graph Gallery](https://r-graph-gallery.com/)
+  - Quick References
+    - [RStudio Cheat Sheets](https://rstudio.com/resources/cheatsheets/)
+  - Programming & Advanced Topics
+    - [Hands On Programming with R](https://rstudio-education.github.io/hopr/)
+    - [Advanced R](https://adv-r.hadley.nz/)
+
+# References
+
+<!--chapter:end:10-Appendices.Rmd-->
+

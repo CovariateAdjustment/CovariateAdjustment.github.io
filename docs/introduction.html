@@ -264,9 +264,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="10" data-path="recommendations.html"><a href="recommendations.html"><i class="fa fa-check"></i><b>10</b> Guidance on Applying Covariate Adjustment</a>
 <ul>
-<li class="chapter" data-level="10.1" data-path="recommendations.html"><a href="recommendations.html#statistical-analysis-plans"><i class="fa fa-check"></i><b>10.1</b> Statistical Analysis Plans</a></li>
-<li class="chapter" data-level="10.2" data-path="recommendations.html"><a href="recommendations.html#sample-size-for-adjusted-vs.-unadjusted"><i class="fa fa-check"></i><b>10.2</b> Sample size for adjusted vs. unadjusted</a></li>
-<li class="chapter" data-level="10.3" data-path="recommendations.html"><a href="recommendations.html#number-of-parameters-vs.-sample-size"><i class="fa fa-check"></i><b>10.3</b> Number of parameters vs. sample size</a></li>
+<li class="chapter" data-level="10.1" data-path="recommendations.html"><a href="recommendations.html#missing-covariates"><i class="fa fa-check"></i><b>10.1</b> Missing Covariates</a></li>
+<li class="chapter" data-level="10.2" data-path="recommendations.html"><a href="recommendations.html#statistical-analysis-plans"><i class="fa fa-check"></i><b>10.2</b> Statistical Analysis Plans</a></li>
+<li class="chapter" data-level="10.3" data-path="recommendations.html"><a href="recommendations.html#sample-size-for-adjusted-vs.-unadjusted"><i class="fa fa-check"></i><b>10.3</b> Sample size for adjusted vs. unadjusted</a></li>
+<li class="chapter" data-level="10.4" data-path="recommendations.html"><a href="recommendations.html#number-of-parameters-vs.-sample-size"><i class="fa fa-check"></i><b>10.4</b> Number of parameters vs. sample size</a></li>
+<li class="chapter" data-level="10.5" data-path="recommendations.html"><a href="recommendations.html#data-adaptive-covariate-adjustment"><i class="fa fa-check"></i><b>10.5</b> Data-Adaptive Covariate Adjustment</a></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="appendices.html"><a href="appendices.html"><i class="fa fa-check"></i><b>11</b> Appendices</a>
 <ul>
@@ -302,7 +304,7 @@ div.csl-indent {
 <h2><span class="header-section-number">2.1</span> Notation and Assumptions<a href="introduction.html#notation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Let <span class="math inline">\(A\)</span> denote a binary treatment assignment: <span class="math inline">\(A = 1\)</span> indicates assignment to receive the treatment of interest, and <span class="math inline">\(A = 0\)</span> indicates assignment to the control or comparator group. Let <span class="math inline">\(Y\)</span> denote the outcome of interest, and <span class="math inline">\(X\)</span> denote a vector of baseline covariates. If stratified randomization is used, let <span class="math inline">\(X_{S}\)</span> denote the stratification variables, and <span class="math inline">\(X_{\bar{S}}\)</span> denote the other baseline covariates, and <span class="math inline">\(X = (X_{S}, X_{\bar{S}})\)</span>. We assume that treatment assignment is independent of the baseline covariates, i.e. <span class="math inline">\(A \perp X\)</span>, or if stratified randomization is used, that the treatment assignment is conditionally independent of the other covariates given the stratification variables, i.e. <span class="math inline">\(A \perp\!\!\!\perp X_{\bar{S}} \vert X_{S}\)</span>. Each participant’s data is assumed to be independent, identically distributed (IID) draws from an unknown distribution <span class="math inline">\(P(X, A, Y)\)</span>.</p>
 <p>In order to include covariate information in an analysis, we have to specify how these covariates relate to the outcome in a regression model, which models a conditional distribution of the outcome as as a function of the covariates. In most circumstances, the validity of our inference from regression models depends on how close the regression model’s specification reflects the true data generation mechanism, which is almost always unknown. This may make investigators understandably reluctant to use covariate adjusted methods, as they do not want the validity of the analysis to depend on assumptions of a correctly specified model.</p>
-<p>What may be surprising is that there are covariate adjustment methods that provide valid estimates of the treatment effect, even if the models used to obtain these estimates are arbitrarily misspecified. These estimators also can have precision that is equal or better than the unadjusted estimators.</p>
+<p>What may be surprising is that there are covariate adjustment methods that provide valid estimates of the treatment effect, even if the models used to obtain these estimates are arbitrarily misspecified. Having models that more closely reflect the underlying data generating mechanism improves precision and power. Additionally, covariate adjusted estimators also can have precision that is equal or better than the unadjusted estimators.</p>
 <hr />
 </div>
 <div id="ancova" class="section level2 hasAnchor" number="2.2">
@@ -315,10 +317,10 @@ div.csl-indent {
 <p>In the case of the simple ANCOVA model with only one covariate, the marginal mean under treatment would be:</p>
 <p><span class="math display">\[\hat{\mu}_{1} = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y \vert A = 1, X] = \frac{1}{n} \sum_{i=1}^{n} (\hat{\beta}_{0} + \hat{\beta}_{X}X_{i} + \hat{\beta}_{A}) = \hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n} + \hat{\beta}_{A}\]</span>
 Note that this utilizes the covariate data from the entire sample, not just those who were assigned to receive the active treatment. The marginal mean under control would be:</p>
-<p><span class="math display">\[\hat{\mu}_{0} = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y \vert A = 1, X] = \frac{1}{n} \sum_{i=1}^{n} (\hat{\beta}_{0} + \hat{\beta}_{X}X_{i}) = \hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n}\]</span>
+<p><span class="math display">\[\hat{\mu}_{0} = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y \vert A = 0, X] = \frac{1}{n} \sum_{i=1}^{n} (\hat{\beta}_{0} + \hat{\beta}_{X}X_{i}) = \hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n}\]</span>
 Likewise, our marginal estimate of the mean under control utilizes the covariate data from the entire sample, not just those who were assigned to receive the control treatment. Our estimate of the average treatment effect would be the contrast between these quantities:</p>
 <p><span class="math display">\[\hat{\theta}_{ATE} = \hat{\mu}_{1} - \hat{\mu}_{0} = (\hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n} + \hat{\beta}_{A}) - (\hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n}) = \hat{\beta}_{A}\]</span></p>
-<p>The procedure for gives us the same result as we would have otherwise used to estimate the treatment effect: the regression coefficient associated with treatment. When there are no treatment-by-covariate interactions and the model does not use a nonlinear link function, the conditional effect and the marginal effect coincide. However, the approach we outlined here is applicable to a wide range of outcome models, including those using link functions, like logistic regression, or models that include treatment-by-covariate interactions.</p>
+<p>The procedure for gives us the same result as we would have otherwise used to estimate the treatment effect: the regression coefficient associated with treatment. When there are no treatment-by-covariate interactions and the model does not use a nonlinear link function, the conditional effect and the marginal effect coincide. However, the approach outlined here is applicable to a wide range of outcome models, including those using link functions, like logistic regression, or models that include treatment-by-covariate interactions. Computing the variance or standard errors of the estimate involves the use of the nonparametric bootstrap or appropriate robust standard errors for the study design and model specification.</p>
 <hr />
 </div>
 <div id="generalizing-the-ancova-g-computation" class="section level2 hasAnchor" number="2.3">
@@ -366,7 +368,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/covariateadjustment/covariateadjustment.github.io/edit/main/01-introduction.Rmd",
+"link": "https://github.com/covariateadjustment/covariateadjustment.github.io/edit/main/01-Introduction.Rmd",
 "text": "Edit"
 },
 "history": {

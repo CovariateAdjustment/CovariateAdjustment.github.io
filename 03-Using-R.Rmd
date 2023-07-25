@@ -4,6 +4,7 @@ The R environment for Statistical Computing is a free, open source environment f
 
 In addition to R and Rstudio, we will also need to install [RTools](https://cran.r-project.org/bin/windows/Rtools/), also known as the R toolchain. These are software tools for compiling software packages. Some of the packages we use may have to be compiled after being downloaded, and RTools provides all the software needed to do so. CRAN provides instruction on which version of RTools you should use, depending on your version of R, and how to install it.
 
+This section is primarily about how to use R and associated software packages. While this does include demonstration of how to implement statistical models and hypothesis tests, a larger discussion of their appropriate use and interpretation will take place in later sections.
 
 
 
@@ -256,7 +257,7 @@ ggplot(
 ```
 
 
-Or we may want to create a plot of the Kaplan-Meier estimate of the survival function (see the [estimands](#estimands) section for its definition).
+Or we may want to create a plot of the Kaplan-Meier estimate of the survival function (see the [estimands](#estimands) section for its definition, and the [time-to-event](#timetoevent) section for further discussion).
 
 
 ```{r Plot-KM-MISTIE-III}

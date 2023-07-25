@@ -1,5 +1,20 @@
 # Guidance on Applying Covariate Adjustment {#recommendations}
 
+
+## Missing Covariates
+
+  - How much missingness is too much
+  - Approaches and justification for missing covariates
+  - Preserving independence of covariates and treatment
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
 ## Statistical Analysis Plans
 
 
@@ -21,4 +36,15 @@
 
 
 ## Number of parameters vs. sample size
-    
+
+
+  - Adjusting for sites in multi-site trial
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+## Data-Adaptive Covariate Adjustment

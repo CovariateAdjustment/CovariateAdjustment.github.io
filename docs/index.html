@@ -264,9 +264,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="10" data-path="recommendations.html"><a href="recommendations.html"><i class="fa fa-check"></i><b>10</b> Guidance on Applying Covariate Adjustment</a>
 <ul>
-<li class="chapter" data-level="10.1" data-path="recommendations.html"><a href="recommendations.html#statistical-analysis-plans"><i class="fa fa-check"></i><b>10.1</b> Statistical Analysis Plans</a></li>
-<li class="chapter" data-level="10.2" data-path="recommendations.html"><a href="recommendations.html#sample-size-for-adjusted-vs.-unadjusted"><i class="fa fa-check"></i><b>10.2</b> Sample size for adjusted vs. unadjusted</a></li>
-<li class="chapter" data-level="10.3" data-path="recommendations.html"><a href="recommendations.html#number-of-parameters-vs.-sample-size"><i class="fa fa-check"></i><b>10.3</b> Number of parameters vs. sample size</a></li>
+<li class="chapter" data-level="10.1" data-path="recommendations.html"><a href="recommendations.html#missing-covariates"><i class="fa fa-check"></i><b>10.1</b> Missing Covariates</a></li>
+<li class="chapter" data-level="10.2" data-path="recommendations.html"><a href="recommendations.html#statistical-analysis-plans"><i class="fa fa-check"></i><b>10.2</b> Statistical Analysis Plans</a></li>
+<li class="chapter" data-level="10.3" data-path="recommendations.html"><a href="recommendations.html#sample-size-for-adjusted-vs.-unadjusted"><i class="fa fa-check"></i><b>10.3</b> Sample size for adjusted vs. unadjusted</a></li>
+<li class="chapter" data-level="10.4" data-path="recommendations.html"><a href="recommendations.html#number-of-parameters-vs.-sample-size"><i class="fa fa-check"></i><b>10.4</b> Number of parameters vs. sample size</a></li>
+<li class="chapter" data-level="10.5" data-path="recommendations.html"><a href="recommendations.html#data-adaptive-covariate-adjustment"><i class="fa fa-check"></i><b>10.5</b> Data-Adaptive Covariate Adjustment</a></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="appendices.html"><a href="appendices.html"><i class="fa fa-check"></i><b>11</b> Appendices</a>
 <ul>
@@ -300,43 +302,13 @@ div.csl-indent {
 </div>
 <div id="the-book" class="section level1 hasAnchor" number="1">
 <h1><span class="header-section-number">Chapter 1</span> The Book<a href="index.html#the-book" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<ul>
-<li>This book is about covariate adjustment for practitioners planning and analyzing randomized trials</li>
-<li>Marginal Effects: what they are, why we are focusing on them.
-<ul>
-<li>References on where to find more on conditional effects</li>
-</ul></li>
-<li>Goals for covariate adjusted approach
-<ul>
-<li>We do not want to change the target of inference</li>
-<li>We want to have the same or better precision (asymptotically) as the unadjusted estimator</li>
-<li>We want assumptions to be as strict as the unadjusted estimator, if not less strict.</li>
-</ul></li>
-<li>We want to provide methods and examples that are broadly applicable:
-<ul>
-<li>Continuous, binary, ordinal, time-to-event outcomes</li>
-<li>Applicable to various areas</li>
-<li>Avoid methods with pathological behavior, such as lack of convergence</li>
-</ul></li>
-<li>Potential Benefits:
-<ul>
-<li>Increased power for same sample size or same power at lower sample size
-<ul>
-<li>Particularly beneficial in larger trials</li>
-</ul></li>
-<li>More ethical, efficient trials</li>
-<li>Generally supported by regulatory agencies</li>
-</ul></li>
-<li>Challenges to Address:
-<ul>
-<li>Precision gain not known a priori</li>
-<li>Need a theoretical framework which includes a broad class of estimators</li>
-<li>Missing data: dropout, not yet collected</li>
-<li>No ‘off the shelf’ software solutions</li>
-<li>Reviewer skepticism</li>
-<li>General guidance and rules for application</li>
-</ul></li>
-</ul>
+<p>Randomized trials are an important tool for generating evidence to inform practice in medicine, public health, science, and industry. Planning ethical, informative, and cost-effective studies requires many careful considerations when deciding on the study design and analysis plan. One of these considerations should be how to utilize the information about study participants which is known before randomization takes place. Variables observed prior to randomization, known as baseline covariates, can provide information about the outcomes that are observed during the study. Leveraging the information in baseline covariates could improve our inference about the potential benefits or harms of an intervention. Utilizing this information effectively in the study design and analysis plan has the potential to reduce the number of participants required or the duration of the study without sacrificing the precision of our inference. Such methods can make evaluating interventions more ethical and cost effective, which is generally supported by regulatory agencies.</p>
+<p>This book is about the practice of applying covariate adjustment in randomized trials. While there are many approaches for covariate adjustment, our focus will be on estimating the average outcome in a population under different potential treatment assignments, known as marginal treatment effects. Investigators may be interested in comparing the average outcome within strata of a population under different potential treatment assignments, which are known as conditional treatment effects. While conditional treatment effects will arise in our discussion along the way, they will not be our primary focus.</p>
+<p>Since randomized trials serve such an important role in policy and practice, stakeholders may be understandably cautious about changing how such research is carried out. It is important that investigators, regulators, reviewers, and readers trust the methods chosen for an application and understand how they compare to potential alternative approaches. It is natural to ask what assumptions are required for the validity of a covariate adjusted analysis, how such results should be interpreted, and how these differ from an unadjusted approach.</p>
+<p>The methods that we consider should meet certain acceptability criteria. Firstly, an acceptable approach must not change the statistical and scientific focus of investigation. In other words, our covariate-adjusted approach should infer about the same quantities of interest, or estimands, as an unadjusted approach. Secondly, an acceptable approach must not require stronger, more restrictive assumptions: the assumptions for the validity of a covariate-adjusted approach should be the same or less stringent than an unadjusted approach. Finally, a covariate-adjusted approach should have the same or better precision than the unadjusted estimator.</p>
+<p>Statisticians rely on regression models in many contexts to relate covariate information to an outcome of interest. Before interpreting regression coefficients, there is often a great deal of consideration put into choosing an appropriate specification for the model: which variables should be included in the model, how they should be included, and how to link the covariates to the scale of the outcome. Appropriate interpretation and application of models requires some assumptions about how closely the fitted model is to the true data generating process, which is unknown in practice.</p>
+<p>Since regression models are used to perform covariate adjustment, it is natural to ask whether using such models also requires assumptions about how closely the specified model is to the true data generating process. What may be surprising to some is that covariate adjusted analyses can be valid under arbitrary model misspecification. Even though covariate adjustment may use regression models to construct an estimator, the validity of the resulting estimator does not require that the model is correctly specified. This is particularly important if we are to have covariate-adjusted methods that do not require stronger assumptions than an unadjusted analysis. Use of regression models allow us to do covariate-adjusted analyses for continuous, binary, ordinal, or time-to-event outcomes, allowing them to be applied to many research areas and questions.</p>
+<p>While covariate adjustment has the potential to improve precision and make research more ethical and cost effective, there are still challenges to be addressed in practice. Firstly, the amount of precision gained by using covariate adjustment is not known a priori. We need study designs and analysis plans that guarantee the desired level of statistical power and control of error rates irrespective of the amount of precision gained by using covariate adjustment. Secondly, we need a theoretical framework which includes a broad class of estimators in a single framework. The methods employed must address missing data due to dropout, and incomplete data from participants whose outcomes have yet to be collected. Investigators need the information to effectively advocate for the use of these methods with stakeholders, regulators, and reviewers. Practitioners need validated, freely available software to make applying these methods straightforward. Finally, general guidance and best practices need to be established so as to make covariate adjusted analyses as well understood and trusted as their unadjusted counterparts.</p>
 <hr />
 <div id="using-this-book" class="section level2 hasAnchor" number="1.1">
 <h2><span class="header-section-number">1.1</span> Using this Book<a href="index.html#using-this-book" class="anchor-section" aria-label="Anchor link to header"></a></h2>

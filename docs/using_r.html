@@ -264,9 +264,11 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="10" data-path="recommendations.html"><a href="recommendations.html"><i class="fa fa-check"></i><b>10</b> Guidance on Applying Covariate Adjustment</a>
 <ul>
-<li class="chapter" data-level="10.1" data-path="recommendations.html"><a href="recommendations.html#statistical-analysis-plans"><i class="fa fa-check"></i><b>10.1</b> Statistical Analysis Plans</a></li>
-<li class="chapter" data-level="10.2" data-path="recommendations.html"><a href="recommendations.html#sample-size-for-adjusted-vs.-unadjusted"><i class="fa fa-check"></i><b>10.2</b> Sample size for adjusted vs. unadjusted</a></li>
-<li class="chapter" data-level="10.3" data-path="recommendations.html"><a href="recommendations.html#number-of-parameters-vs.-sample-size"><i class="fa fa-check"></i><b>10.3</b> Number of parameters vs. sample size</a></li>
+<li class="chapter" data-level="10.1" data-path="recommendations.html"><a href="recommendations.html#missing-covariates"><i class="fa fa-check"></i><b>10.1</b> Missing Covariates</a></li>
+<li class="chapter" data-level="10.2" data-path="recommendations.html"><a href="recommendations.html#statistical-analysis-plans"><i class="fa fa-check"></i><b>10.2</b> Statistical Analysis Plans</a></li>
+<li class="chapter" data-level="10.3" data-path="recommendations.html"><a href="recommendations.html#sample-size-for-adjusted-vs.-unadjusted"><i class="fa fa-check"></i><b>10.3</b> Sample size for adjusted vs. unadjusted</a></li>
+<li class="chapter" data-level="10.4" data-path="recommendations.html"><a href="recommendations.html#number-of-parameters-vs.-sample-size"><i class="fa fa-check"></i><b>10.4</b> Number of parameters vs. sample size</a></li>
+<li class="chapter" data-level="10.5" data-path="recommendations.html"><a href="recommendations.html#data-adaptive-covariate-adjustment"><i class="fa fa-check"></i><b>10.5</b> Data-Adaptive Covariate Adjustment</a></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="appendices.html"><a href="appendices.html"><i class="fa fa-check"></i><b>11</b> Appendices</a>
 <ul>
@@ -298,6 +300,7 @@ div.csl-indent {
 <h1><span class="header-section-number">Chapter 4</span> Using R<a href="using_r.html#using_r" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>The R environment for Statistical Computing is a free, open source environment for managing and visualizing data and performing analyses. Its capabilities can be augmented by downloading software packages from repositories, such as the <a href="https://cran.r-project.org/">Comprehensive R Archival Network (CRAN)</a>, and more recently, <a href="https://github.com/">GitHub</a>. <a href="https://rstudio.com/">Rstudio</a> is a powerful development environment that makes it easier to use R, expands its functionality, and allows the integration of other tools, such as Git, into an analyst’s workflow. If you are new to R or would like additional resources on using R in practice, see <a href="appendices.html#appendix_b_using_r">the appendix</a>.</p>
 <p>In addition to R and Rstudio, we will also need to install <a href="https://cran.r-project.org/bin/windows/Rtools/">RTools</a>, also known as the R toolchain. These are software tools for compiling software packages. Some of the packages we use may have to be compiled after being downloaded, and RTools provides all the software needed to do so. CRAN provides instruction on which version of RTools you should use, depending on your version of R, and how to install it.</p>
+<p>This section is primarily about how to use R and associated software packages. While this does include demonstration of how to implement statistical models and hypothesis tests, a larger discussion of their appropriate use and interpretation will take place in later sections.</p>
 <hr />
 <div id="installing-packages" class="section level2 hasAnchor" number="4.1">
 <h2><span class="header-section-number">4.1</span> Installing Packages<a href="using_r.html#installing-packages" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -658,7 +661,7 @@ div.csl-indent {
 <span id="cb16-15"><a href="using_r.html#cb16-15" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb16-16"><a href="using_r.html#cb16-16" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 <p><img src="_main_files/figure-html/Plot-eCDF-Age-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>Or we may want to create a plot of the Kaplan-Meier estimate of the survival function (see the <a href="estimands.html#estimands">estimands</a> section for its definition).</p>
+<p>Or we may want to create a plot of the Kaplan-Meier estimate of the survival function (see the <a href="estimands.html#estimands">estimands</a> section for its definition, and the <a href="timetoevent.html#timetoevent">time-to-event</a> section for further discussion).</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="using_r.html#cb17-1" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
 <span id="cb17-2"><a href="using_r.html#cb17-2" tabindex="-1"></a><span class="fu">library</span>(survminer)</span>
 <span id="cb17-3"><a href="using_r.html#cb17-3" tabindex="-1"></a></span>
