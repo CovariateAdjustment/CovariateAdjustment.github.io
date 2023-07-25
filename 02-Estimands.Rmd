@@ -150,7 +150,7 @@ $$-\theta_{LOR} = \frac{1}{K-1} \sum_{j=1}^{K-1} log \left( \frac{odds(Y > j \ve
 
 ## Survival/Time-To-Event Outcomes {#survival_estimands}
 
-When the outcome is the time from randomization until an event of interest occurs, let $Y$ denote the time at which the event occurs, and $C$ denote the time at which individuals would be censored. For each individual, we observe $\delta_{i} = I_{\{Y_{i} \le C_{i}\}}$, whether an individual is censored or the event is observed, and $T_{i} = min\{Y_{i}, C_{i}\}$, the time at which the event or censoring occurs. Often we are interested in a particular time window after randomization, known as the time horizon. Let $\tau$ denote the time horizon of interest for inference.
+When the outcome is the time from randomization until an event of interest occurs, let $Y$ denote the time at which the event occurs, and $C$ denote the time at which individuals would be censored. For each individual, we observe $\delta_{i} = I_{\{Y_{i} \le C_{i}\}}$, whether an individual is censored or the event is observed, and $T_{i} = min\{Y_{i}, C_{i}\}$, the time at which the event or censoring occurs. Often we are interested in a pre-specified time window from randomization to a scientifically relevant point in time, known as the time horizon. Let $\tau$ denote the time horizon of interest for inference.
 
 
 
@@ -166,10 +166,10 @@ When the outcome is a time-to-event, the usual target of inference is the surviv
 
 $$S_{0}^{(a)}(t) = Pr\{Y > t \vert A = a\}$$
 
-Estimands of interest may include the difference in survival probability at a particular time, denoted $\tau$:
+Estimands of interest may include the difference in survival probability up to the time horizon $\tau$:
 
 $$\theta_{DSP} = Pr(Y \ge \tau \vert A = 1) - Pr(Y \ge \tau \vert A = 0)$$
-Instead of an additive estimand, a relative estimand can be obtained by taking the ratio of survival probabilities at time $\tau$:
+Instead of an additive estimand, a relative estimand can be obtained by taking the ratio of survival probabilities at the time horizon $\tau$:
 
 
 $$\theta_{RSP} = \frac{Pr(Y \ge \tau \vert A = 1)}{Pr(Y \ge \tau \vert A = 0)}$$
@@ -195,7 +195,7 @@ $$\theta_{HR}(t) = \frac{h^{(1)}(t)}{h^{(0)}(t)}$$
 
 Since both hazard functions can vary over time, the true hazard ratio can vary over time. Commonly used approaches in time-to-event analysis often require the hazard rate being approximately constant over the time interval of interest, either unconditionally or conditional on covariates. It may not be known a priori in practice whether such an assumption is reasonable, but this assumption can be empirically assessed.
 
-When the hazard ratio varies appreciably in time, methods that make a conditional or unconditional assumption of proportional hazards are less efficient and give effect estimates whose interpretation is unclear. Even when the assumption of proportional hazards is approximately true, the hazard ratio cannot easily be translated into easily communicated, meaningful effects, such as the number of years an individual can expect to be free of the event if they were assigned to one treatment or another.
+When the hazard ratio varies appreciably in time, methods that make a conditional or unconditional assumption of proportional hazards are less efficient and give effect estimates whose interpretation is unclear. Even when the assumption of proportional hazards is approximately true, the hazard ratio cannot easily be translated into an easily communicated metric, such as the number of years an individual can expect to be free of the event if they were assigned to one treatment or another.
 
 
 
@@ -207,7 +207,7 @@ When the hazard ratio varies appreciably in time, methods that make a conditiona
 
 ### Restricted Mean Survival Time
 
-Another estimand that may be of interest is the restricted mean survival time (RMST). This estimand is the average time-to-event (e.g. life expectancy when mortality is the event of interest) from baseline to a pre-specified point in time, denoted $\tau$. The interval $[0, \tau]$ is called the time horizon. This is given by taking the area under the survival function over the time horizon:
+Another estimand that may be of interest is the restricted mean survival time (RMST). This estimand is the average time-to-event from randomization to the time horizon $\tau$ (e.g. life expectancy up to $\tau$ when mortality is the event of interest). This is given by taking the area under the survival function from randomization to the time horizon:
 
 $$RMST = E[min\{ Y, \tau \} \vert a] = \int_{0}^{\tau} S_{0}^{(a)}(t) dt$$
 
