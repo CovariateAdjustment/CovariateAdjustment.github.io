@@ -159,7 +159,7 @@ surv_prob_unadj <-
   )
 ```
 
-```{r Unadjusted-Survival-Probability-MISTIE-Print}
+```{r Unadjusted-Survival-Probability-MISTIE-Print, results = 'asis', message = TRUE}
 surv_prob_unadj
 ```
 
@@ -200,7 +200,7 @@ rmst_unadj <-
 ```
 
 
-```{r Unadjusted-RMST-adjrct-MISTIE-print}
+```{r Unadjusted-RMST-adjrct-MISTIE-print, results = 'asis', message = TRUE}
 rmst_unadj
 ```
 
@@ -244,6 +244,46 @@ rmst_unadj
 
 ### Survival Probability
 
+Producing covariate-adjusted estimates of the survival metadata follows the same syntax as before with `adjrct::survrct`. The formulas can be used to include terms for the baseline covariates in both the outcome and treatment models:
+
+```{r Adjusted-Survival-Metadata-MISTIE, eval = FALSE}
+# Note: this can be time-consuming to compute
+surv_metadata_adj <-
+  adjrct::survrct(
+    outcome.formula =
+      Surv(days_on_study, died_on_study) ~
+      tx + age + male + hx_cvd + hx_hyperlipidemia +
+      on_anticoagulants + on_antiplatelets + ich_location +
+      ich_s_volume + ivh_s_volume + gcs_category,
+    trt.formula =
+      tx ~
+      age + male + hx_cvd + hx_hyperlipidemia +
+      on_anticoagulants + on_antiplatelets + ich_location +
+      ich_s_volume + ivh_s_volume + gcs_category,
+    data = sim_miii
+  )
+```
+
+
+Once the metadata is computed, the syntax to produce the results is identical:
+
+
+```{r Adjusted-Survival-Probability-MISTIE, eval = FALSE, results = 'asis'}
+surv_prob_adj <-
+  adjrct::survprob(
+    metadata = surv_metadata_adj,
+    horizon = 90
+  )
+```
+
+
+The results can be printed using the `base::print` function:
+
+
+```{r Adjusted-Survival-Probability-MISTIE-Print, results = 'asis', message = TRUE}
+surv_prob_adj
+```
+
 
 
 
@@ -254,6 +294,21 @@ rmst_unadj
 
 ### Restricted Mean Survival Time (RMST)
 
+Similar to the survival probability, once the metadata is computed, the syntax to produce the covariate-adjusted RMST is identical:
 
 
+```{r Adjusted-RMST-adjrct-MISTIE, eval = FALSE}
+rmst_adj <-
+  adjrct::rmst(
+    metadata = surv_metadata_adj,
+    horizon = 90
+  )
+```
 
+
+Similarly, results can be printed using the `base::print` function:
+
+
+```{r Adjusted-RMST-adjrct-MISTIE-print, results = 'asis', message = TRUE}
+rmst_adj
+```

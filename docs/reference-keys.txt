@@ -35,7 +35,9 @@ variance-estimation
 robust-standard-errors
 bootstrap-estimator
 addressing-multiplicity
-applying-covariate-adjustment-ancova-g-computation-dr-wls
+applying-covariate-adjustment-ancova-g-computation
+computing-the-estimate
+standard-error-inference
 calculating-precision-gain
 covariate-adjustment-with-binary-outcomes
 stratified-randomization-covariate-adjustment

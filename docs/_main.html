@@ -234,12 +234,14 @@ details > summary {
 </ul></li>
 <li><a href="#addressing-multiplicity" id="toc-addressing-multiplicity"><span class="toc-section-number">4.7</span> Addressing Multiplicity</a></li>
 </ul></li>
-<li class="has-sub"><a href="#applying-covariate-adjustment-ancova-g-computation-dr-wls" id="toc-applying-covariate-adjustment-ancova-g-computation-dr-wls"><span class="toc-section-number">5</span> Applying Covariate Adjustment: ANCOVA, G-Computation, DR-WLS</a>
+<li class="has-sub"><a href="#applying-covariate-adjustment-ancova-g-computation" id="toc-applying-covariate-adjustment-ancova-g-computation"><span class="toc-section-number">5</span> Applying Covariate Adjustment: ANCOVA &amp; G-Computation</a>
 <ul>
-<li><a href="#calculating-precision-gain" id="toc-calculating-precision-gain"><span class="toc-section-number">5.1</span> Calculating Precision Gain</a></li>
-<li><a href="#covariate-adjustment-with-binary-outcomes" id="toc-covariate-adjustment-with-binary-outcomes"><span class="toc-section-number">5.2</span> Covariate Adjustment with Binary Outcomes</a></li>
-<li><a href="#stratified-randomization-covariate-adjustment" id="toc-stratified-randomization-covariate-adjustment"><span class="toc-section-number">5.3</span> Stratified Randomization &amp; Covariate Adjustment</a></li>
-<li><a href="#missing-outcome-data-inverse-weighting" id="toc-missing-outcome-data-inverse-weighting"><span class="toc-section-number">5.4</span> Missing Outcome Data: Inverse Weighting</a></li>
+<li><a href="#computing-the-estimate" id="toc-computing-the-estimate"><span class="toc-section-number">5.1</span> Computing the Estimate</a></li>
+<li><a href="#standard-error-inference" id="toc-standard-error-inference"><span class="toc-section-number">5.2</span> Standard Error &amp; Inference</a></li>
+<li><a href="#calculating-precision-gain" id="toc-calculating-precision-gain"><span class="toc-section-number">5.3</span> Calculating Precision Gain</a></li>
+<li><a href="#covariate-adjustment-with-binary-outcomes" id="toc-covariate-adjustment-with-binary-outcomes"><span class="toc-section-number">5.4</span> Covariate Adjustment with Binary Outcomes</a></li>
+<li><a href="#stratified-randomization-covariate-adjustment" id="toc-stratified-randomization-covariate-adjustment"><span class="toc-section-number">5.5</span> Stratified Randomization &amp; Covariate Adjustment</a></li>
+<li><a href="#missing-outcome-data-inverse-weighting" id="toc-missing-outcome-data-inverse-weighting"><span class="toc-section-number">5.6</span> Missing Outcome Data: Inverse Weighting</a></li>
 </ul></li>
 <li class="has-sub"><a href="#doublyrobust" id="toc-doublyrobust"><span class="toc-section-number">6</span> Doubly Robust Estimators</a>
 <ul>
@@ -1214,14 +1216,20 @@ A relative estimand is given by the ratio of RMST:</p>
 
 </div>
 </div>
-<div id="applying-covariate-adjustment-ancova-g-computation-dr-wls" class="section level1" number="5">
-<h1><span class="header-section-number">Chapter 5</span> Applying Covariate Adjustment: ANCOVA, G-Computation, DR-WLS</h1>
+<div id="applying-covariate-adjustment-ancova-g-computation" class="section level1" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Applying Covariate Adjustment: ANCOVA &amp; G-Computation</h1>
 <p>In this next section, we will use R to produce the ANCOVA estimator, get an estimate of its standard error, and compare its precision to an unadjusted analysis using R. For this example we will use the Buprenorphine tapering trial data (CTN-03).</p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a>data_url <span class="ot">&lt;-</span></span>
 <span id="cb57-2"><a href="#cb57-2" tabindex="-1"></a>  <span class="st">&quot;https://github.com/jbetz-jhu/CovariateAdjustmentTutorial/raw/main/SIMULATED_CTN03_220506.Rdata&quot;</span></span>
 <span id="cb57-3"><a href="#cb57-3" tabindex="-1"></a></span>
 <span id="cb57-4"><a href="#cb57-4" tabindex="-1"></a><span class="fu">load</span>(<span class="at">file =</span> <span class="fu">url</span>(data_url))</span></code></pre></div>
 <p>This .Rdata file contains two datasets: <code>ctn03_sim</code>, which has no missing data, and <code>ctn03_sim_mar</code>, where a simulated missing data mechanism has been applied.</p>
+<p>The <code>stats::lm</code> function can be used to fit a linear regression model, such as the ANCOVA. While this estimator is conditional on the baseline value of the outcome, because the model is linear with an identity link, the conditional treatment effect is the same as the marginal treatment effect. When binary outcomes or nonlinear link functions are used in a regression model, the marginal and conditional associations are almost always different.</p>
+<p>In order to generalize the ANCOVA to other settings, a different approach must be taken to compute the marginal treatment effect. We will use the steps outlined earlier in <a href="#ancova">the discussion of the ANCOVA estimator</a>.</p>
+<hr />
+<div id="computing-the-estimate" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Computing the Estimate</h2>
+<p>To compute the ANCOVA estimator, first regress the final outcome on the treatment assignment indicator and the baseline value of the outcome:</p>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a><span class="co"># 1. Regress final outcome (VAS at end of taper) on treatment assignment and</span></span>
 <span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a><span class="co"># outcome assessed at baseline (VAS at baseline)</span></span>
 <span id="cb58-3"><a href="#cb58-3" tabindex="-1"></a>vas_ancova_1 <span class="ot">&lt;-</span></span>
@@ -1252,7 +1260,7 @@ A relative estimand is given by the ratio of RMST:</p>
 ##   (163 observations deleted due to missingness)
 ## Multiple R-squared:  0.06006,    Adjusted R-squared:  0.05469 
 ## F-statistic: 11.18 on 2 and 350 DF,  p-value: 1.962e-05</code></pre>
-<p>Note that the standard error reported by <code>lm()</code> is the model-based standard error, not a robust standard error or bootstrap standard error.</p>
+<p>Note that the standard error reported by <code>lm()</code> is the model-based standard error, not a robust standard error or bootstrap standard error. Next, we generate the predicted outcome for each randomized individual under each treatment assignment:</p>
 <div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a><span class="co"># 2. Generate predictions based on fitted model:</span></span>
 <span id="cb60-2"><a href="#cb60-2" tabindex="-1"></a><span class="co"># Their predicted outcome if they were assigned to treatment (7-day taper)</span></span>
 <span id="cb60-3"><a href="#cb60-3" tabindex="-1"></a><span class="co"># Their predicted outcome if they were assigned to control (28-day taper)</span></span>
@@ -1260,31 +1268,33 @@ A relative estimand is given by the ratio of RMST:</p>
 <span id="cb60-5"><a href="#cb60-5" tabindex="-1"></a>  <span class="fu">predict</span>(</span>
 <span id="cb60-6"><a href="#cb60-6" tabindex="-1"></a>    <span class="at">object =</span> vas_ancova_1,</span>
 <span id="cb60-7"><a href="#cb60-7" tabindex="-1"></a>    <span class="at">newdata =</span></span>
-<span id="cb60-8"><a href="#cb60-8" tabindex="-1"></a>      <span class="fu">within</span>(</span>
-<span id="cb60-9"><a href="#cb60-9" tabindex="-1"></a>        <span class="at">data =</span> ctn03_sim_mar,</span>
-<span id="cb60-10"><a href="#cb60-10" tabindex="-1"></a>        <span class="at">expr =</span> {arm <span class="ot">=</span> <span class="st">&quot;7-day&quot;</span>}</span>
-<span id="cb60-11"><a href="#cb60-11" tabindex="-1"></a>      ),</span>
-<span id="cb60-12"><a href="#cb60-12" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;response&quot;</span></span>
-<span id="cb60-13"><a href="#cb60-13" tabindex="-1"></a>  )</span>
-<span id="cb60-14"><a href="#cb60-14" tabindex="-1"></a></span>
-<span id="cb60-15"><a href="#cb60-15" tabindex="-1"></a>expected_vas_28_day <span class="ot">&lt;-</span></span>
-<span id="cb60-16"><a href="#cb60-16" tabindex="-1"></a>  <span class="fu">predict</span>(</span>
-<span id="cb60-17"><a href="#cb60-17" tabindex="-1"></a>    <span class="at">object =</span> vas_ancova_1,</span>
-<span id="cb60-18"><a href="#cb60-18" tabindex="-1"></a>    <span class="at">newdata =</span></span>
-<span id="cb60-19"><a href="#cb60-19" tabindex="-1"></a>      <span class="fu">within</span>(</span>
-<span id="cb60-20"><a href="#cb60-20" tabindex="-1"></a>        <span class="at">data =</span> ctn03_sim_mar,</span>
-<span id="cb60-21"><a href="#cb60-21" tabindex="-1"></a>        <span class="at">expr =</span> {arm <span class="ot">=</span> <span class="st">&quot;28-day&quot;</span>}</span>
-<span id="cb60-22"><a href="#cb60-22" tabindex="-1"></a>      ),</span>
-<span id="cb60-23"><a href="#cb60-23" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;response&quot;</span></span>
-<span id="cb60-24"><a href="#cb60-24" tabindex="-1"></a>  )</span>
-<span id="cb60-25"><a href="#cb60-25" tabindex="-1"></a></span>
-<span id="cb60-26"><a href="#cb60-26" tabindex="-1"></a></span>
-<span id="cb60-27"><a href="#cb60-27" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
-<span id="cb60-28"><a href="#cb60-28" tabindex="-1"></a>  expected_vas_7_day,</span>
-<span id="cb60-29"><a href="#cb60-29" tabindex="-1"></a>  expected_vas_28_day,</span>
-<span id="cb60-30"><a href="#cb60-30" tabindex="-1"></a>  ctn03_sim_mar[, <span class="fu">c</span>(<span class="st">&quot;arm&quot;</span>, <span class="st">&quot;vas_crave_opiates_eot&quot;</span>, <span class="st">&quot;vas_crave_opiates_bl&quot;</span>)]</span>
-<span id="cb60-31"><a href="#cb60-31" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb60-32"><a href="#cb60-32" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
+<span id="cb60-8"><a href="#cb60-8" tabindex="-1"></a>      <span class="co"># Set all treatment to &quot;7-day&quot;</span></span>
+<span id="cb60-9"><a href="#cb60-9" tabindex="-1"></a>      <span class="fu">within</span>(</span>
+<span id="cb60-10"><a href="#cb60-10" tabindex="-1"></a>        <span class="at">data =</span> ctn03_sim_mar,</span>
+<span id="cb60-11"><a href="#cb60-11" tabindex="-1"></a>        <span class="at">expr =</span> {arm <span class="ot">=</span> <span class="st">&quot;7-day&quot;</span>}</span>
+<span id="cb60-12"><a href="#cb60-12" tabindex="-1"></a>      ),</span>
+<span id="cb60-13"><a href="#cb60-13" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;response&quot;</span></span>
+<span id="cb60-14"><a href="#cb60-14" tabindex="-1"></a>  )</span>
+<span id="cb60-15"><a href="#cb60-15" tabindex="-1"></a></span>
+<span id="cb60-16"><a href="#cb60-16" tabindex="-1"></a>expected_vas_28_day <span class="ot">&lt;-</span></span>
+<span id="cb60-17"><a href="#cb60-17" tabindex="-1"></a>  <span class="fu">predict</span>(</span>
+<span id="cb60-18"><a href="#cb60-18" tabindex="-1"></a>    <span class="at">object =</span> vas_ancova_1,</span>
+<span id="cb60-19"><a href="#cb60-19" tabindex="-1"></a>    <span class="at">newdata =</span></span>
+<span id="cb60-20"><a href="#cb60-20" tabindex="-1"></a>      <span class="co"># Set all treatment to &quot;28-day&quot;</span></span>
+<span id="cb60-21"><a href="#cb60-21" tabindex="-1"></a>      <span class="fu">within</span>(</span>
+<span id="cb60-22"><a href="#cb60-22" tabindex="-1"></a>        <span class="at">data =</span> ctn03_sim_mar,</span>
+<span id="cb60-23"><a href="#cb60-23" tabindex="-1"></a>        <span class="at">expr =</span> {arm <span class="ot">=</span> <span class="st">&quot;28-day&quot;</span>}</span>
+<span id="cb60-24"><a href="#cb60-24" tabindex="-1"></a>      ),</span>
+<span id="cb60-25"><a href="#cb60-25" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;response&quot;</span></span>
+<span id="cb60-26"><a href="#cb60-26" tabindex="-1"></a>  )</span>
+<span id="cb60-27"><a href="#cb60-27" tabindex="-1"></a></span>
+<span id="cb60-28"><a href="#cb60-28" tabindex="-1"></a></span>
+<span id="cb60-29"><a href="#cb60-29" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb60-30"><a href="#cb60-30" tabindex="-1"></a>  expected_vas_7_day,</span>
+<span id="cb60-31"><a href="#cb60-31" tabindex="-1"></a>  expected_vas_28_day,</span>
+<span id="cb60-32"><a href="#cb60-32" tabindex="-1"></a>  ctn03_sim_mar[, <span class="fu">c</span>(<span class="st">&quot;arm&quot;</span>, <span class="st">&quot;vas_crave_opiates_eot&quot;</span>, <span class="st">&quot;vas_crave_opiates_bl&quot;</span>)]</span>
+<span id="cb60-33"><a href="#cb60-33" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb60-34"><a href="#cb60-34" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
 <pre><code>##   expected_vas_7_day expected_vas_28_day   arm vas_crave_opiates_eot
 ## 1           27.97901            30.15833 7-day                    NA
 ## 2           24.38801            26.56733 7-day                     5
@@ -1307,7 +1317,12 @@ A relative estimand is given by the ratio of RMST:</p>
 <div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" tabindex="-1"></a>vas_ancova_estimate <span class="ot">&lt;-</span> <span class="fu">mean</span>(expected_vas_7_day) <span class="sc">-</span> <span class="fu">mean</span>(expected_vas_28_day)</span>
 <span id="cb66-2"><a href="#cb66-2" tabindex="-1"></a>vas_ancova_estimate</span></code></pre></div>
 <pre><code>## [1] -2.179321</code></pre>
-<p>Notice this is the exact same as the regression coefficient for <code>arm</code> in the regression model, since there’s no treatment-covariate interactions and an identity link function. We can obtain the standard error of the estimate two ways. The first way is using the <code>margins::margins()</code> command, using the robust standard errors from <code>sandwich::vcovHC</code>:</p>
+<p>Notice this is the exact same as the regression coefficient for <code>arm</code> in the regression model, since there’s no treatment-covariate interactions and an identity link function.</p>
+<hr />
+</div>
+<div id="standard-error-inference" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Standard Error &amp; Inference</h2>
+<p>We can obtain the standard error of the estimate two ways. The first way is using the <code>margins::margins()</code> command, using the robust standard errors from <code>sandwich::vcovHC</code>:</p>
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" tabindex="-1"></a>vas_ancova_margins <span class="ot">&lt;-</span></span>
 <span id="cb68-2"><a href="#cb68-2" tabindex="-1"></a>  margins<span class="sc">::</span><span class="fu">margins</span>(</span>
 <span id="cb68-3"><a href="#cb68-3" tabindex="-1"></a>    <span class="at">model =</span> vas_ancova_1,</span>
@@ -1432,8 +1447,9 @@ A relative estimand is given by the ratio of RMST:</p>
 <pre><code>## [1] 1.018282</code></pre>
 <p>The standard errors are nearly identical using the estimated marginal effect with robust standard errors or the bootstrap.</p>
 <hr />
-<div id="calculating-precision-gain" class="section level2" number="5.1">
-<h2><span class="header-section-number">5.1</span> Calculating Precision Gain</h2>
+</div>
+<div id="calculating-precision-gain" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Calculating Precision Gain</h2>
 <p>Asymptotically, the ANCOVA estimate should have precision that is equal or better than an unadjusted analysis. We can calculate the precision gain by taking the ratio of the variances, i.e. the squared standard errors, of the adjusted estimator to the unadjusted estimator.</p>
 <div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" tabindex="-1"></a>vas_t_test <span class="ot">&lt;-</span></span>
 <span id="cb83-2"><a href="#cb83-2" tabindex="-1"></a>  <span class="fu">t.test</span>(</span>
@@ -1491,8 +1507,8 @@ A relative estimand is given by the ratio of RMST:</p>
 <p>Including these other covariates leads to a larger gain in precision.</p>
 <hr />
 </div>
-<div id="covariate-adjustment-with-binary-outcomes" class="section level2" number="5.2">
-<h2><span class="header-section-number">5.2</span> Covariate Adjustment with Binary Outcomes</h2>
+<div id="covariate-adjustment-with-binary-outcomes" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Covariate Adjustment with Binary Outcomes</h2>
 <p>When the outcome is binary, the only difference in the approach is fitting a logistic regression with a nonlinear link instead of multiple regression with an identity link:</p>
 <div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" tabindex="-1"></a>uds_opioids_glm <span class="ot">&lt;-</span></span>
 <span id="cb91-2"><a href="#cb91-2" tabindex="-1"></a>  <span class="fu">glm</span>(</span>
@@ -1556,8 +1572,8 @@ A relative estimand is given by the ratio of RMST:</p>
 <p>A risk ratio could be obtained by using <code>margins_fun</code> from above, specifying <code>contrast = "ratio"</code>, and obtaining the standard error and confidence interval via the bootstrap. In the event that a marginal odds ratio is of interest, specifying <code>type = "link"</code> in the <code>margins::margins</code> call gives a marginal log odds ratio, which could be exponentiated to obtain a marginal odds ratio.</p>
 <hr />
 </div>
-<div id="stratified-randomization-covariate-adjustment" class="section level2" number="5.3">
-<h2><span class="header-section-number">5.3</span> Stratified Randomization &amp; Covariate Adjustment</h2>
+<div id="stratified-randomization-covariate-adjustment" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> Stratified Randomization &amp; Covariate Adjustment</h2>
 <p>When stratified randomization is employed, additional benefits in precision can be realized by using covariate adjustment and a variance estimator designed for covariate adaptive designs. First, source the ICAD code from Github:</p>
 <div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" tabindex="-1"></a>icad_link <span class="ot">&lt;-</span></span>
 <span id="cb97-2"><a href="#cb97-2" tabindex="-1"></a>  <span class="st">&quot;https://raw.githubusercontent.com/BingkaiWang/covariate-adaptive/master/R/ICAD.R&quot;</span></span>
@@ -1607,8 +1623,8 @@ A relative estimand is given by the ratio of RMST:</p>
 ## drwls               -0.9485718 6.956200 -6.117900 4.220757</code></pre>
 <hr />
 </div>
-<div id="missing-outcome-data-inverse-weighting" class="section level2" number="5.4">
-<h2><span class="header-section-number">5.4</span> Missing Outcome Data: Inverse Weighting</h2>
+<div id="missing-outcome-data-inverse-weighting" class="section level2" number="5.6">
+<h2><span class="header-section-number">5.6</span> Missing Outcome Data: Inverse Weighting</h2>
 <p>So far, we have not discussed the issue of missing outcome data. While the G-computation estimator is robust to arbitrary model misspecification, it is only valid if data are missing completely at random (MCAR): missingness is unrelated to either the observed or unobserved data. If this were the case, we should not see any association between the baseline covariates and missingness in the VAS opiate craving scores at the end-of-taper visit. We can assess this using a generalized additive model (GAM):</p>
 <div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" tabindex="-1"></a>vas_mar_glm <span class="ot">&lt;-</span></span>
 <span id="cb104-2"><a href="#cb104-2" tabindex="-1"></a>  mgcv<span class="sc">::</span><span class="fu">gam</span>(</span>
@@ -1778,20 +1794,35 @@ The Survival Probability assumes that <span class="math inline">\(\ldots\)</span
 <span id="cb114-4"><a href="#cb114-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
 <span id="cb114-5"><a href="#cb114-5" tabindex="-1"></a>  )</span></code></pre></div>
 <div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" tabindex="-1"></a>surv_prob_unadj</span></code></pre></div>
+<pre><code>## Survival Probability Estimator: tmle</code></pre>
+<pre><code>## Marginal Survival Probability: Pr(T &gt; 90 | A = a)</code></pre>
+<pre><code>## Treatment Arm</code></pre>
+<pre><code>## Estimate: 0.9</code></pre>
+<pre><code>## Std. error: 0.02</code></pre>
+<pre><code>## 95% CI: (0.86, 0.93)</code></pre>
+<pre><code>## Control Arm</code></pre>
+<pre><code>## Estimate: 0.8</code></pre>
+<pre><code>## Std. error: 0.03</code></pre>
+<pre><code>## 95% CI: (0.75, 0.85)</code></pre>
+<pre><code>## Treatment Effect: Pr(T &gt; 90 | A = 1) - Pr(T &gt; 90 | A = 0)</code></pre>
+<pre><code>## Additive effect</code></pre>
+<pre><code>## Estimate: 0.1</code></pre>
+<pre><code>## Std. error: 0.03</code></pre>
+<pre><code>## 95% CI: (0.03, 0.16)</code></pre>
 <hr />
 </div>
 <div id="restricted-mean-survival-time-rmst" class="section level3" number="7.1.5">
 <h3><span class="header-section-number">7.1.5</span> Restricted Mean Survival Time (RMST)</h3>
 <p>The <code>survRM2</code> package can be used to obtain the RMST in each arm, as well as differences and ratios of the RMST between treatment arms:</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" tabindex="-1"></a><span class="fu">with</span>(</span>
-<span id="cb116-2"><a href="#cb116-2" tabindex="-1"></a>  sim_miii,</span>
-<span id="cb116-3"><a href="#cb116-3" tabindex="-1"></a>  survRM2<span class="sc">::</span><span class="fu">rmst2</span>(</span>
-<span id="cb116-4"><a href="#cb116-4" tabindex="-1"></a>    <span class="at">time =</span> days_on_study,</span>
-<span id="cb116-5"><a href="#cb116-5" tabindex="-1"></a>    <span class="at">status =</span> died_on_study,</span>
-<span id="cb116-6"><a href="#cb116-6" tabindex="-1"></a>    <span class="at">arm =</span> tx,</span>
-<span id="cb116-7"><a href="#cb116-7" tabindex="-1"></a>    <span class="at">tau =</span> <span class="dv">90</span></span>
-<span id="cb116-8"><a href="#cb116-8" tabindex="-1"></a>  )</span>
-<span id="cb116-9"><a href="#cb116-9" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" tabindex="-1"></a><span class="fu">with</span>(</span>
+<span id="cb131-2"><a href="#cb131-2" tabindex="-1"></a>  sim_miii,</span>
+<span id="cb131-3"><a href="#cb131-3" tabindex="-1"></a>  survRM2<span class="sc">::</span><span class="fu">rmst2</span>(</span>
+<span id="cb131-4"><a href="#cb131-4" tabindex="-1"></a>    <span class="at">time =</span> days_on_study,</span>
+<span id="cb131-5"><a href="#cb131-5" tabindex="-1"></a>    <span class="at">status =</span> died_on_study,</span>
+<span id="cb131-6"><a href="#cb131-6" tabindex="-1"></a>    <span class="at">arm =</span> tx,</span>
+<span id="cb131-7"><a href="#cb131-7" tabindex="-1"></a>    <span class="at">tau =</span> <span class="dv">90</span></span>
+<span id="cb131-8"><a href="#cb131-8" tabindex="-1"></a>  )</span>
+<span id="cb131-9"><a href="#cb131-9" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## 
 ## The truncation time: tau = 90  was specified. 
 ## 
@@ -1813,12 +1844,27 @@ The Survival Probability assumes that <span class="math inline">\(\ldots\)</span
 ## RMST (arm=1)/(arm=0) 1.116     1.054     1.181 0
 ## RMTL (arm=1)/(arm=0) 0.385     0.235     0.630 0</code></pre>
 <p>This can also be done using the <code>adjrct</code> package. Once the “survival metadata” has been produced using the <code>adjrct::survrct</code> function, the metadata can be passed to the <code>adjrct::rmst</code> function.</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" tabindex="-1"></a>rmst_unadj <span class="ot">&lt;-</span> </span>
-<span id="cb118-2"><a href="#cb118-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">rmst</span>(</span>
-<span id="cb118-3"><a href="#cb118-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_unadj,</span>
-<span id="cb118-4"><a href="#cb118-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
-<span id="cb118-5"><a href="#cb118-5" tabindex="-1"></a>  )</span></code></pre></div>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" tabindex="-1"></a>rmst_unadj</span></code></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" tabindex="-1"></a>rmst_unadj <span class="ot">&lt;-</span> </span>
+<span id="cb133-2"><a href="#cb133-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">rmst</span>(</span>
+<span id="cb133-3"><a href="#cb133-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_unadj,</span>
+<span id="cb133-4"><a href="#cb133-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
+<span id="cb133-5"><a href="#cb133-5" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" tabindex="-1"></a>rmst_unadj</span></code></pre></div>
+<pre><code>## RMST Estimator: tmle</code></pre>
+<pre><code>## Marginal RMST: E(min[T, 90] | A = a)</code></pre>
+<pre><code>## Treatment Arm</code></pre>
+<pre><code>## Estimate: 84.51</code></pre>
+<pre><code>## Std. error: 1.16</code></pre>
+<pre><code>## 95% CI: (82.24, 86.78)</code></pre>
+<pre><code>## Control Arm</code></pre>
+<pre><code>## Estimate: 75.74</code></pre>
+<pre><code>## Std. error: 1.93</code></pre>
+<pre><code>## 95% CI: (71.95, 79.54)</code></pre>
+<pre><code>## Treatment Effect: E(min[T, 90] | A = 1) - E(min[T, 90] | A = 0)</code></pre>
+<pre><code>## Additive effect</code></pre>
+<pre><code>## Estimate: 8.77</code></pre>
+<pre><code>## Std. error: 2.26</code></pre>
+<pre><code>## 95% CI: (4.34, 13.19)</code></pre>
 <hr />
 </div>
 </div>
@@ -1835,10 +1881,72 @@ The Survival Probability assumes that <span class="math inline">\(\ldots\)</span
 </div>
 <div id="survival-probability-1" class="section level3" number="7.3.2">
 <h3><span class="header-section-number">7.3.2</span> Survival Probability</h3>
+<p>Producing covariate-adjusted estimates of the survival metadata follows the same syntax as before with <code>adjrct::survrct</code>. The formulas can be used to include terms for the baseline covariates in both the outcome and treatment models:</p>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" tabindex="-1"></a><span class="co"># Note: this can be time-consuming to compute</span></span>
+<span id="cb150-2"><a href="#cb150-2" tabindex="-1"></a>surv_metadata_adj <span class="ot">&lt;-</span></span>
+<span id="cb150-3"><a href="#cb150-3" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">survrct</span>(</span>
+<span id="cb150-4"><a href="#cb150-4" tabindex="-1"></a>    <span class="at">outcome.formula =</span></span>
+<span id="cb150-5"><a href="#cb150-5" tabindex="-1"></a>      <span class="fu">Surv</span>(days_on_study, died_on_study) <span class="sc">~</span></span>
+<span id="cb150-6"><a href="#cb150-6" tabindex="-1"></a>      tx <span class="sc">+</span> age <span class="sc">+</span> male <span class="sc">+</span> hx_cvd <span class="sc">+</span> hx_hyperlipidemia <span class="sc">+</span></span>
+<span id="cb150-7"><a href="#cb150-7" tabindex="-1"></a>      on_anticoagulants <span class="sc">+</span> on_antiplatelets <span class="sc">+</span> ich_location <span class="sc">+</span></span>
+<span id="cb150-8"><a href="#cb150-8" tabindex="-1"></a>      ich_s_volume <span class="sc">+</span> ivh_s_volume <span class="sc">+</span> gcs_category,</span>
+<span id="cb150-9"><a href="#cb150-9" tabindex="-1"></a>    <span class="at">trt.formula =</span></span>
+<span id="cb150-10"><a href="#cb150-10" tabindex="-1"></a>      tx <span class="sc">~</span></span>
+<span id="cb150-11"><a href="#cb150-11" tabindex="-1"></a>      age <span class="sc">+</span> male <span class="sc">+</span> hx_cvd <span class="sc">+</span> hx_hyperlipidemia <span class="sc">+</span></span>
+<span id="cb150-12"><a href="#cb150-12" tabindex="-1"></a>      on_anticoagulants <span class="sc">+</span> on_antiplatelets <span class="sc">+</span> ich_location <span class="sc">+</span></span>
+<span id="cb150-13"><a href="#cb150-13" tabindex="-1"></a>      ich_s_volume <span class="sc">+</span> ivh_s_volume <span class="sc">+</span> gcs_category,</span>
+<span id="cb150-14"><a href="#cb150-14" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
+<span id="cb150-15"><a href="#cb150-15" tabindex="-1"></a>  )</span></code></pre></div>
+<p>Once the metadata is computed, the syntax to produce the results is identical:</p>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="#cb151-1" tabindex="-1"></a>surv_prob_adj <span class="ot">&lt;-</span></span>
+<span id="cb151-2"><a href="#cb151-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">survprob</span>(</span>
+<span id="cb151-3"><a href="#cb151-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_adj,</span>
+<span id="cb151-4"><a href="#cb151-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
+<span id="cb151-5"><a href="#cb151-5" tabindex="-1"></a>  )</span></code></pre></div>
+<p>The results can be printed using the <code>base::print</code> function:</p>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" tabindex="-1"></a>surv_prob_adj</span></code></pre></div>
+<pre><code>## Survival Probability Estimator: tmle</code></pre>
+<pre><code>## Marginal Survival Probability: Pr(T &gt; 90 | A = a)</code></pre>
+<pre><code>## Treatment Arm</code></pre>
+<pre><code>## Estimate: 0.89</code></pre>
+<pre><code>## Std. error: 0.02</code></pre>
+<pre><code>## 95% CI: (0.85, 0.93)</code></pre>
+<pre><code>## Control Arm</code></pre>
+<pre><code>## Estimate: 0.81</code></pre>
+<pre><code>## Std. error: 0.02</code></pre>
+<pre><code>## 95% CI: (0.77, 0.86)</code></pre>
+<pre><code>## Treatment Effect: Pr(T &gt; 90 | A = 1) - Pr(T &gt; 90 | A = 0)</code></pre>
+<pre><code>## Additive effect</code></pre>
+<pre><code>## Estimate: 0.08</code></pre>
+<pre><code>## Std. error: 0.03</code></pre>
+<pre><code>## 95% CI: (0.02, 0.14)</code></pre>
 <hr />
 </div>
 <div id="restricted-mean-survival-time-rmst-1" class="section level3" number="7.3.3">
 <h3><span class="header-section-number">7.3.3</span> Restricted Mean Survival Time (RMST)</h3>
+<p>Similar to the survival probability, once the metadata is computed, the syntax to produce the covariate-adjusted RMST is identical:</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="#cb168-1" tabindex="-1"></a>rmst_adj <span class="ot">&lt;-</span></span>
+<span id="cb168-2"><a href="#cb168-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">rmst</span>(</span>
+<span id="cb168-3"><a href="#cb168-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_adj,</span>
+<span id="cb168-4"><a href="#cb168-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
+<span id="cb168-5"><a href="#cb168-5" tabindex="-1"></a>  )</span></code></pre></div>
+<p>Similarly, results can be printed using the <code>base::print</code> function:</p>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="#cb169-1" tabindex="-1"></a>rmst_adj</span></code></pre></div>
+<pre><code>## RMST Estimator: tmle</code></pre>
+<pre><code>## Marginal RMST: E(min[T, 90] | A = a)</code></pre>
+<pre><code>## Treatment Arm</code></pre>
+<pre><code>## Estimate: 84.28</code></pre>
+<pre><code>## Std. error: 1.19</code></pre>
+<pre><code>## 95% CI: (81.95, 86.61)</code></pre>
+<pre><code>## Control Arm</code></pre>
+<pre><code>## Estimate: 76.65</code></pre>
+<pre><code>## Std. error: 1.77</code></pre>
+<pre><code>## 95% CI: (73.17, 80.13)</code></pre>
+<pre><code>## Treatment Effect: E(min[T, 90] | A = 1) - E(min[T, 90] | A = 0)</code></pre>
+<pre><code>## Additive effect</code></pre>
+<pre><code>## Estimate: 7.63</code></pre>
+<pre><code>## Std. error: 2.11</code></pre>
+<pre><code>## 95% CI: (3.49, 11.77)</code></pre>
 
 </div>
 </div>

@@ -1,4 +1,4 @@
-# Applying Covariate Adjustment: ANCOVA, G-Computation, DR-WLS
+# Applying Covariate Adjustment: ANCOVA & G-Computation
 
 In this next section, we will use R to produce the ANCOVA estimator, get an estimate of its standard error, and compare its precision to an unadjusted analysis using R. For this example we will use the Buprenorphine tapering trial data (CTN-03).
 
@@ -11,6 +11,19 @@ load(file = url(data_url))
 
 This .Rdata file contains two datasets: `ctn03_sim`, which has no missing data, and `ctn03_sim_mar`, where a simulated missing data mechanism has been applied.
 
+The `stats::lm` function can be used to fit a linear regression model, such as the ANCOVA. While this estimator is conditional on the baseline value of the outcome, because the model is linear with an identity link, the conditional treatment effect is the same as the marginal treatment effect. When binary outcomes or nonlinear link functions are used in a regression model, the marginal and conditional associations are almost always different.
+
+In order to generalize the ANCOVA to other settings, a different approach must be taken to compute the marginal treatment effect. We will use the steps outlined earlier in [the discussion of the ANCOVA estimator](#ancova).
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+## Computing the Estimate
+
+To compute the ANCOVA estimator, first regress the final outcome on the treatment assignment indicator and the baseline value of the outcome:
 
 ```{r ANCOVA-CTN03-Step-1-Fit-Model}
 # 1. Regress final outcome (VAS at end of taper) on treatment assignment and
@@ -25,7 +38,7 @@ summary(vas_ancova_1)
 ```
 
 
-Note that the standard error reported by `lm()` is the model-based standard error, not a robust standard error or bootstrap standard error.
+Note that the standard error reported by `lm()` is the model-based standard error, not a robust standard error or bootstrap standard error. Next, we generate the predicted outcome for each randomized individual under each treatment assignment:
 
 
 ```{r ANCOVA-CTN03-Step-2-Predict-Outcomes}
@@ -36,6 +49,7 @@ expected_vas_7_day <-
   predict(
     object = vas_ancova_1,
     newdata =
+      # Set all treatment to "7-day"
       within(
         data = ctn03_sim_mar,
         expr = {arm = "7-day"}
@@ -47,6 +61,7 @@ expected_vas_28_day <-
   predict(
     object = vas_ancova_1,
     newdata =
+      # Set all treatment to "28-day"
       within(
         data = ctn03_sim_mar,
         expr = {arm = "28-day"}
@@ -75,7 +90,17 @@ vas_ancova_estimate
 ```
 
 
-Notice this is the exact same as the regression coefficient for `arm` in the regression model, since there's no treatment-covariate interactions and an identity link function. We can obtain the standard error of the estimate two ways. The first way is using the `margins::margins()` command, using the robust standard errors from `sandwich::vcovHC`:
+Notice this is the exact same as the regression coefficient for `arm` in the regression model, since there's no treatment-covariate interactions and an identity link function.
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+## Standard Error & Inference
+
+We can obtain the standard error of the estimate two ways. The first way is using the `margins::margins()` command, using the robust standard errors from `sandwich::vcovHC`:
 
 ```{r ANCOVA-CTN03-Compute-SE-Margins}
 vas_ancova_margins <-
