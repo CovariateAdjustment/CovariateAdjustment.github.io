@@ -54,12 +54,99 @@ adjusted analyses in randomized trials.</p>" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/table1-1.0/table1_defaults.css" rel="stylesheet" />
 
 
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 <style type="text/css">
   
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -78,7 +165,7 @@ adjusted analyses in randomized trials.</p>" />
 <li><a href="./">Covariate Adjustment in Randomized Trials</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> cover-image: path to the social sharing image like images/cover.jpg</a>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Covariate Adjustment: Opportunities and Challenges</a>
 <ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-this-book"><i class="fa fa-check"></i><b>1.1</b> Using this Book</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#case-studies"><i class="fa fa-check"></i><b>1.2</b> Case Studies</a>
@@ -110,7 +197,7 @@ adjusted analyses in randomized trials.</p>" />
 <li class="chapter" data-level="3.3" data-path="estimands.html"><a href="estimands.html#survival_estimands"><i class="fa fa-check"></i><b>3.3</b> Survival/Time-To-Event Outcomes</a>
 <ul>
 <li class="chapter" data-level="3.3.1" data-path="estimands.html"><a href="estimands.html#survival-function"><i class="fa fa-check"></i><b>3.3.1</b> Survival Function</a></li>
-<li class="chapter" data-level="3.3.2" data-path="estimands.html"><a href="estimands.html#hazard-ratio"><i class="fa fa-check"></i><b>3.3.2</b> Hazard Ratio</a></li>
+<li class="chapter" data-level="3.3.2" data-path="estimands.html"><a href="estimands.html#hazard_ratio"><i class="fa fa-check"></i><b>3.3.2</b> Hazard Ratio</a></li>
 <li class="chapter" data-level="3.3.3" data-path="estimands.html"><a href="estimands.html#restricted-mean-survival-time"><i class="fa fa-check"></i><b>3.3.3</b> Restricted Mean Survival Time</a></li>
 </ul></li>
 </ul></li>
@@ -122,7 +209,7 @@ adjusted analyses in randomized trials.</p>" />
 <li class="chapter" data-level="4.1.2" data-path="using_r.html"><a href="using_r.html#packages-from-github"><i class="fa fa-check"></i><b>4.1.2</b> Packages from Github</a></li>
 <li class="chapter" data-level="4.1.3" data-path="using_r.html"><a href="using_r.html#loading-packages-into-workspace"><i class="fa fa-check"></i><b>4.1.3</b> Loading Packages into Workspace</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="using_r.html"><a href="using_r.html#loading-the-data-mistie-iii"><i class="fa fa-check"></i><b>4.2</b> Loading the Data: MISTIE-III</a></li>
+<li class="chapter" data-level="4.2" data-path="using_r.html"><a href="using_r.html#Load_MISTIE"><i class="fa fa-check"></i><b>4.2</b> Loading the Data: MISTIE-III</a></li>
 <li class="chapter" data-level="4.3" data-path="using_r.html"><a href="using_r.html#assessing-baseline-balance"><i class="fa fa-check"></i><b>4.3</b> Assessing Baseline Balance</a></li>
 <li class="chapter" data-level="4.4" data-path="using_r.html"><a href="using_r.html#visualizing-data"><i class="fa fa-check"></i><b>4.4</b> Visualizing Data</a></li>
 <li class="chapter" data-level="4.5" data-path="using_r.html"><a href="using_r.html#fitting-regression-models"><i class="fa fa-check"></i><b>4.5</b> Fitting Regression Models</a>
@@ -140,8 +227,9 @@ adjusted analyses in randomized trials.</p>" />
 <li class="chapter" data-level="5" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><i class="fa fa-check"></i><b>5</b> Applying Covariate Adjustment: ANCOVA, G-Computation, DR-WLS</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#calculating-precision-gain"><i class="fa fa-check"></i><b>5.1</b> Calculating Precision Gain</a></li>
-<li class="chapter" data-level="5.2" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#stratified-randomization-covariate-adjustment"><i class="fa fa-check"></i><b>5.2</b> Stratified Randomization &amp; Covariate Adjustment</a></li>
-<li class="chapter" data-level="5.3" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#missing-outcome-data-inverse-weighting"><i class="fa fa-check"></i><b>5.3</b> Missing Outcome Data: Inverse Weighting</a></li>
+<li class="chapter" data-level="5.2" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#covariate-adjustment-with-binary-outcomes"><i class="fa fa-check"></i><b>5.2</b> Covariate Adjustment with Binary Outcomes</a></li>
+<li class="chapter" data-level="5.3" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#stratified-randomization-covariate-adjustment"><i class="fa fa-check"></i><b>5.3</b> Stratified Randomization &amp; Covariate Adjustment</a></li>
+<li class="chapter" data-level="5.4" data-path="applying-covariate-adjustment-ancova-g-computation-dr-wls.html"><a href="applying-covariate-adjustment-ancova-g-computation-dr-wls.html#missing-outcome-data-inverse-weighting"><i class="fa fa-check"></i><b>5.4</b> Missing Outcome Data: Inverse Weighting</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="doublyrobust.html"><a href="doublyrobust.html"><i class="fa fa-check"></i><b>6</b> Doubly Robust Estimators</a>
 <ul>
@@ -154,8 +242,9 @@ adjusted analyses in randomized trials.</p>" />
 <ul>
 <li class="chapter" data-level="7.1.1" data-path="timetoevent.html"><a href="timetoevent.html#kaplan-meier-estimator"><i class="fa fa-check"></i><b>7.1.1</b> Kaplan-Meier Estimator</a></li>
 <li class="chapter" data-level="7.1.2" data-path="timetoevent.html"><a href="timetoevent.html#logrank-test"><i class="fa fa-check"></i><b>7.1.2</b> Logrank Test</a></li>
-<li class="chapter" data-level="7.1.3" data-path="timetoevent.html"><a href="timetoevent.html#survival-probability"><i class="fa fa-check"></i><b>7.1.3</b> Survival Probability</a></li>
-<li class="chapter" data-level="7.1.4" data-path="timetoevent.html"><a href="timetoevent.html#restricted-mean-survival-time-rmst"><i class="fa fa-check"></i><b>7.1.4</b> Restricted Mean Survival Time (RMST)</a></li>
+<li class="chapter" data-level="7.1.3" data-path="timetoevent.html"><a href="timetoevent.html#cox-proportional-hazards-model"><i class="fa fa-check"></i><b>7.1.3</b> Cox Proportional Hazards Model</a></li>
+<li class="chapter" data-level="7.1.4" data-path="timetoevent.html"><a href="timetoevent.html#survival-probability"><i class="fa fa-check"></i><b>7.1.4</b> Survival Probability</a></li>
+<li class="chapter" data-level="7.1.5" data-path="timetoevent.html"><a href="timetoevent.html#restricted-mean-survival-time-rmst"><i class="fa fa-check"></i><b>7.1.5</b> Restricted Mean Survival Time (RMST)</a></li>
 </ul></li>
 <li class="chapter" data-level="7.2" data-path="timetoevent.html"><a href="timetoevent.html#event-driven-trials"><i class="fa fa-check"></i><b>7.2</b> Event-Driven Trials</a></li>
 <li class="chapter" data-level="7.3" data-path="timetoevent.html"><a href="timetoevent.html#covariate-adjusted-estimators"><i class="fa fa-check"></i><b>7.3</b> Covariate-Adjusted Estimators</a>
@@ -190,7 +279,7 @@ adjusted analyses in randomized trials.</p>" />
 <li class="chapter" data-level="11.1" data-path="appendices.html"><a href="appendices.html#appendix_a_glossary"><i class="fa fa-check"></i><b>11.1</b> Appendix A: Glossary of Terms</a></li>
 <li class="chapter" data-level="11.2" data-path="appendices.html"><a href="appendices.html#appendix_b_using_r"><i class="fa fa-check"></i><b>11.2</b> Appendix B: Resources for Using R</a></li>
 </ul></li>
-<li class="chapter" data-level="12" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>12</b> References</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -213,7 +302,7 @@ adjusted analyses in randomized trials.</p>" />
             <section class="normal" id="section-">
 <div id="introduction" class="section level1 hasAnchor" number="2">
 <h1><span class="header-section-number">Chapter 2</span> Introduction<a href="introduction.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>In this section, we will lay out the notation for the following chapters, discuss what assumptions are required for these methods to be applied, and survey the literature on covariate adjustment.</p>
+<p>In this section, we will lay out the notation for the following chapters, discuss what assumptions are required for these methods to be applied, and survey the literature on covariate adjustment. While the examples and notation focus on trials with two treatment arms, most methods can be applied to trials with more than two treatment arms.</p>
 <hr />
 <div id="notation" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> Notation and Assumptions<a href="introduction.html#notation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
@@ -247,11 +336,17 @@ This approach is known as G-computation or the standardization estimator. This a
 </div>
 <div id="combining-covariate-adjustment-and-stratified-randomization" class="section level2 hasAnchor" number="2.4">
 <h2><span class="header-section-number">2.4</span> Combining Covariate Adjustment and Stratified Randomization<a href="introduction.html#combining-covariate-adjustment-and-stratified-randomization" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Stratified randomization is a way of addressing the potential for baseline imbalance in covariates at the design phase by having a separate randomization sequence for each stratum of baseline variables. Each randomization sequence is constructed by randomly choosing a block size (e.g. 1, 2, or 4 participants per treatment arm), and then permuting the order of the treatment labels in each block. For example, below is a sequence of four blocks, the first with size 3, the second with size 2, and the rest of size 1.</p>
-<p><code>[ABBABA][BABA][BA][AB]</code></p>
-<p>Randomly choosing block sizes makes it difficult to anticipate when blocks begin and end and which treatment the next participant will receive. Balance between treatment arms within a stratum is achieved whenever a block is completed. Stratifying randomization on too many variables can lead to many incomplete blocks, and thus poor within-stratum balance in treatment allocation. Stratified randomization generally provides the greatest benefit in efficiency when there is high variability between strata and lower variability within strata.</p>
-<p>When stratified randomization is utilized, it is generally recommended to adjust for the stratification variables in the analysis. Unfortunately, this may not be done in practice. Additional improvements in efficiency can be realized using a variance estimator specifically designed for stratified randomization designs.</p>
+<p>Stratified randomization is a way of addressing the potential for baseline imbalance in covariates at the design phase by having a separate randomization sequence for each stratum of baseline variables. Each randomization sequence is constructed by randomly choosing a block size (e.g. 1, 2, or 4 participants per treatment arm), and then permuting the order of the treatment labels in each block. For example, below is a sequence of three blocks, the first with size 3, the second and third with size 2.</p>
+<p><code>[ABBABA][BABA][BAAB]</code></p>
+<p>Randomly choosing block sizes makes it difficult to anticipate when blocks begin and end, and thus which treatment the next participant will receive. Balance between treatment arms within a stratum is achieved whenever a block is completed. Stratifying randomization on too many variables can lead to many incomplete blocks, and thus poor within-stratum balance in treatment allocation. Stratified randomization generally provides the greatest benefit in efficiency when there is high variability between strata and lower variability within strata.</p>
+<p>When stratified randomization is utilized, it is generally recommended to adjust for the stratification variables in the analysis. Unfortunately, this may not be done in practice. Additional improvements in efficiency can be realized using a variance estimator specifically designed for stratified randomization designs <span class="citation">(<a href="#ref-Wang2020">Wang et al. 2020</a>)</span>.</p>
 
+</div>
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Wang2020" class="csl-entry">
+Wang, Bingkai, Ryoko Susukida, Ramin Mojtabai, Masoumeh Amin-Esmaeili, and Michael Rosenblum. 2020. <span>“Model-Robust Inference for Clinical Trials That Improve Precision by Stratified Randomization and Covariate Adjustment.”</span> <a href="https://arxiv.org/abs/1910.13954">https://arxiv.org/abs/1910.13954</a>.
 </div>
 </div>
             </section>

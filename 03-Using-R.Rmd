@@ -51,7 +51,7 @@ required_packages <-
     "mgcv",
     "sandwich",
     "survminer",
-    "survRM2"
+    "survRM2",
     "table1",
     "tidyverse"
   )
@@ -107,7 +107,7 @@ It is possible that different packages contain a function of the same name. For 
 
 
 
-## Loading the Data: MISTIE-III
+## Loading the Data: MISTIE-III {#Load_MISTIE}
 
 The [data dictionary](#mistie_iii) and more information about the MISTIE III study were presented earlier. All of the data needed for the examples are available on the web. To load these, we create a file connection to the URL using the `url()` function, and then use `read.csv()` to read in the comma separated values (CSV) file. To load data from a local file path, the `file.path()` function is useful for creating file paths. We can start by loading the simulated MISTIE III data. Once we have loaded the full data, we can use `dplyr::slice` to take the first 500 rows.
 
@@ -478,7 +478,9 @@ wilcox_to_auc <-
 Now, we call this function using `boot`, passing any arguments required: `boot` will resample the data, and pass the indices to the function, and evaluate the result. From the result, we can calculate the standard error or estimate of the bootstrap distribution:
 
 
-```{r Boot-Example-Step-2-Call-Boot}
+```{r Boot-Example-Step-2-Call-Boot, eval = FALSE}
+library(boot)
+
 # Perform 10,000 bootstraps of data
 n_boot_samples <- 10000
 
@@ -489,12 +491,11 @@ mrs_365d_auc_boot <-
     R = n_boot_samples,
     formula = mrs_365d ~ arm
   )
+```
 
-# Bootstrap Standard Error
-sd(mrs_365d_auc_boot$t[,1])
 
-# Bootstrap Variance (SE^2)
-var(mrs_365d_auc_boot$t[,1])
+```{r Load-Boot-Package, echo = FALSE}
+library(boot)
 ```
 
 
@@ -502,9 +503,21 @@ Once the bootstrap procedure is complete, we can view and summarize the results.
 
 
 ```{r Boot-Example-Step-3-Use-Results, fig.height = 0.6*fig_w}
+# Bootstrap Standard Error
+sd(mrs_365d_auc_boot$t[,1])
+
+# Bootstrap Variance (SE^2)
+var(mrs_365d_auc_boot$t[,1])
+
 # Produce a histogram and quantile-quantile plot
 plot(mrs_365d_auc_boot)
+```
 
+
+Confidence intervals can be computed using `boot::boot.ci`:
+
+
+```{r Boot-Example-Compute-CI, eval = FALSE}
 mrs_365d_auc_boot_ci <-
   boot::boot.ci(
     boot.out = mrs_365d_auc_boot,
@@ -512,7 +525,13 @@ mrs_365d_auc_boot_ci <-
     type = "bca",
     index = 1
   )
+```
 
+
+The results can be printed out or extracted for use elsewhere:
+
+
+```{r Boot-Example-Report-CI}
 # boot.ci result
 mrs_365d_auc_boot_ci
 
@@ -524,7 +543,8 @@ mrs_365d_auc_boot_ci_result <-
 mrs_365d_auc_boot_ci_result
 ```
 
-The most straightforward way to calculate a p-value using the bootstrap involves finding the smallest value of $\alpha$ at which the $100(1 - \alpha)\%$ confidence interval does not contain the null value, resulting in a rejection of the null hypothesis. This can be done using a binary search algorithm.
+
+The most straightforward way to calculate a p-value using the bootstrap involves finding the smallest value of $\alpha$ at which the $100(1 - \alpha)\%$ confidence interval does not contain the null value, resulting in a rejection of the null hypothesis. While not implemented in `boot`, this can be done using a binary search algorithm for the values of $\alpha$ typically used in practice: $0.05 \ge \alpha \ge 0.0001$.
 
 
 

@@ -1,5 +1,7 @@
 # Time-To-Event Outcomes {#timetoevent}
 
+We will illustrate covariate adjustment for time-to-event outcomes using the simulated MISTIE III dataset. The code to load this data is in the chapter on [Using R](#Load_MISTIE). Here we are interested in whether the minimally invasive surgery procedure improves survival in the first 90 days after randomization.
+
 
 
 
@@ -10,7 +12,16 @@
 
 ## Unadjusted Estimators
 
+Before discussing covariate adjustment in time-to-event outcomes, it is worth reviewing unadjusted methods, the assumptions needed for their valid use, and their interpretation.
 
+The Kaplan-Meier (or K-M) estimate of the survival function is one of the most ubiquitous approaches to time-to-event outcomes. The K-M estimator assumes that censoring occurs independent of event time in each treatment arm. This is often violated when baseline covariates associated with event times and dropout [@Diaz2018].
+
+The Logrank test and the Cox Proportional Hazards model are closely related to each other and [the proportional hazards assumption](#hazard_ratio). The Logrank Test provides a valid test of the null hypothesis if censoring is independent of treatment or the event time in each treatment arm [@VanLancker2021]. While its validity does not depend on the proportional hazards (PH) assumption, its power is greatest when the PH assumption is true. When the PH assumption does not hold, weighted logrank tests can improve power by emphasizing different parts of the survival curve [@Lin2017].
+
+The Cox Proportional Hazards (PH) Model provides a valid test of the null hypothesis if the sandwich covariance estimator is used and censoring is either conditionally independent of treatment assignment given the covariates or conditionally independent of the covariates given treatment assignment. As previously mentioned, the [proportional hazards assumption](#hazard_ratio) may not be known to hold a priori, presents difficulties in interpretation when the assumption does not empirically hold, and does not quantify the amount of time a participant can expect to be event free under a particular treatment [@Rudser2012].
+
+The Restricted Mean Survival Time assumes that $\ldots$.
+The Survival Probability assumes that $\ldots$.
 
 
 --------------------------------------------------------------------------------
@@ -19,6 +30,33 @@
 
 
 ### Kaplan-Meier Estimator
+
+```{r KM-MISTIE-Survival, echo = FALSE}
+library(survival)
+library(survminer)
+
+time_to_death_km <-
+  survfit(
+    formula = miii_surv ~ arm,
+    data = sim_miii
+  )
+
+miii_surv <- 
+  with(sim_miii,
+       survival::Surv(
+         time = days_on_study,
+         event = died_on_study
+       )
+  )
+
+ggsurvplot(
+  fit = time_to_death_km,
+  conf.int = TRUE,
+  risk.table = TRUE,
+  xlab = "Days", 
+  ylab = "Survival probability"
+)
+```
 
 
 
@@ -29,6 +67,68 @@
 
 
 ### Logrank Test
+
+The Logrank test (and the $G^{\rho}$ family of tests) can be performed using the `survival::survdiff` function:
+
+```{r Logrank-MISTIE}
+survival::survdiff(
+  formula =
+    Surv(time = days_on_study,
+         event = died_on_study) ~ arm,
+  data = sim_miii
+)
+```
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+### Cox Proportional Hazards Model
+
+The Cox Proportional Hazards model can be fitted using the `survival::coxph` function: the specification of the model is done using a formula object, with a `survival::Surv` object on the left hand side, and the covariates specified on the right hand side. To obtain the robust variance estimate of the coefficients, the `robust` argument should be set to `TRUE`. See `?survival::coxph` for more details, such as handling of tied survival times.
+
+```{r Unadjusted-Cox-MISTIE}
+unadjusted_cox <-
+  survival::coxph(
+    formula =
+      Surv(time = days_on_study,
+           event = died_on_study) ~ arm,
+    ties = "efron",
+    robust = TRUE,
+    data = sim_miii
+  )
+
+summary(unadjusted_cox)
+```
+
+
+Tests for the proportional hazards assumption using weighted residuals can be obtained using `survival::cox.zph`.
+
+
+```{r Unadjusted-Cox-PH-Test-MISTIE}
+unadjusted_cox_ph_test <-
+  survival::cox.zph(unadjusted_cox)
+
+print(unadjusted_cox_ph_test)
+```
+
+
+In addition to test statistics, plots can be used to visualize how covariate effects vary by time on study:
+
+
+```{r Unadjusted-Cox-PH-Plot-MISTIE}
+# Plot Proportionality Results
+plot(unadjusted_cox_ph_test,
+     main = "Proportional Hazards Test")
+abline(h = 0, col = "red")
+```
+
+
+Here we see that the hazard ratio for treatment arm is negative initially, reflecting lower mortality after randomization in the surgical arm. The magnitude of this effect decreases with time, eventually becoming indistinguishable from zero. This pattern of mortality and time-varying treatment effect is consistent with the fact that most stroke-related mortality occurs in the few weeks following its initial onset, and the intervention is only expected to address mortality related to the initial hemorrhagic stroke. In such a setting, we might expect a violation of the proportional hazards assumption at some point in follow-up, but not know how the treatment effect varies in time.
 
 
 
@@ -41,6 +141,29 @@
 ### Survival Probability
 
 
+```{r Unadjusted-Survival-Metadata-MISTIE, eval = FALSE}
+surv_metadata_unadj <-
+  adjrct::survrct(
+    outcome.formula =
+      Surv(days_on_study, died_on_study) ~ tx, 
+    trt.formula = tx ~ 1,
+    data = sim_miii,
+  )
+```
+
+```{r Unadjusted-Survival-Probability-MISTIE, eval = FALSE}
+surv_prob_unadj <- 
+  adjrct::survprob(
+    metadata = surv_metadata_unadj,
+    horizon = 90
+  )
+```
+
+```{r Unadjusted-Survival-Probability-MISTIE-Print}
+surv_prob_unadj
+```
+
+
 
 
 --------------------------------------------------------------------------------
@@ -49,6 +172,37 @@
 
 
 ### Restricted Mean Survival Time (RMST)
+
+The `survRM2` package can be used to obtain the RMST in each arm, as well as differences and ratios of the RMST between treatment arms:
+
+```{r Unadjusted-RMST-survRM2-MISTIE}
+with(
+  sim_miii,
+  survRM2::rmst2(
+    time = days_on_study,
+    status = died_on_study,
+    arm = tx,
+    tau = 90
+  )
+)
+```
+
+
+This can also be done using the `adjrct` package. Once the "survival metadata" has been produced using the `adjrct::survrct` function, the metadata can be passed to the `adjrct::rmst` function. 
+
+
+```{r Unadjusted-RMST-adjrct-MISTIE, eval = FALSE}
+rmst_unadj <- 
+  adjrct::rmst(
+    metadata = surv_metadata_unadj,
+    horizon = 90
+  )
+```
+
+
+```{r Unadjusted-RMST-adjrct-MISTIE-print}
+rmst_unadj
+```
 
 
 

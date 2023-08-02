@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Covariate Adjustment in Randomized Trials" />
+<meta property="og:type" content="book" />
+
+<meta property="og:description" content="<p>This a series of tutorials meant to help investigators apply covariate
+adjusted analyses in randomized trials.</p>" />
+<meta name="github-repo" content="covariateadjustment/covariateadjustment.github.io" />
+
+<meta name="author" content="Josh Betz, Kelly van Lancker, and Michael Rosenblum" />
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<meta name="description" content="<p>This a series of tutorials meant to help investigators apply covariate
+adjusted analyses in randomized trials.</p>">
+
+<title>Covariate Adjustment in Randomized Trials</title>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.5/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="libs/navigation-1.1/tabsets.js"></script>
+<link href="libs/table1-1.0/table1_defaults.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+/* show arrow before summary tag as in bootstrap
+TODO: remove if boostrap in updated in html_document (rmarkdown#1485) */
+details > summary {
+  display: list-item;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container-fluid main-container">
+
+
+<div class="row">
+<div class="col-sm-12">
+<div id="TOC">
+<ul>
+<li class="has-sub"><a href="#covariate-adjustment-opportunities-and-challenges" id="toc-covariate-adjustment-opportunities-and-challenges"><span class="toc-section-number">1</span> Covariate Adjustment: Opportunities and Challenges</a>
+<ul>
+<li><a href="#using-this-book" id="toc-using-this-book"><span class="toc-section-number">1.1</span> Using this Book</a></li>
+<li class="has-sub"><a href="#case-studies" id="toc-case-studies"><span class="toc-section-number">1.2</span> Case Studies</a>
+<ul>
+<li><a href="#ctn_03" id="toc-ctn_03"><span class="toc-section-number">1.2.1</span> Buprenorphine tapering schedule and illicit opioid use: CTN-03</a></li>
+<li><a href="#mistie_iii" id="toc-mistie_iii"><span class="toc-section-number">1.2.2</span> Functional Outcome in Hemorrhagic Stroke: MISTIE III</a></li>
+</ul></li>
+</ul></li>
+<li class="has-sub"><a href="#introduction" id="toc-introduction"><span class="toc-section-number">2</span> Introduction</a>
+<ul>
+<li><a href="#notation" id="toc-notation"><span class="toc-section-number">2.1</span> Notation and Assumptions</a></li>
+<li><a href="#ancova" id="toc-ancova"><span class="toc-section-number">2.2</span> The Analysis of Covariance (ANCOVA)</a></li>
+<li><a href="#generalizing-the-ancova-g-computation" id="toc-generalizing-the-ancova-g-computation"><span class="toc-section-number">2.3</span> Generalizing the ANCOVA: G-computation</a></li>
+<li><a href="#combining-covariate-adjustment-and-stratified-randomization" id="toc-combining-covariate-adjustment-and-stratified-randomization"><span class="toc-section-number">2.4</span> Combining Covariate Adjustment and Stratified Randomization</a></li>
+</ul></li>
+<li class="has-sub"><a href="#estimands" id="toc-estimands"><span class="toc-section-number">3</span> Targets of Inference: Estimands</a>
+<ul>
+<li class="has-sub"><a href="#estimands-for-continuous-and-binary-outcomes" id="toc-estimands-for-continuous-and-binary-outcomes"><span class="toc-section-number">3.1</span> Estimands for Continuous and Binary Outcomes</a>
+<ul>
+<li><a href="#difference-in-means" id="toc-difference-in-means"><span class="toc-section-number">3.1.1</span> Difference in Means</a></li>
+<li><a href="#ratio-of-means" id="toc-ratio-of-means"><span class="toc-section-number">3.1.2</span> Ratio of Means</a></li>
+</ul></li>
+<li class="has-sub"><a href="#ordinal_estimands" id="toc-ordinal_estimands"><span class="toc-section-number">3.2</span> Estimands for Ordinal Outcomes</a>
+<ul>
+<li><a href="#difference-in-mean-utility" id="toc-difference-in-mean-utility"><span class="toc-section-number">3.2.1</span> Difference in Mean Utility</a></li>
+<li><a href="#mann-whitney-m-w-estimand" id="toc-mann-whitney-m-w-estimand"><span class="toc-section-number">3.2.2</span> Mann-Whitney (M-W) Estimand</a></li>
+<li><a href="#log-odds-ratio-lor" id="toc-log-odds-ratio-lor"><span class="toc-section-number">3.2.3</span> Log Odds Ratio (LOR)</a></li>
+</ul></li>
+<li class="has-sub"><a href="#survival_estimands" id="toc-survival_estimands"><span class="toc-section-number">3.3</span> Survival/Time-To-Event Outcomes</a>
+<ul>
+<li><a href="#survival-function" id="toc-survival-function"><span class="toc-section-number">3.3.1</span> Survival Function</a></li>
+<li><a href="#hazard_ratio" id="toc-hazard_ratio"><span class="toc-section-number">3.3.2</span> Hazard Ratio</a></li>
+<li><a href="#restricted-mean-survival-time" id="toc-restricted-mean-survival-time"><span class="toc-section-number">3.3.3</span> Restricted Mean Survival Time</a></li>
+</ul></li>
+</ul></li>
+<li class="has-sub"><a href="#using_r" id="toc-using_r"><span class="toc-section-number">4</span> Using R</a>
+<ul>
+<li class="has-sub"><a href="#installing-packages" id="toc-installing-packages"><span class="toc-section-number">4.1</span> Installing Packages</a>
+<ul>
+<li><a href="#packages-from-cran" id="toc-packages-from-cran"><span class="toc-section-number">4.1.1</span> Packages from CRAN</a></li>
+<li><a href="#packages-from-github" id="toc-packages-from-github"><span class="toc-section-number">4.1.2</span> Packages from Github</a></li>
+<li><a href="#loading-packages-into-workspace" id="toc-loading-packages-into-workspace"><span class="toc-section-number">4.1.3</span> Loading Packages into Workspace</a></li>
+</ul></li>
+<li><a href="#Load_MISTIE" id="toc-Load_MISTIE"><span class="toc-section-number">4.2</span> Loading the Data: MISTIE-III</a></li>
+<li><a href="#assessing-baseline-balance" id="toc-assessing-baseline-balance"><span class="toc-section-number">4.3</span> Assessing Baseline Balance</a></li>
+<li><a href="#visualizing-data" id="toc-visualizing-data"><span class="toc-section-number">4.4</span> Visualizing Data</a></li>
+<li class="has-sub"><a href="#fitting-regression-models" id="toc-fitting-regression-models"><span class="toc-section-number">4.5</span> Fitting Regression Models</a>
+<ul>
+<li><a href="#generalized-linear-model" id="toc-generalized-linear-model"><span class="toc-section-number">4.5.1</span> Generalized Linear Model</a></li>
+<li><a href="#logrank-test-and-cox-proportional-hazards-model" id="toc-logrank-test-and-cox-proportional-hazards-model"><span class="toc-section-number">4.5.2</span> Logrank Test and Cox Proportional Hazards Model</a></li>
+</ul></li>
+<li class="has-sub"><a href="#variance-estimation" id="toc-variance-estimation"><span class="toc-section-number">4.6</span> Variance Estimation</a>
+<ul>
+<li><a href="#robust-standard-errors" id="toc-robust-standard-errors"><span class="toc-section-number">4.6.1</span> Robust Standard Errors</a></li>
+<li><a href="#bootstrap-estimator" id="toc-bootstrap-estimator"><span class="toc-section-number">4.6.2</span> Bootstrap Estimator</a></li>
+</ul></li>
+<li><a href="#addressing-multiplicity" id="toc-addressing-multiplicity"><span class="toc-section-number">4.7</span> Addressing Multiplicity</a></li>
+</ul></li>
+<li class="has-sub"><a href="#applying-covariate-adjustment-ancova-g-computation-dr-wls" id="toc-applying-covariate-adjustment-ancova-g-computation-dr-wls"><span class="toc-section-number">5</span> Applying Covariate Adjustment: ANCOVA, G-Computation, DR-WLS</a>
+<ul>
+<li><a href="#calculating-precision-gain" id="toc-calculating-precision-gain"><span class="toc-section-number">5.1</span> Calculating Precision Gain</a></li>
+<li><a href="#covariate-adjustment-with-binary-outcomes" id="toc-covariate-adjustment-with-binary-outcomes"><span class="toc-section-number">5.2</span> Covariate Adjustment with Binary Outcomes</a></li>
+<li><a href="#stratified-randomization-covariate-adjustment" id="toc-stratified-randomization-covariate-adjustment"><span class="toc-section-number">5.3</span> Stratified Randomization &amp; Covariate Adjustment</a></li>
+<li><a href="#missing-outcome-data-inverse-weighting" id="toc-missing-outcome-data-inverse-weighting"><span class="toc-section-number">5.4</span> Missing Outcome Data: Inverse Weighting</a></li>
+</ul></li>
+<li class="has-sub"><a href="#doublyrobust" id="toc-doublyrobust"><span class="toc-section-number">6</span> Doubly Robust Estimators</a>
+<ul>
+<li><a href="#augmented-inverse-probability-weighted-estimation" id="toc-augmented-inverse-probability-weighted-estimation"><span class="toc-section-number">6.1</span> Augmented Inverse Probability Weighted Estimation</a></li>
+<li><a href="#targeted-maximum-likelihood-estimation" id="toc-targeted-maximum-likelihood-estimation"><span class="toc-section-number">6.2</span> Targeted Maximum Likelihood Estimation</a></li>
+</ul></li>
+<li class="has-sub"><a href="#timetoevent" id="toc-timetoevent"><span class="toc-section-number">7</span> Time-To-Event Outcomes</a>
+<ul>
+<li class="has-sub"><a href="#unadjusted-estimators" id="toc-unadjusted-estimators"><span class="toc-section-number">7.1</span> Unadjusted Estimators</a>
+<ul>
+<li><a href="#kaplan-meier-estimator" id="toc-kaplan-meier-estimator"><span class="toc-section-number">7.1.1</span> Kaplan-Meier Estimator</a></li>
+<li><a href="#logrank-test" id="toc-logrank-test"><span class="toc-section-number">7.1.2</span> Logrank Test</a></li>
+<li><a href="#cox-proportional-hazards-model" id="toc-cox-proportional-hazards-model"><span class="toc-section-number">7.1.3</span> Cox Proportional Hazards Model</a></li>
+<li><a href="#survival-probability" id="toc-survival-probability"><span class="toc-section-number">7.1.4</span> Survival Probability</a></li>
+<li><a href="#restricted-mean-survival-time-rmst" id="toc-restricted-mean-survival-time-rmst"><span class="toc-section-number">7.1.5</span> Restricted Mean Survival Time (RMST)</a></li>
+</ul></li>
+<li><a href="#event-driven-trials" id="toc-event-driven-trials"><span class="toc-section-number">7.2</span> Event-Driven Trials</a></li>
+<li class="has-sub"><a href="#covariate-adjusted-estimators" id="toc-covariate-adjusted-estimators"><span class="toc-section-number">7.3</span> Covariate-Adjusted Estimators</a>
+<ul>
+<li><a href="#kaplan-meier-estimator-1" id="toc-kaplan-meier-estimator-1"><span class="toc-section-number">7.3.1</span> Kaplan-Meier Estimator</a></li>
+<li><a href="#survival-probability-1" id="toc-survival-probability-1"><span class="toc-section-number">7.3.2</span> Survival Probability</a></li>
+<li><a href="#restricted-mean-survival-time-rmst-1" id="toc-restricted-mean-survival-time-rmst-1"><span class="toc-section-number">7.3.3</span> Restricted Mean Survival Time (RMST)</a></li>
+</ul></li>
+</ul></li>
+<li class="has-sub"><a href="#groupsequential" id="toc-groupsequential"><span class="toc-section-number">8</span> Group Sequential Designs</a>
+<ul>
+<li><a href="#group-sequential-designs" id="toc-group-sequential-designs"><span class="toc-section-number">8.1</span> Group Sequential Designs</a></li>
+<li><a href="#power-sample-size-calculations" id="toc-power-sample-size-calculations"><span class="toc-section-number">8.2</span> Power &amp; Sample Size Calculations</a></li>
+<li><a href="#analyses-unadjusted-and-adjusted" id="toc-analyses-unadjusted-and-adjusted"><span class="toc-section-number">8.3</span> Analyses: Unadjusted and Adjusted</a></li>
+</ul></li>
+<li class="has-sub"><a href="#informationadaptive" id="toc-informationadaptive"><span class="toc-section-number">9</span> Information Adaptive Designs</a>
+<ul>
+<li><a href="#information-adaptive-designs" id="toc-information-adaptive-designs"><span class="toc-section-number">9.1</span> Information Adaptive Designs</a></li>
+<li><a href="#power-sample-size-calculations-1" id="toc-power-sample-size-calculations-1"><span class="toc-section-number">9.2</span> Power &amp; Sample Size Calculations</a></li>
+<li><a href="#analyses-unadjusted-and-adjusted-1" id="toc-analyses-unadjusted-and-adjusted-1"><span class="toc-section-number">9.3</span> Analyses: Unadjusted and Adjusted</a></li>
+</ul></li>
+<li class="has-sub"><a href="#recommendations" id="toc-recommendations"><span class="toc-section-number">10</span> Guidance on Applying Covariate Adjustment</a>
+<ul>
+<li><a href="#missing-covariates" id="toc-missing-covariates"><span class="toc-section-number">10.1</span> Missing Covariates</a></li>
+<li><a href="#statistical-analysis-plans" id="toc-statistical-analysis-plans"><span class="toc-section-number">10.2</span> Statistical Analysis Plans</a></li>
+<li><a href="#sample-size-for-adjusted-vs.-unadjusted" id="toc-sample-size-for-adjusted-vs.-unadjusted"><span class="toc-section-number">10.3</span> Sample size for adjusted vs. unadjusted</a></li>
+<li><a href="#number-of-parameters-vs.-sample-size" id="toc-number-of-parameters-vs.-sample-size"><span class="toc-section-number">10.4</span> Number of parameters vs. sample size</a></li>
+<li><a href="#data-adaptive-covariate-adjustment" id="toc-data-adaptive-covariate-adjustment"><span class="toc-section-number">10.5</span> Data-Adaptive Covariate Adjustment</a></li>
+</ul></li>
+<li class="has-sub"><a href="#appendices" id="toc-appendices"><span class="toc-section-number">11</span> Appendices</a>
+<ul>
+<li><a href="#appendix_a_glossary" id="toc-appendix_a_glossary"><span class="toc-section-number">11.1</span> Appendix A: Glossary of Terms</a></li>
+<li><a href="#appendix_b_using_r" id="toc-appendix_b_using_r"><span class="toc-section-number">11.2</span> Appendix B: Resources for Using R</a></li>
+</ul></li>
+<li><a href="#references" id="toc-references">References</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-12">
+<div id="header">
+<h1 class="title">Covariate Adjustment in Randomized Trials</h1>
+<h4 class="author"><em>Josh Betz, Kelly van Lancker, and Michael Rosenblum</em></h4>
+</div>
+<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.3.1</code></pre>
+<pre><code>## Warning: package &#39;table1&#39; was built under R version 4.3.1</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>results_code_file <span class="ot">&lt;-</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="st">&quot;cache_results.r&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>cached_results_file <span class="ot">&lt;-</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="st">&quot;covariateadjustment_github_io_cached.Rdata&quot;</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>results_code_path <span class="ot">&lt;-</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="fu">file.path</span>(<span class="fu">getwd</span>(), results_code_file)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>cached_results_path <span class="ot">&lt;-</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>  <span class="fu">file.path</span>(<span class="fu">getwd</span>(), cached_results_file)</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>cached_results_exist <span class="ot">&lt;-</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  <span class="fu">file.exists</span>(cached_results_path)</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="cf">if</span>(cached_results_exist) {</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a>  <span class="fu">load</span>(<span class="at">file =</span> cached_results_path)</span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>  <span class="fu">source</span>(<span class="at">file =</span> results_code_path)</span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>}</span></code></pre></div>
+<div id="covariate-adjustment-opportunities-and-challenges" class="section level1" number="1">
+<h1><span class="header-section-number">Chapter 1</span> Covariate Adjustment: Opportunities and Challenges</h1>
+<p>Randomized trials are an important tool for generating evidence to inform practice in medicine, public health, science, and industry. Planning ethical, informative, and cost-effective studies requires many careful considerations when deciding on the study design and analysis plan. One of these considerations should be how to utilize the information about study participants which is known before randomization takes place. Variables observed prior to randomization, known as baseline covariates, can provide information about the outcomes that are observed during the study. Leveraging the information in baseline covariates could improve our inference about the potential benefits or harms of an intervention. Utilizing this information effectively in the study design and analysis plan has the potential to reduce the number of participants required or the duration of the study without sacrificing the precision of our inference. Such methods can make evaluating interventions more ethical and cost effective, and is generally supported by regulatory agencies.</p>
+<p>This book is about the practice of applying covariate adjustment in randomized trials. While there are many approaches for covariate adjustment, our focus will be on estimating the average outcome in a population under different potential treatment assignments, known as marginal treatment effects. Investigators may be interested in comparing the average outcome within strata of a population under different potential treatment assignments, which are known as conditional treatment effects. While conditional treatment effects will arise in our discussion along the way, they will not be our primary focus.</p>
+<p>Since randomized trials serve such an important role in policy and practice, stakeholders may be understandably cautious about changing how such research is carried out. It is important that investigators, regulators, reviewers, and readers trust the methods chosen for an application and understand how they compare to potential alternative approaches. It is natural to ask what assumptions are required for the validity of a covariate adjusted analysis, how such results should be interpreted, and how these differ from an unadjusted approach.</p>
+<p>The methods that we consider should meet certain acceptability criteria. Firstly, an acceptable approach must not change the statistical and scientific focus of investigation. In other words, our covariate-adjusted approach should infer about the same quantities of interest, or estimands, as an unadjusted approach. Secondly, an acceptable approach must not require stronger, more restrictive assumptions: the assumptions for the validity of a covariate-adjusted approach should be the same or less stringent than an unadjusted approach. Finally, a covariate-adjusted approach should have the same or better precision than the unadjusted estimator.</p>
+<p>Statisticians rely on regression models in many contexts to relate covariate information to an outcome of interest. Before interpreting regression coefficients, there is often a great deal of consideration put into choosing an appropriate specification for the model: which variables should be included in the model, how they should be included, and how to link the covariates to the scale of the outcome. Appropriate interpretation and application of models requires some assumptions about how closely the fitted model is to the true data generating process, which is unknown in practice.</p>
+<p>Since regression models are used to perform covariate adjustment, it is natural to ask whether using such models also requires assumptions about how closely the specified model is to the true data generating process. What may be surprising to some is that covariate adjusted analyses can be valid under arbitrary model misspecification. Even though covariate adjustment may use regression models to construct an estimator, the validity of the resulting estimator does not require that the model is correctly specified. This is particularly important if we are to have covariate-adjusted methods that do not require stronger assumptions than an unadjusted analysis. Use of regression models allow us to do covariate-adjusted analyses for continuous, binary, ordinal, or time-to-event outcomes, allowing them to be applied to many research areas and questions.</p>
+<p>While covariate adjustment has the potential to improve precision and make research more ethical and cost effective, there are still challenges to be addressed in practice. Firstly, the amount of precision gained by using covariate adjustment is not known a priori. We need study designs and analysis plans that guarantee the desired level of statistical power and control of error rates irrespective of the amount of precision gained by using covariate adjustment. Secondly, we need a theoretical framework which includes a broad class of estimators in a single framework. The methods employed must address missing data due to dropout, and incomplete data from participants whose outcomes have yet to be collected. Investigators need the information to effectively advocate for the use of these methods with stakeholders, regulators, and reviewers. Practitioners need validated, freely available software to make applying these methods straightforward. Finally, general guidance and best practices need to be established so as to make covariate adjusted analyses as well understood and trusted as their unadjusted counterparts. We will address each of these challenges in the material ahead.</p>
+<hr />
+<div id="using-this-book" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Using this Book</h2>
+<p>This book is meant to provide worked examples to help practitioners apply covariate adjustment in practice. The material will be most accessible to a reader who has a good understanding of probability and statistics (confidence intervals, hypothesis testing), generalized linear models, and survival analysis. Some familiarity with concepts in randomized trials and causal inference is helpful, but not required. In order to make these methods broadly available, we provide worked examples using the R environment for statistical computing, which is free and open source software. While not all users may be familiar with R, we provide example code and links to additional resources to help users understand how to apply it in practice. The data in our examples are simulated from actual randomized trial data, meant to mimic key features such as missingness patterns and the distribution of outcomes and covariates.</p>
+<p>We will start with an overview of key ideas and findings from research in randomized trial methodology. From there, we will discuss different targets of inference, or estimands, that may be of interest to investigators. Afterwards, we provide a brief overview of using R, and how to install the necessary software to perform covariate adjustment. With the necessary background in place, we will begin with the most simple and commonly used approach for covariate adjustment, the analysis of covariance (ANCOVA), show how this approach can be generalized to binary and other types of outcomes. From there, we will discuss how to address the issues of missing data in baseline covariates and outcomes using doubly robust methods.</p>
+<p>Since randomized trials are often designed with incomplete and imprecise information, the study design should incorporate pre-planned analyses to determine if the study should continue or be stopped for either success or futility. We discuss how covariate adjustment can be integrated into such analysis plans. Finally, we discuss some recommendations for applying these methods in practice.</p>
+<hr />
+</div>
+<div id="case-studies" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Case Studies</h2>
+<p>The datasets used in our examples are simulated data based on actual randomized trials, with considerable effort spent making the data as realistic as possible. The original study data was used to create regression models for the outcomes of interest and missingness patterns. Next, simulated covariate data were created by resampling the original covariate data, and perturbing the resampled data. Simulated outcome data and missingness patterns were generated using predictions from the outcome regression models, using the simulated covariates as input.</p>
+<hr />
+<div id="ctn_03" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Buprenorphine tapering schedule and illicit opioid use: CTN-03</h3>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/19149822">CTN-03</a> (<a href="https://clinicaltrials.gov/show/NCT00078117">NCT00078117</a>) was two-arm a phase III trial to compare two potential tapering schedules of the drug buprenorphine, a pharmacotherapy for opioid dependence. At the time of the study design, there was considerable variation in tapering schedules in practice, and a knowledge gap in terms of the best way to administer buprenorphine to control withdrawal symptoms and give the greatest chance of abstinence at the end of treatment. It was hypothesized that a longer taper schedule would result in greater likelihood of a participant being retained on study and providing opioid-free urine samples at the end of the drug taper schedule.</p>
+<p>Participants were randomized 1:1 to a 7-day or 28-day taper using stratified block randomization across 11 sites in 10 US cities. Randomization was stratified by the maintenance dose of buprenorphine at stabilization: 8, 16, or 24 mg. The structure of the CTN-03 simulated data is as follows:</p>
+<ul>
+<li>Baseline Covariates
+<ul>
+<li><code>age</code>: Participant age at baseline</li>
+<li><code>sex</code>: Participant sex</li>
+<li><code>race</code>: Participant race</li>
+<li><code>ethnic</code>: Participant ethnicity</li>
+<li><code>marital</code>: Participant marital status</li>
+</ul></li>
+<li>Randomization Information
+<ul>
+<li><code>arm</code>: Treatment Arm</li>
+<li><code>stability_dose</code>: Stratification Factor</li>
+</ul></li>
+<li>Baseline (<code>_bl</code>) &amp; End-Of-Taper (<code>_eot</code>) Outcomes:
+<ul>
+<li><code>arsw_score</code>: Adjective Rating Scale for Withdrawal (ARSW) Score at baseline</li>
+<li><code>cows_score</code>: Clinical Opiate Withdrawal Scale (COWS) Score at baseline</li>
+<li><code>cows_category</code>: COWS Severity Category - Ordinal</li>
+<li><code>vas_crave_opiates</code>: Visual Analog Scale (VAS) - Self report of opiate cravings</li>
+<li><code>vas_current_withdrawal</code>: Visual Analog Scale (VAS) - Current withdrawal symptoms</li>
+<li><code>vas_study_tx_help</code>: Visual Analog Scale (VAS) - Study treatment helping symptoms</li>
+<li><code>uds_opioids</code>: Urine Drug Screen Result - Opioids</li>
+<li><code>uds_oxycodone</code>: Urine Drug Screen Result - Oxycodone</li>
+<li><code>uds_any_positive</code>: Urine Drug Screen - Any positive result</li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="mistie_iii" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Functional Outcome in Hemorrhagic Stroke: MISTIE III</h3>
+<p>Hemorrhagic stroke occurs when a blood vessel in the brain ruptures, causing a bleed inside the skull. The bleeding from an ICH can occur in the brain tissue itself (an intracerebral hemorrhage, or ICH), or in the fluid-filled channels in the brain (an intraventricular hemorrhage, or IVH). The <a href="https://doi.org/10.1016/s0140-6736(19)30195-3">MISTIE III</a> trial (<a href="https://clinicaltrials.gov/show/NCT01827046">NCT01827046</a>) was a phase III study comparing a minimally invasive surgical intervention to conventional medical management for the treatment of spontaneous, non-traumatic ICH.</p>
+<p>In this study, participants were randomized 1:1 to receive either standard-of-care medical management or a minimal invasive surgery with Alteplase for ICH removal. Outcomes were measured at 30, 180, and 365-days post-randomization using the Modified Rankin Scale (MRS), which measures functional outcome on a scale ranging from 0 (no residual symptoms) to 6 (death). The MRS was collapsed into a binary variable, representing a score of 0-3 (no symptoms to moderate disability but able to walk without assistance) or 4-6 (unable to walk or attend to daily activities without assistance to death). Survival was also assessed, with patients administratively censored on the date of their final MRS assessment.</p>
+<p>The data from MISTIE III was used to create a synthetic dataset for educational purposes. Baseline covariates include demographics, medications and comorbidities, characteristics of the stroke (location of the ICH lesion, the size of the ICH and IVH lesions on CT scans), and neurological status on presentation to the hospital (the Glasgow Coma Scale, or GCS).</p>
+<p>In addition to the longitudinal measures of the MRS at 30-, 180-, and 365-days post randomization, mortality data are included. The structure of the data is as follows:</p>
+<ul>
+<li><code>sim_participant_id</code>: Patient id</li>
+<li>Baseline Covariates
+<ul>
+<li><code>age</code>: Age in years</li>
+<li><code>male</code>: male sex</li>
+<li><code>hx_cvd</code>: cardiovascular disease history</li>
+<li><code>hx_hyperlipidemia</code>: hyperlipidemia history</li>
+<li><code>on_anticoagulants</code>: on anticoagulant medication</li>
+<li><code>on_antiplatelets</code>: on antiplatelet medication</li>
+<li><code>ich_location</code>: intracerebral hemorrhage location: (<code>Lobar</code>, <code>Deep</code>)</li>
+<li><code>ich_s_volume</code>: intracerebral hemorrhage volume on stability scan</li>
+<li><code>ivh_s_volume</code>: intraventricular hemorrhage volume on stability scan</li>
+<li><code>gcs_category</code>: presenting Glasgow Coma Score (GCS)</li>
+</ul></li>
+<li>Treatment:
+<ul>
+<li><code>arm</code>: treatment arm</li>
+<li><code>ich_eot_volume</code>: intracerebral hemorrhage volume on end-of-treatment scan</li>
+</ul></li>
+<li>Outcome:
+<ul>
+<li><code>mrs_30d</code>: MRS at 30 days (<code>0-3</code>, <code>4</code>, <code>5</code>, <code>6</code>)</li>
+<li><code>mrs_30d_complete</code>: MRS at 30 days if no data were missing</li>
+<li><code>mrs_180d</code>: MRS at 180 days (<code>0-2</code>, <code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>)</li>
+<li><code>mrs_180d_complete</code>: MRS at 180 days if no data were missing</li>
+<li><code>mrs_365d</code>: MRS at 365 days (<code>0-1</code>, <code>2</code>, <code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>)</li>
+<li><code>mrs_365d_complete</code>: MRS at 365 days if no data were missing</li>
+<li><code>days_on_study</code>: days until death or administrative censoring</li>
+<li><code>died_on_study</code>: participant died (<code>1</code>) or is censored (<code>0</code>)</li>
+</ul></li>
+</ul>
+
+</div>
+</div>
+</div>
+<div id="introduction" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Introduction</h1>
+<p>In this section, we will lay out the notation for the following chapters, discuss what assumptions are required for these methods to be applied, and survey the literature on covariate adjustment. While the examples and notation focus on trials with two treatment arms, most methods can be applied to trials with more than two treatment arms.</p>
+<hr />
+<div id="notation" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Notation and Assumptions</h2>
+<p>Let <span class="math inline">\(A\)</span> denote a binary treatment assignment: <span class="math inline">\(A = 1\)</span> indicates assignment to receive the treatment of interest, and <span class="math inline">\(A = 0\)</span> indicates assignment to the control or comparator group. Let <span class="math inline">\(Y\)</span> denote the outcome of interest, and <span class="math inline">\(X\)</span> denote a vector of baseline covariates. If stratified randomization is used, let <span class="math inline">\(X_{S}\)</span> denote the stratification variables, and <span class="math inline">\(X_{\bar{S}}\)</span> denote the other baseline covariates, and <span class="math inline">\(X = (X_{S}, X_{\bar{S}})\)</span>. We assume that treatment assignment is independent of the baseline covariates, i.e. <span class="math inline">\(A \perp X\)</span>, or if stratified randomization is used, that the treatment assignment is conditionally independent of the other covariates given the stratification variables, i.e. <span class="math inline">\(A \perp\!\!\!\perp X_{\bar{S}} \vert X_{S}\)</span>. Each participant’s data is assumed to be independent, identically distributed (IID) draws from an unknown distribution <span class="math inline">\(P(X, A, Y)\)</span>.</p>
+<p>In order to include covariate information in an analysis, we have to specify how these covariates relate to the outcome in a regression model, which models a conditional distribution of the outcome as as a function of the covariates. In most circumstances, the validity of our inference from regression models depends on how close the regression model’s specification reflects the true data generation mechanism, which is almost always unknown. This may make investigators understandably reluctant to use covariate adjusted methods, as they do not want the validity of the analysis to depend on assumptions of a correctly specified model.</p>
+<p>What may be surprising is that there are covariate adjustment methods that provide valid estimates of the treatment effect, even if the models used to obtain these estimates are arbitrarily misspecified. Having models that more closely reflect the underlying data generating mechanism improves precision and power. Additionally, covariate adjusted estimators also can have precision that is equal or better than the unadjusted estimators.</p>
+<hr />
+</div>
+<div id="ancova" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> The Analysis of Covariance (ANCOVA)</h2>
+<p>The ANCOVA is perhaps the best known method for covariate adjustment with a continuous outcome. The simplest version of an ANCOVA is a linear regression of the final outcome <span class="math inline">\(Y\)</span> on the baseline covariate <span class="math inline">\(X\)</span>, usually the outcome measured at baseline, and treatment assignment <span class="math inline">\(A\)</span>:</p>
+<p><span class="math display">\[Y_{i} = \beta_{0} + \beta_{X}X_{i} + \beta_{A}A_{i} + \epsilon_{i}\]</span></p>
+<p>This regression model assumes that the final outcome is linearly related to the outcome at baseline, with an additive effect of treatment. Even if the true relationship between the final outcome and the baseline covariate is nonlinear, includes interactions, and includes other variables that are omitted from the model, the ANCOVA estimate will provide a consistent estimate of the treatment effect that is as precise or even more precise than an unadjusted estimate. An outcome model that more accurately reflects the data generating mechanism will improve precision, but is not required for a consistent estimate of the outcome.</p>
+<p>Linear regression involves the conditional mean, but we are interested in a marginal treatment effect. In order to obtain a marginal treatment effect, we need to marginalize (i.e. average over) the variation in the covariates:</p>
+<p><span class="math display">\[\hat{\mu}_{1} = \hat{E}[Y \vert A = 1] = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y_{i} \vert A_{i} = 1, X_{i}]\]</span></p>
+<p>In the case of the simple ANCOVA model with only one covariate, the marginal mean under treatment would be:</p>
+<p><span class="math display">\[\hat{\mu}_{1} = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y_{i} \vert A_{i} = 1, X_{i}] = \frac{1}{n} \sum_{i=1}^{n} (\hat{\beta}_{0} + \hat{\beta}_{X}X_{i} + \hat{\beta}_{A}) = \hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n} + \hat{\beta}_{A}\]</span>
+Note that this utilizes the covariate data from the entire sample, not just those who were assigned to receive the active treatment. The marginal mean under control would be:</p>
+<p><span class="math display">\[\hat{\mu}_{0} = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y_{i} \vert A_{i} = 0, X_{i}] = \frac{1}{n} \sum_{i=1}^{n} (\hat{\beta}_{0} + \hat{\beta}_{X}X_{i}) = \hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n}\]</span>
+Likewise, our marginal estimate of the mean under control utilizes the covariate data from the entire sample, not just those who were assigned to receive the control treatment. Our estimate of the average treatment effect would be the contrast between these quantities:</p>
+<p><span class="math display">\[\hat{\theta}_{ATE} = \hat{\mu}_{1} - \hat{\mu}_{0} = (\hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n} + \hat{\beta}_{A}) - (\hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n}) = \hat{\beta}_{A}\]</span></p>
+<p>The procedure for gives us the same result as we would have otherwise used to estimate the treatment effect: the regression coefficient associated with treatment. When there are no treatment-by-covariate interactions and the model does not use a nonlinear link function, the conditional effect and the marginal effect coincide. However, the approach outlined here is applicable to a wide range of outcome models, including those using link functions, like logistic regression, or models that include treatment-by-covariate interactions. Computing the variance or standard errors of the estimate involves the use of the nonparametric bootstrap or appropriate robust standard errors for the study design and model specification.</p>
+<hr />
+</div>
+<div id="generalizing-the-ancova-g-computation" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Generalizing the ANCOVA: G-computation</h2>
+<p>In general, if we have a regression model <span class="math inline">\(\hat{f}(X, A) = \hat{E}[Y \vert A, X]\)</span>, we can obtain the average treatment effect by respectively computing the marginal mean under treatment and control, and taking a contrast between these quantities:</p>
+<p><span class="math display">\[\hat{\theta}_{ATE} = \hat{\mu_{1}} - \hat{\mu_{0}} = \left(\frac{1}{n} \sum_{i=1}^{n} \hat{f}(X_{i}, A_{i} = 1) \right) - \left(\frac{1}{n} \sum_{i=1}^{n} \hat{f}(X_{i}, A_{i} = 0) \right)\]</span>
+This approach is known as G-computation or the standardization estimator. This allows us to obtain the average treatment effect for regression models which may include interactions or use a nonlinear link function, such as logistic regression.</p>
+<hr />
+</div>
+<div id="combining-covariate-adjustment-and-stratified-randomization" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Combining Covariate Adjustment and Stratified Randomization</h2>
+<p>Stratified randomization is a way of addressing the potential for baseline imbalance in covariates at the design phase by having a separate randomization sequence for each stratum of baseline variables. Each randomization sequence is constructed by randomly choosing a block size (e.g. 1, 2, or 4 participants per treatment arm), and then permuting the order of the treatment labels in each block. For example, below is a sequence of three blocks, the first with size 3, the second and third with size 2.</p>
+<p><code>[ABBABA][BABA][BAAB]</code></p>
+<p>Randomly choosing block sizes makes it difficult to anticipate when blocks begin and end, and thus which treatment the next participant will receive. Balance between treatment arms within a stratum is achieved whenever a block is completed. Stratifying randomization on too many variables can lead to many incomplete blocks, and thus poor within-stratum balance in treatment allocation. Stratified randomization generally provides the greatest benefit in efficiency when there is high variability between strata and lower variability within strata.</p>
+<p>When stratified randomization is utilized, it is generally recommended to adjust for the stratification variables in the analysis. Unfortunately, this may not be done in practice. Additional improvements in efficiency can be realized using a variance estimator specifically designed for stratified randomization designs <span class="citation">(<a href="#ref-Wang2020">Wang et al. 2020</a>)</span>.</p>
+
+</div>
+</div>
+<div id="estimands" class="section level1" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Targets of Inference: Estimands</h1>
+<div id="estimands-for-continuous-and-binary-outcomes" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Estimands for Continuous and Binary Outcomes</h2>
+<div id="difference-in-means" class="section level3" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Difference in Means</h3>
+<p>When an outcome is continuous or binary, one meaningful summary may be the mean of the outcome, and a meaningful comparison may be the difference in means estimand:</p>
+<p><span class="math display">\[\theta_{DIM} = E[Y \vert A = 1] - E[Y \vert A = 0]\]</span></p>
+<p>This estimand compares the mean outcome in the population of interest if all individuals received the treatment of interest to the the mean outcome in the population of interest if all individuals received the control or comparator intervention. Note that in binary outcomes, this is a difference in proportions (or risk difference) between the population where all individuals received the treatment of interest compared to receiving the control or comparator intervention.</p>
+<hr />
+</div>
+<div id="ratio-of-means" class="section level3" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Ratio of Means</h3>
+<p>The Difference in Means gives an absolute measure of an effect. For a relative measure of an effect, such as the relative risk, we can compare the ratio of these means:</p>
+<p><span class="math display">\[\theta_{ROM} = E[Y \vert A = 1]/E[Y \vert A = 0]\]</span></p>
+<hr />
+</div>
+</div>
+<div id="ordinal_estimands" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Estimands for Ordinal Outcomes</h2>
+<p>Let <span class="math inline">\(Y\)</span> be an ordinal outcome with <span class="math inline">\(k\)</span> ordered categories. For each outcome category <span class="math inline">\(j \in \{1, \ldots, K\}\)</span>, the cumulative distribution function of <span class="math inline">\(Y\)</span> given treatment <span class="math inline">\(A\)</span> is denoted as:</p>
+<p><span class="math display">\[Pr \left\{Y \le j\right\} = F(j \vert a)\]</span></p>
+<p>The probability mass function of <span class="math inline">\(Y\)</span> given treatment <span class="math inline">\(A\)</span> is denoted as:</p>
+<p><span class="math display">\[Pr \left\{Y = j\right\} = f(j \vert a) = F(j \vert a) - F(j-1 \vert a)\]</span></p>
+<p>Although this notation involves numeric labels for levels, this is merely to simplify notation. Clarifications will be made as needed when distinguishing between outcomes with and without a numeric levels.</p>
+<hr />
+<div id="difference-in-mean-utility" class="section level3" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Difference in Mean Utility</h3>
+<p>If the levels of <span class="math inline">\(Y\)</span> have numeric labels, and the mean value of this ordinal variable is meaningful, the difference in means estimand may still be meaningful and useful. Alternatively, if either the labels do not have a numeric interpretation, or the mean of these values is not particularly meaningful, it may be possible to create a meaningful numeric value by assigning ‘utilities’ or ‘weights’ to each level of the outcome. The quantitative and clinical meanings of the difference in means estimator will depend on the utilities assigned to the outcome scale. This allows the difference in means to be used, even if the levels of the outcome are not numeric (e.g. the Glasgow Outcome Scale, ranging from ‘Dead’, ‘Vegetative state’, ‘Severely disabled’, ‘Moderately disabled’, and ‘Good recovery’).</p>
+<p>Let <span class="math inline">\(u(\cdot)\)</span> denote a pre-specified mapping from the outcome labels to utility values:</p>
+<p><span class="math display">\[
+    u(Y)=
+\begin{cases}
+    u_{1} := \text{utility of } Y = 1\\
+    u_{2} := \text{utility of } Y = 2\\
+    \vdots \\
+    u_{k} := \text{utility of } Y = k
+\end{cases}
+\]</span></p>
+<p>The utilities will usually be monotone increasing, such that each succesive level of the outcome is associated with equal or better utility. Alternatively, if lower values of the outcome are preferable, utilities will usually be monotone decreasing.</p>
+<p>Once the utilities have been defined, the estimand is defined as:</p>
+<p><span class="math display">\[\theta_{DIM} = E[u(Y) \vert A=1] - E[u(Y) \vert A=0] = \sum_{i=1}^{k}u(j)\left(f( j \vert 1) - f(j \vert 0)\right)\]</span></p>
+<p>When all outcomes at or above a threshold <span class="math inline">\(t \in \{2, \ldots, k\}\)</span> are given a utility of 1, and all others are given a utility of 0, this collapses the ordinal outcome into a binary one. The resulting estimand is the risk difference estimator of the outcome being at or above <span class="math inline">\(t\)</span>:</p>
+<p><span class="math display">\[
+    u(Y)=
+\begin{cases}
+    1: &amp; Y \geq t \\
+    0: &amp; Y &lt; t
+\end{cases}
+\]</span></p>
+<p>While a risk difference may be more familiar to implement and conceptually easier to interpret, it treats all outcome states either below or above the threshold identically, ignoring potential information in such outcome states.</p>
+<hr />
+</div>
+<div id="mann-whitney-m-w-estimand" class="section level3" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Mann-Whitney (M-W) Estimand</h3>
+<p>The Mann-Whitney estimand gives the probability that a randomly-selected person assigned to treatment of interest will have an outcome on the same level or a higher level than a randomly-selected person assigned to the comparator group, with ties broken at random:</p>
+<p><span class="math display">\[\theta_{MW} = P(\tilde{Y} &gt; Y \vert \tilde{A} = 1, A = 0) + \frac{1}{2}P(\tilde{Y} = Y \vert \tilde{A} = 1, A = 0) = \\ \sum_{j=1}^{K} \left\{ F(j-1 \vert 0) + \frac{1}{2} f(j \vert 0) \right\} f(j \vert 1)\]</span></p>
+<p>If there is no difference in treatments, we would expect a randomly selected individual from one group to have a higher outcome than a randomly selected individual from the other group about half the time: the null value for this estimand is <span class="math inline">\(1/2\)</span>.</p>
+<p>Note that if higher numerical values indicate worse outcomes, the outcome scale can be reversed prior to analysis, so that the estimand can be interpreted as the probability that a randomly-selected person assigned to treatment of interest will have an outcome as good or better than a randomly-selected person assigned to the comparator group.</p>
+<p>This estimand addresses a common concern of those choosing between treatment options, and may be easier to communicate to a lay audience.</p>
+<hr />
+</div>
+<div id="log-odds-ratio-lor" class="section level3" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Log Odds Ratio (LOR)</h3>
+<p>In the case of a binary outcome, the odds ratio of a “good” outcome (<span class="math inline">\(Y=1\)</span>) is <span class="math inline">\(OR = odds(Y = 1 \vert A = 1)/odds(Y = 1 \vert A = 0)\)</span>: a value greater than 1 indicates a greater likelihood of a “good” outcome in the treatment of interest relative to the comparator group, and the log of the odds ratio will be positive.</p>
+<p>In the case of an ordinal outcome with categories <span class="math inline">\(1, \ldots, K\)</span>, these categories can be collapsed into <span class="math inline">\((K-1)\)</span> binary outcomes: <span class="math inline">\(Y \le j\)</span> for <span class="math inline">\(j \in \{1, \ldots, (K-1) \}\)</span>. The odds ratio at threshold <span class="math inline">\(j\)</span> compares the odds of falling at or below level <span class="math inline">\(j\)</span> between the treatment of interest and the comparator group:</p>
+<p><span class="math display">\[OR_{j} = \frac{odds(Y \le j \vert A = 1)}{odds(Y \le j \vert A = 0)}\]</span></p>
+<p>When this odds ratio is greater than 1, individuals assigned to the treatment of interest are more likely to have outcomes at or below level <span class="math inline">\(j\)</span> than those in the comparator group: the log of this odds ratio will be positive. The log odds ratio estimand combines information across the levels of an ordinal outcome by averaging the log odds of an outcome at or below each threshold across all thresholds of the outcome:</p>
+<p><span class="math display">\[\theta_{LOR} = \frac{1}{K-1} \sum_{j=1}^{K-1} log \left( \frac{odds(Y \le j \vert A = 1)}{odds(Y \le j \vert A = 0)} \right) = \frac{1}{K-1} \sum_{j=1}^{K-1} log \left( \frac{F(j \vert 1)/ \left( 1 - F(j \vert 1) \right) } {F(j \vert 0)/ \left( 1 - F(j \vert 0) \right) } \right)\]</span></p>
+<p>This estimand is related to the proportional odds logistic regression model, a common parametric model for analyzing ordinal outcomes. In the proportional odds model, a regression coefficient for treatment group gives the increase in the odds of being at or below a given level of the outcome associated with a unit increase in that variable holding all else constant:</p>
+<p><span class="math display">\[log(odds(Y \le j \vert A)) = logit \left(P(Y \le j \vert A) \right) =  \alpha_{j} + \beta A: \quad j \in \{1, \ldots, (K-1)\}\]</span></p>
+<p>A positive slope indicates greater likelihood of lower scores in those assigned to receive the treatment of interest relative to the comparator group. The proportional odds assumption involves assuming that the treatment has the same effect across each binary threshold (i.e. that <span class="math inline">\(\beta\)</span> does not vary across the <span class="math inline">\(K-1\)</span> thresholds). When this assumption holds, the log odds ratio estimand is the same as the coefficient in the proportional odds model, but importantly, the validity of the LOR estimand does not depend on this assumption. As in binary and ordinal logistic regression, the null value for this estimand is 0.</p>
+<p>Since <span class="math inline">\(-log(a/b) = log(b/a)\)</span> and <span class="math inline">\(odds(Y &gt; j \vert A = 1) = 1/odds(Y \le j \vert A = 1)\)</span>, changing the sign of the log odds ratio estimator tells us about the average log odds of having scores higher than level <span class="math inline">\(j\)</span> in the treatment of interest relative to the comparator group:</p>
+<p><span class="math display">\[-\theta_{LOR} = \frac{1}{K-1} \sum_{j=1}^{K-1} log \left( \frac{odds(Y &gt; j \vert A = 1)}{odds(Y &gt; j \vert A = 0)} \right)\]</span></p>
+<hr />
+</div>
+</div>
+<div id="survival_estimands" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Survival/Time-To-Event Outcomes</h2>
+<p>When the outcome is the time from randomization until an event of interest occurs, let <span class="math inline">\(Y\)</span> denote the time at which the event occurs, and <span class="math inline">\(C\)</span> denote the time at which individuals would be censored. For each individual, we observe <span class="math inline">\(\delta_{i} = I_{\{Y_{i} \le C_{i}\}}\)</span>, whether an individual is censored or the event is observed, and <span class="math inline">\(T_{i} = min\{Y_{i}, C_{i}\}\)</span>, the time at which the event or censoring occurs. Often we are interested in a pre-specified time window from randomization to a scientifically relevant point in time, known as the time horizon. Let <span class="math inline">\(\tau\)</span> denote the time horizon of interest for inference.</p>
+<hr />
+<div id="survival-function" class="section level3" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Survival Function</h3>
+<p>When the outcome is a time-to-event, the usual target of inference is the survival function, which is the marginal probability of being event-free through time <span class="math inline">\(t\)</span> if the entire population were assigned to study arm <span class="math inline">\(A = a\)</span>:</p>
+<p><span class="math display">\[S_{0}^{(a)}(t) = Pr\{Y &gt; t \vert A = a\}\]</span></p>
+<p>Estimands of interest may include the difference in survival probability up to the time horizon <span class="math inline">\(\tau\)</span>:</p>
+<p><span class="math display">\[\theta_{DSP} = Pr(Y \ge \tau \vert A = 1) - Pr(Y \ge \tau \vert A = 0)\]</span>
+Instead of an additive estimand, a relative estimand can be obtained by taking the ratio of survival probabilities at the time horizon <span class="math inline">\(\tau\)</span>:</p>
+<p><span class="math display">\[\theta_{RSP} = \frac{Pr(Y \ge \tau \vert A = 1)}{Pr(Y \ge \tau \vert A = 0)}\]</span></p>
+<hr />
+</div>
+<div id="hazard_ratio" class="section level3" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> Hazard Ratio</h3>
+<p>The hazard rate for individuals receiving treatment <span class="math inline">\(A = a\)</span>, denoted <span class="math inline">\(h^{(a)}(t)\)</span>, is the instantaneous rate of the event of interest at time <span class="math inline">\(t\)</span> among individuals who have not yet experienced the event:</p>
+<p><span class="math display">\[ h^{(a)}(t) = \lim_{ \Delta t \to 0} \frac{ P(t \le Y &lt; t + \Delta t \; \vert \; Y \ge t, A = a) }{\Delta t} = \frac{d}{dt}ln\left(S_{0}^{(a)}(t)\right)\]</span></p>
+<p>The hazard ratio compares the ratio of two hazard functions:</p>
+<p><span class="math display">\[\theta_{HR}(t) = \frac{h^{(1)}(t)}{h^{(0)}(t)}\]</span></p>
+<p>Since both hazard functions can vary over time, the true hazard ratio can vary over time. Commonly used approaches in time-to-event analysis often require the hazard rate being approximately constant over the time interval of interest, either unconditionally or conditional on covariates. It may not be known a priori in practice whether such an assumption is reasonable, but this assumption can be empirically assessed.</p>
+<p>When the hazard ratio varies appreciably in time, methods that make a conditional or unconditional assumption of proportional hazards are less efficient and give effect estimates whose interpretation is unclear. Even when the assumption of proportional hazards is approximately true, the hazard ratio cannot easily be translated into an easily communicated metric, such as the number of years an individual can expect to be free of the event if they were assigned to one treatment or another.</p>
+<hr />
+</div>
+<div id="restricted-mean-survival-time" class="section level3" number="3.3.3">
+<h3><span class="header-section-number">3.3.3</span> Restricted Mean Survival Time</h3>
+<p>Another estimand that may be of interest is the restricted mean survival time (RMST). This estimand is the average time-to-event from randomization to the time horizon <span class="math inline">\(\tau\)</span> (e.g. life expectancy up to <span class="math inline">\(\tau\)</span> when mortality is the event of interest). This is given by taking the area under the survival function from randomization to the time horizon:</p>
+<p><span class="math display">\[RMST = E[min\{ Y, \tau \} \vert a] = \int_{0}^{\tau} S_{0}^{(a)}(t) dt\]</span></p>
+<p>Treatments can be compared using a contrast of the RMST in the population where everyone receives treatment and that same population where everyone receives the control/comparator intervention. The difference in RMST contrast assesses the area between the survival curves under each treatment scenario.</p>
+<p><span class="math display">\[\theta_{DRMST} = E[min\{ Y, \tau \} \vert A = 1] - E[min\{ Y, \tau \} \vert A = 0]\]</span>
+A relative estimand is given by the ratio of RMST:</p>
+<p><span class="math display">\[\theta_{RRMST} = \frac{E[min\{ Y, \tau \} \vert A = 1]}{E[min\{ Y, \tau \} \vert A = 0]}\]</span></p>
+
+</div>
+</div>
+</div>
+<div id="using_r" class="section level1" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Using R</h1>
+<p>The R environment for Statistical Computing is a free, open source environment for managing and visualizing data and performing analyses. Its capabilities can be augmented by downloading software packages from repositories, such as the <a href="https://cran.r-project.org/">Comprehensive R Archival Network (CRAN)</a>, and more recently, <a href="https://github.com/">GitHub</a>. <a href="https://rstudio.com/">Rstudio</a> is a powerful development environment that makes it easier to use R, expands its functionality, and allows the integration of other tools, such as Git, into an analyst’s workflow. If you are new to R or would like additional resources on using R in practice, see <a href="#appendix_b_using_r">the appendix</a>.</p>
+<p>In addition to R and Rstudio, we will also need to install <a href="https://cran.r-project.org/bin/windows/Rtools/">RTools</a>, also known as the R toolchain. These are software tools for compiling software packages. Some of the packages we use may have to be compiled after being downloaded, and RTools provides all the software needed to do so. CRAN provides instruction on which version of RTools you should use, depending on your version of R, and how to install it.</p>
+<p>This section is primarily about how to use R and associated software packages. While this does include demonstration of how to implement statistical models and hypothesis tests, a larger discussion of their appropriate use and interpretation will take place in later sections.</p>
+<hr />
+<div id="installing-packages" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Installing Packages</h2>
+<p>Once we have Rtools installed, we are ready to install the required packages from CRAN and Github. The <code>install.packages()</code> function in R can be used to install packages from CRAN, R-Forge, BioC, and other repositories via the command line. In Rstudio, users can also use the ‘Packages’ tab to see which packages are installed, their current version, and whether or not they have been loaded into the workspace for use. If you have installed the <code>devtools</code> package, <code>devtools::install_github()</code> can be used to install packages from Github or other version control repositories.</p>
+<p>If you would like to explore which R packages are available for a given application or research area, the <a href="https://cran.r-project.org/web/views/">CRAN Task Views</a>, including the <a href="https://cran.r-project.org/web/views/ClinicalTrials.html">CRAN Clinical Trials taskview</a>, are worth exploring.</p>
+<hr />
+<div id="packages-from-cran" class="section level3" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> Packages from CRAN</h3>
+<p>Below are some of the packages that we will use from CRAN, along with a brief description of their purposes:</p>
+<ul>
+<li><a href="https://cloud.r-project.org/web/packages/devtools/index.html">devtools</a> - A suite of tools for R package development</li>
+<li><a href="https://cran.r-project.org/web/packages/cobalt/index.html">cobalt</a> - Creating tables and plots for assessing covariate balance</li>
+<li><a href="https://cran.r-project.org/web/packages/knitr/index.html">knitr</a> - Tools for literate programming: including code in reproducible reports</li>
+<li><a href="https://cran.r-project.org/web/packages/margins/index.html">margins</a> - Calculating marginal or partial effects from regression models</li>
+<li><a href="https://cran.r-project.org/web/packages/mgcv/index.html">mgcv</a> - Fitting generalized additive models</li>
+<li><a href="https://cran.r-project.org/web/packages/sandwich/index.html">sandwich</a> Robust covariance matrix estimation</li>
+<li><a href="https://cran.r-project.org/web/packages/survminer/index.html">survminer</a> - Creating plots of time-to-event data</li>
+<li><a href="https://cran.r-project.org/web/packages/survRM2/index.html">survRM2</a> - Calculating the restricted mean survival time (RMST) with and without covariate adjustment.</li>
+<li><a href="https://cran.r-project.org/web/packages/table1/index.html">table1</a> - Creating simple tabulations in aggregate and by treatment arm</li>
+<li><a href="https://www.tidyverse.org/packages/">tidyverse</a> - An ecosystem of packages for working with data</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>required_packages <span class="ot">&lt;-</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;devtools&quot;</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>    <span class="st">&quot;cobalt&quot;</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>    <span class="st">&quot;knitr&quot;</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>    <span class="st">&quot;margins&quot;</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>    <span class="st">&quot;mgcv&quot;</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>    <span class="st">&quot;sandwich&quot;</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>    <span class="st">&quot;survminer&quot;</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>    <span class="st">&quot;survRM2&quot;</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>    <span class="st">&quot;table1&quot;</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>    <span class="st">&quot;tidyverse&quot;</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>  )</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>packages_to_install <span class="ot">&lt;-</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>  <span class="fu">setdiff</span>(</span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>    <span class="at">x =</span> required_packages,</span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">installed.packages</span>(.Library)[, <span class="st">&quot;Package&quot;</span>]</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>  )</span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="fu">install.packages</span>(packages_to_install)</span></code></pre></div>
+<hr />
+</div>
+<div id="packages-from-github" class="section level3" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> Packages from Github</h3>
+<p>We will also use the following packages from Github:</p>
+<ul>
+<li><a href="https://github.com/nt-williams/simul">simul</a> Inference based on Efficient Influence Function and Multiplier Bootstrap</li>
+<li><a href="https://github.com/nt-williams/adjrct">adjrct</a> Doubly Robust, Efficient Estimators for Survival and Time to Event Outcomes</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;nt-williams/simul&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;nt-williams/adjrct&quot;</span>)</span></code></pre></div>
+</div>
+<div id="loading-packages-into-workspace" class="section level3" number="4.1.3">
+<h3><span class="header-section-number">4.1.3</span> Loading Packages into Workspace</h3>
+<p>Once a package has been successfully installed, we use the <code>library()</code> command to load it into the workspace for use:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Data manipulation: dplyr, tidyr</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">library</span>(table1) <span class="co"># Creation of Summary tables</span></span></code></pre></div>
+<p>It is possible that different packages contain a function of the same name. For example, the <code>table1</code> package contains the function <code>table1()</code>: there are other packages that also have a function named <code>table1()</code>, such as the <a href="https://cran.r-project.org/web/packages/furniture/index.html"><code>furniture</code></a> package. If both of these packages are loaded, it can cause confusion about which version should be used when <code>table1()</code> is called. R will warn when such conflicts can arise, but as a best practice, it is useful to specify the package and function as as follows: <code>table1::table1()</code>. This makes code easier to use and potentially reduces ambiguity.</p>
+<hr />
+</div>
+</div>
+<div id="Load_MISTIE" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Loading the Data: MISTIE-III</h2>
+<p>The <a href="#mistie_iii">data dictionary</a> and more information about the MISTIE III study were presented earlier. All of the data needed for the examples are available on the web. To load these, we create a file connection to the URL using the <code>url()</code> function, and then use <code>read.csv()</code> to read in the comma separated values (CSV) file. To load data from a local file path, the <code>file.path()</code> function is useful for creating file paths. We can start by loading the simulated MISTIE III data. Once we have loaded the full data, we can use <code>dplyr::slice</code> to take the first 500 rows.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>data_url <span class="ot">&lt;-</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">&quot;https://github.com/jbetz-jhu/CovariateAdjustmentTutorial&quot;</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>         <span class="st">&quot;/raw/main/Simulated_MISTIE_III_v1.2.csv&quot;</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>sim_miii_full <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="fu">url</span>(data_url))</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co"># Read in data: Recast categorical variables as factors</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>sim_miii_full <span class="ot">&lt;-</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  sim_miii_full <span class="sc">%&gt;%</span> </span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>    <span class="co"># Convert variables from binary indicators to labeled categorical variables</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>    <span class="at">male =</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>      <span class="fu">factor</span>(</span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>        <span class="at">x =</span> male,</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>        <span class="at">levels =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;0. Female&quot;</span>, <span class="st">&quot;1. Male&quot;</span>)</span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>      ),</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>      <span class="at">.cols =</span> </span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>        <span class="fu">all_of</span>(</span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>          <span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;hx_cvd&quot;</span>, <span class="st">&quot;hx_hyperlipidemia&quot;</span>,</span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>                <span class="st">&quot;on_anticoagulants&quot;</span>, <span class="st">&quot;on_antiplatelets&quot;</span>)</span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>        ),</span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a>      <span class="at">.fns =</span> <span class="cf">function</span>(x) <span class="fu">factor</span>(x, <span class="at">levels =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;0. No&quot;</span>, <span class="st">&quot;1. Yes&quot;</span>))</span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a>    ),</span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a>    <span class="co"># Convert GCS and MRS variables from character data to categorical variables</span></span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a>      <span class="at">.cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;gcs&quot;</span>) <span class="sc">|</span> <span class="fu">starts_with</span>(<span class="st">&quot;mrs&quot;</span>),</span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a>      <span class="at">.fns =</span> factor</span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a>    ),</span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a>    <span class="at">ich_location =</span></span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a>      <span class="fu">factor</span>(</span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a>        <span class="at">x =</span> ich_location,</span>
+<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Deep&quot;</span>, <span class="st">&quot;Lobar&quot;</span>)</span>
+<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a>      ),</span>
+<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a>    <span class="at">arm =</span></span>
+<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a>      <span class="fu">factor</span>(</span>
+<span id="cb7-39"><a href="#cb7-39" tabindex="-1"></a>        <span class="at">x =</span> arm,</span>
+<span id="cb7-40"><a href="#cb7-40" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;medical&quot;</span>, <span class="st">&quot;surgical&quot;</span>)</span>
+<span id="cb7-41"><a href="#cb7-41" tabindex="-1"></a>      ),</span>
+<span id="cb7-42"><a href="#cb7-42" tabindex="-1"></a>    <span class="at">tx =</span> <span class="dv">1</span><span class="sc">*</span>(arm <span class="sc">==</span> <span class="st">&quot;surgical&quot;</span>)</span>
+<span id="cb7-43"><a href="#cb7-43" tabindex="-1"></a>  )</span>
+<span id="cb7-44"><a href="#cb7-44" tabindex="-1"></a></span>
+<span id="cb7-45"><a href="#cb7-45" tabindex="-1"></a></span>
+<span id="cb7-46"><a href="#cb7-46" tabindex="-1"></a><span class="co"># Take the first 500 rows</span></span>
+<span id="cb7-47"><a href="#cb7-47" tabindex="-1"></a>sim_miii <span class="ot">&lt;-</span></span>
+<span id="cb7-48"><a href="#cb7-48" tabindex="-1"></a>  sim_miii_full <span class="sc">%&gt;%</span> </span>
+<span id="cb7-49"><a href="#cb7-49" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">500</span>)</span></code></pre></div>
+<p>Other useful functions include:</p>
+<ul>
+<li><code>head()</code>/<code>tail()</code> - Looking at the first <span class="math inline">\(n\)</span> rows of a dataset</li>
+<li><code>nrow()</code>/<code>ncol()</code> - Counting the rows/columns of a dataset</li>
+<li><code>colnames()</code>/<code>rownames()</code> - Getting the row/column names of a dataset</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">head</span>(sim_miii)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 22
+##   sim_participant_id   age male      hx_cvd hx_hyperlipidemia on_anticoagulants
+##                &lt;int&gt; &lt;int&gt; &lt;fct&gt;     &lt;fct&gt;  &lt;fct&gt;             &lt;fct&gt;            
+## 1                  1    52 1. Male   0. No  0. No             0. No            
+## 2                  2    74 0. Female 0. No  1. Yes            1. Yes           
+## 3                  3    62 1. Male   0. No  1. Yes            0. No            
+## 4                  4    81 0. Female 0. No  0. No             0. No            
+## 5                  5    73 0. Female 0. No  1. Yes            0. No            
+## 6                  6    60 1. Male   1. Yes 1. Yes            0. No            
+## # ℹ 16 more variables: on_antiplatelets &lt;fct&gt;, ich_location &lt;fct&gt;,
+## #   ich_s_volume &lt;dbl&gt;, ivh_s_volume &lt;int&gt;, gcs_category &lt;fct&gt;, arm &lt;fct&gt;,
+## #   ich_eot_volume &lt;dbl&gt;, mrs_30d &lt;fct&gt;, mrs_30d_complete &lt;fct&gt;,
+## #   mrs_180d &lt;fct&gt;, mrs_180d_complete &lt;fct&gt;, mrs_365d &lt;fct&gt;,
+## #   mrs_365d_complete &lt;fct&gt;, days_on_study &lt;int&gt;, died_on_study &lt;int&gt;, tx &lt;dbl&gt;</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">nrow</span>(sim_miii)</span></code></pre></div>
+<pre><code>## [1] 500</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">ncol</span>(sim_miii)</span></code></pre></div>
+<pre><code>## [1] 22</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">colnames</span>(sim_miii)</span></code></pre></div>
+<pre><code>##  [1] &quot;sim_participant_id&quot; &quot;age&quot;                &quot;male&quot;              
+##  [4] &quot;hx_cvd&quot;             &quot;hx_hyperlipidemia&quot;  &quot;on_anticoagulants&quot; 
+##  [7] &quot;on_antiplatelets&quot;   &quot;ich_location&quot;       &quot;ich_s_volume&quot;      
+## [10] &quot;ivh_s_volume&quot;       &quot;gcs_category&quot;       &quot;arm&quot;               
+## [13] &quot;ich_eot_volume&quot;     &quot;mrs_30d&quot;            &quot;mrs_30d_complete&quot;  
+## [16] &quot;mrs_180d&quot;           &quot;mrs_180d_complete&quot;  &quot;mrs_365d&quot;          
+## [19] &quot;mrs_365d_complete&quot;  &quot;days_on_study&quot;      &quot;died_on_study&quot;     
+## [22] &quot;tx&quot;</code></pre>
+<hr />
+</div>
+<div id="assessing-baseline-balance" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Assessing Baseline Balance</h2>
+<p>While randomization will tend to produce treatment groups that are similar on both measured and unmeasured factors, there will always be some degree of imbalance between groups in some characteristics. It is important to remember that these differences only represent confounding if groups are imbalanced on variables that are associated with the outcome. To assess the degree of imbalance, we can tabulate characteristics by treatment arm, and compute standardized differences to get a scale-free measure of the magnitude of imbalance.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">table1</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  <span class="sc">~</span> age <span class="sc">+</span> male <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>    on_antiplatelets <span class="sc">+</span> ich_location <span class="sc">+</span> ich_s_volume <span class="sc">+</span> ivh_s_volume <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>    gcs_category <span class="sc">|</span> arm, </span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>  <span class="at">data =</span> sim_miii</span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>)</span></code></pre></div>
+<div class="Rtable1"><table class="Rtable1">
+<thead>
+<tr>
+<th class='rowlabel firstrow lastrow'></th>
+<th class='firstrow lastrow'><span class='stratlabel'>medical<br><span class='stratn'>(N=250)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>surgical<br><span class='stratn'>(N=250)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Overall<br><span class='stratn'>(N=500)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class='rowlabel firstrow'>age</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>60.6 (12.9)</td>
+<td>60.1 (12.5)</td>
+<td>60.3 (12.7)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>62.0 [28.0, 85.0]</td>
+<td class='lastrow'>61.0 [35.0, 88.0]</td>
+<td class='lastrow'>62.0 [28.0, 88.0]</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>male</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>0. Female</td>
+<td>100 (40.0%)</td>
+<td>94 (37.6%)</td>
+<td>194 (38.8%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>1. Male</td>
+<td class='lastrow'>150 (60.0%)</td>
+<td class='lastrow'>156 (62.4%)</td>
+<td class='lastrow'>306 (61.2%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>on_antiplatelets</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>0. No</td>
+<td>179 (71.6%)</td>
+<td>164 (65.6%)</td>
+<td>343 (68.6%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>1. Yes</td>
+<td class='lastrow'>71 (28.4%)</td>
+<td class='lastrow'>86 (34.4%)</td>
+<td class='lastrow'>157 (31.4%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>ich_location</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Deep</td>
+<td>155 (62.0%)</td>
+<td>159 (63.6%)</td>
+<td>314 (62.8%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Lobar</td>
+<td class='lastrow'>95 (38.0%)</td>
+<td class='lastrow'>91 (36.4%)</td>
+<td class='lastrow'>186 (37.2%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>ich_s_volume</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>47.9 (17.3)</td>
+<td>47.4 (16.2)</td>
+<td>47.7 (16.7)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>45.9 [15.2, 112]</td>
+<td class='lastrow'>47.0 [12.9, 106]</td>
+<td class='lastrow'>46.3 [12.9, 112]</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>ivh_s_volume</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>2.46 (3.96)</td>
+<td>2.09 (3.40)</td>
+<td>2.28 (3.69)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>0 [0, 32.0]</td>
+<td class='lastrow'>0 [0, 18.0]</td>
+<td class='lastrow'>0 [0, 32.0]</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>gcs_category</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>1. Severe (3-8)</td>
+<td>71 (28.4%)</td>
+<td>63 (25.2%)</td>
+<td>134 (26.8%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>2. Moderate (9-12)</td>
+<td>111 (44.4%)</td>
+<td>102 (40.8%)</td>
+<td>213 (42.6%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>3. Mild (13-15)</td>
+<td class='lastrow'>68 (27.2%)</td>
+<td class='lastrow'>85 (34.0%)</td>
+<td class='lastrow'>153 (30.6%)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This allows us to compare the means, medians, frequencies, and ranges of variables between groups.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">library</span>(cobalt)</span></code></pre></div>
+<pre><code>## Warning: package &#39;cobalt&#39; was built under R version 4.3.1</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">bal.tab</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  <span class="at">x =</span> </span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>    <span class="co"># Only tabulate baseline variables</span></span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>    sim_miii <span class="sc">%&gt;%</span> </span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">all_of</span>(</span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;male&quot;</span>, <span class="st">&quot;on_antiplatelets&quot;</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a>              <span class="st">&quot;ich_location&quot;</span>, <span class="st">&quot;ich_s_volume&quot;</span>, <span class="st">&quot;ivh_s_volume&quot;</span>, <span class="st">&quot;gcs_category&quot;</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a>      )</span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a>    ),</span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a>  <span class="at">treat =</span> sim_miii<span class="sc">$</span>arm,</span>
+<span id="cb19-12"><a href="#cb19-12" tabindex="-1"></a>  <span class="co"># Compute standardized differences for both binary and continuous variables</span></span>
+<span id="cb19-13"><a href="#cb19-13" tabindex="-1"></a>  <span class="at">binary =</span> <span class="st">&quot;std&quot;</span>,</span>
+<span id="cb19-14"><a href="#cb19-14" tabindex="-1"></a>  <span class="at">continuous =</span> <span class="st">&quot;std&quot;</span></span>
+<span id="cb19-15"><a href="#cb19-15" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## Balance Measures
+##                                    Type Diff.Un
+## age                             Contin. -0.0362
+## male_1. Male                     Binary  0.0493
+## on_antiplatelets_1. Yes          Binary  0.1295
+## ich_location_Lobar               Binary -0.0331
+## ich_s_volume                    Contin. -0.0292
+## ivh_s_volume                    Contin. -0.1019
+## gcs_category_1. Severe (3-8)     Binary -0.0723
+## gcs_category_2. Moderate (9-12)  Binary -0.0729
+## gcs_category_3. Mild (13-15)     Binary  0.1480
+## 
+## Sample sizes
+##     medical surgical
+## All     250      250</code></pre>
+<hr />
+</div>
+<div id="visualizing-data" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> Visualizing Data</h2>
+<p>One of the many strength of R is the powerful and flexible data visualization tools in its software ecosystem: see <a href="https://r-graph-gallery.com/">the R Graph Gallery</a> for some examples. The <a href="https://ggplot2.tidyverse.org/"><code>ggplot2</code></a> package, and some related packages like <a href="https://cran.r-project.org/web/packages/survminer/index.html">survminer</a>, are useful for assessing baseline balance and visualizing outcome data.</p>
+<p>For example, we may want to assess the cumulative distribution of a baseline covariate instead of just checking the summary statistics.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>  <span class="at">data =</span> sim_miii,</span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a>    <span class="at">x =</span> age</span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a>  )</span>
+<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(</span>
+<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span>,</span>
+<span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(</span>
+<span id="cb21-13"><a href="#cb21-13" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">color =</span> arm),</span>
+<span id="cb21-14"><a href="#cb21-14" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span>,</span>
+<span id="cb21-15"><a href="#cb21-15" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb21-16"><a href="#cb21-16" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="_main_files/figure-html/Plot-eCDF-Age-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Or we may want to create a plot of the Kaplan-Meier estimate of the survival function (see the <a href="#estimands">estimands</a> section for its definition, and the <a href="#timetoevent">time-to-event</a> section for further discussion).</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="fu">library</span>(survminer)</span></code></pre></div>
+<pre><code>## Warning: package &#39;survminer&#39; was built under R version 4.3.1</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="co"># Create a &#39;survival object&#39; from event times and indicators</span></span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>miii_surv <span class="ot">&lt;-</span> </span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>  <span class="fu">with</span>(sim_miii,</span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>       survival<span class="sc">::</span><span class="fu">Surv</span>(</span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>         <span class="at">time =</span> days_on_study,</span>
+<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a>         <span class="at">event =</span> died_on_study</span>
+<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a>       )</span>
+<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a>  )</span>
+<span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" tabindex="-1"></a><span class="co"># Use survfit to calculate survival data</span></span>
+<span id="cb24-11"><a href="#cb24-11" tabindex="-1"></a>time_to_death_km <span class="ot">&lt;-</span></span>
+<span id="cb24-12"><a href="#cb24-12" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">survfit</span>(</span>
+<span id="cb24-13"><a href="#cb24-13" tabindex="-1"></a>    <span class="at">formula =</span> miii_surv <span class="sc">~</span> arm,</span>
+<span id="cb24-14"><a href="#cb24-14" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
+<span id="cb24-15"><a href="#cb24-15" tabindex="-1"></a>  )</span>
+<span id="cb24-16"><a href="#cb24-16" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" tabindex="-1"></a><span class="co"># Create the Kaplan-Meier Plot</span></span>
+<span id="cb24-18"><a href="#cb24-18" tabindex="-1"></a>survminer<span class="sc">::</span><span class="fu">ggsurvplot</span>(</span>
+<span id="cb24-19"><a href="#cb24-19" tabindex="-1"></a>  <span class="at">fit =</span> time_to_death_km,</span>
+<span id="cb24-20"><a href="#cb24-20" tabindex="-1"></a>  <span class="at">conf.int =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb24-21"><a href="#cb24-21" tabindex="-1"></a>  <span class="at">risk.table =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb24-22"><a href="#cb24-22" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Days&quot;</span>, </span>
+<span id="cb24-23"><a href="#cb24-23" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;Survival probability&quot;</span></span>
+<span id="cb24-24"><a href="#cb24-24" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/Plot-KM-MISTIE-III-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>From this plot, we can see that most of the mortality occurs soon after randomization, with greater mortality in the medical management arm early in the trial. After the first 90 days, the rate of events decreases in both arms.</p>
+<hr />
+</div>
+<div id="fitting-regression-models" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> Fitting Regression Models</h2>
+<p>While covariate adjustment does involve regression modeling, an in-depth discussion of regression modeling is not needed for the purposes of implementing covariate adjustment. For those wanting a more in-depth presentation of fitting generalized linear models (GLMs) in R see Dobson &amp; Barnett <span class="citation">(<a href="#ref-DobsonBarnett2018">2018</a>)</span>.</p>
+<div id="generalized-linear-model" class="section level3" number="4.5.1">
+<h3><span class="header-section-number">4.5.1</span> Generalized Linear Model</h3>
+<p>Fitting a GLM in R is done using the <code>glm()</code> function. For example if we wanted to model the probability of being assigned to the surgical arm in MISTIE III by an individual’s age, ICH volume, and IVH volume, the code is as follows:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>pr_mis_glm <span class="ot">&lt;-</span></span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>  <span class="fu">glm</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>    <span class="at">formula =</span></span>
+<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>      tx <span class="sc">~</span> age <span class="sc">+</span> ich_s_volume <span class="sc">+</span> ivh_s_volume,</span>
+<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a>    <span class="at">data =</span> sim_miii,</span>
+<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a>  )</span></code></pre></div>
+<p>Once the model has been fit, we can use it for creating summary tables, calculating confidence intervals, or generating fitted values for a new dataset:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="co"># Produce GLM Summary Table</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="fu">summary</span>(pr_mis_glm)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = tx ~ age + ich_s_volume + ivh_s_volume, family = binomial(link = &quot;logit&quot;), 
+##     data = sim_miii)
+## 
+## Coefficients:
+##                Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)   0.3090527  0.5028292   0.615    0.539
+## age          -0.0034148  0.0070781  -0.482    0.629
+## ich_s_volume -0.0008168  0.0054271  -0.151    0.880
+## ivh_s_volume -0.0282560  0.0249439  -1.133    0.257
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 693.15  on 499  degrees of freedom
+## Residual deviance: 691.58  on 496  degrees of freedom
+## AIC: 699.58
+## 
+## Number of Fisher Scoring iterations: 3</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a><span class="co"># Calculate Confidence Intervals for Coefficients</span></span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">confint</span>(pr_mis_glm)</span></code></pre></div>
+<pre><code>##                    2.5 %     97.5 %
+## (Intercept)  -0.67578350 1.29885632
+## age          -0.01732742 0.01045830
+## ich_s_volume -0.01148661 0.00983616
+## ivh_s_volume -0.07808960 0.02017825</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="co"># Calculate fitted probabilities for new data:</span></span>
+<span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a><span class="co"># 1. 65 years old, 30 mL ICH, 0 mL IVH</span></span>
+<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a><span class="co"># 2. 70 years old, 50 mL ICH, 15 mL IVH</span></span>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a><span class="fu">predict</span>(</span>
+<span id="cb30-5"><a href="#cb30-5" tabindex="-1"></a>  <span class="at">object =</span> pr_mis_glm,</span>
+<span id="cb30-6"><a href="#cb30-6" tabindex="-1"></a>  <span class="at">newdata =</span> </span>
+<span id="cb30-7"><a href="#cb30-7" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
+<span id="cb30-8"><a href="#cb30-8" tabindex="-1"></a>      <span class="at">age =</span> <span class="fu">c</span>(<span class="dv">65</span>, <span class="dv">70</span>),</span>
+<span id="cb30-9"><a href="#cb30-9" tabindex="-1"></a>      <span class="at">ich_s_volume =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">50</span>),</span>
+<span id="cb30-10"><a href="#cb30-10" tabindex="-1"></a>      <span class="at">ivh_s_volume =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">15</span>)</span>
+<span id="cb30-11"><a href="#cb30-11" tabindex="-1"></a>    ),</span>
+<span id="cb30-12"><a href="#cb30-12" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;response&quot;</span></span>
+<span id="cb30-13"><a href="#cb30-13" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>##         1         2 
+## 0.5156414 0.4025950</code></pre>
+</div>
+<div id="logrank-test-and-cox-proportional-hazards-model" class="section level3" number="4.5.2">
+<h3><span class="header-section-number">4.5.2</span> Logrank Test and Cox Proportional Hazards Model</h3>
+<p>For time-to-event outcomes, such as mortality, the logrank test and Cox Proportional Hazards (PH) model are commonly used analytic approaches. Using the survival object <code>miii_surv</code> created earlier using <code>survival::Surv()</code>, we can pass this object to other functions to perform the logrank test (using <code>survival::survdiff</code>) and fit the Cox PH model (using <code>survival::coxph</code>).</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a>mortality_logrank <span class="ot">&lt;-</span></span>
+<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">survdiff</span>(</span>
+<span id="cb32-3"><a href="#cb32-3" tabindex="-1"></a>    <span class="at">formula =</span> miii_surv <span class="sc">~</span> arm,</span>
+<span id="cb32-4"><a href="#cb32-4" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
+<span id="cb32-5"><a href="#cb32-5" tabindex="-1"></a>  )</span>
+<span id="cb32-6"><a href="#cb32-6" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" tabindex="-1"></a>mortality_logrank</span></code></pre></div>
+<pre><code>## Call:
+## survival::survdiff(formula = miii_surv ~ arm, data = sim_miii)
+## 
+##                N Observed Expected (O-E)^2/E (O-E)^2/V
+## arm=medical  250       64     49.6      4.19      8.06
+## arm=surgical 250       40     54.4      3.82      8.06
+## 
+##  Chisq= 8.1  on 1 degrees of freedom, p= 0.005</code></pre>
+<p>For the Cox PH model, the <code>ties = "efron"</code> argument specifies how tied survival times are addressed, and the <code>robust = TRUE</code> computes robust estimates of the covariance matrix of regression coefficients:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a>mortality_cox <span class="ot">&lt;-</span></span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">coxph</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>    <span class="at">formula =</span> miii_surv <span class="sc">~</span> arm,</span>
+<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a>    <span class="at">data =</span> sim_miii,</span>
+<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a>    <span class="at">ties =</span> <span class="st">&quot;efron&quot;</span>,</span>
+<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a>    <span class="at">robust =</span> <span class="cn">TRUE</span></span>
+<span id="cb34-7"><a href="#cb34-7" tabindex="-1"></a>  )</span>
+<span id="cb34-8"><a href="#cb34-8" tabindex="-1"></a></span>
+<span id="cb34-9"><a href="#cb34-9" tabindex="-1"></a><span class="fu">summary</span>(mortality_cox)</span></code></pre></div>
+<pre><code>## Call:
+## survival::coxph(formula = miii_surv ~ arm, data = sim_miii, ties = &quot;efron&quot;, 
+##     robust = TRUE)
+## 
+##   n= 500, number of events= 104 
+## 
+##                coef exp(coef) se(coef) robust se      z Pr(&gt;|z|)   
+## armsurgical -0.5670    0.5672   0.2016    0.1995 -2.841  0.00449 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+##             exp(coef) exp(-coef) lower .95 upper .95
+## armsurgical    0.5672      1.763    0.3836    0.8387
+## 
+## Concordance= 0.575  (se = 0.024 )
+## Likelihood ratio test= 8.16  on 1 df,   p=0.004
+## Wald test            = 8.07  on 1 df,   p=0.004
+## Score (logrank) test = 8.12  on 1 df,   p=0.004,   Robust = 8.03  p=0.005
+## 
+##   (Note: the likelihood ratio and score tests assume independence of
+##      observations within a cluster, the Wald and robust score tests do not).</code></pre>
+<p>This model assumes that the ratio of the rates of events between the treatment and control arm is approximately constant over time. We can assess using the <code>survival::cox.zph</code> function:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a><span class="co"># Test Proportionality Assumption: Schoenfeld Residuals</span></span>
+<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a><span class="fu">cox.zph</span>(<span class="at">fit =</span> mortality_cox)</span></code></pre></div>
+<pre><code>##        chisq df      p
+## arm     9.85  1 0.0017
+## GLOBAL  9.85  1 0.0017</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a><span class="co"># Plot smoothed residuals</span></span>
+<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cox.zph</span>(<span class="at">fit =</span> mortality_cox))</span>
+<span id="cb38-3"><a href="#cb38-3" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/Cox-PH-Test-MISTIE-III-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>From the plot, we can see that the hazard ratio is initially negative, but increases towards zero as time goes on. It seems as if the treatment has a beneficial effect on mortality for a few weeks after randomization, which then diminishes. This is a violation of the proportional hazards assumption, which is further discussed in the chapter on <a href="#survival_estimands">estimands</a>.</p>
+<hr />
+</div>
+</div>
+<div id="variance-estimation" class="section level2" number="4.6">
+<h2><span class="header-section-number">4.6</span> Variance Estimation</h2>
+<div id="robust-standard-errors" class="section level3" number="4.6.1">
+<h3><span class="header-section-number">4.6.1</span> Robust Standard Errors</h3>
+<p>Most of the standard errors reported in software, such as those returned by <code>vcov()</code>, are model-based estimates of the standard error, which assume that the model is correctly specified. Robust or “Sandwich” standard errors can be used to obtain a consistent estimate of the standard error in such cases. Note that robust estimates of standard errors are different from robust estimates of the regression coefficients themselves.</p>
+<p>The <code>sandwich::vcovHC()</code> function can be used to obtain different types of robust standard errors:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span></code></pre></div>
+<pre><code>## Warning: package &#39;sandwich&#39; was built under R version 4.3.1</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="co"># Model-based standard errors</span></span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a><span class="fu">vcov</span>(<span class="at">object =</span> pr_mis_glm)</span></code></pre></div>
+<pre><code>##               (Intercept)           age  ich_s_volume  ivh_s_volume
+## (Intercept)   0.252837171 -2.993310e-03 -1.285278e-03 -1.316243e-03
+## age          -0.002993310  5.009960e-05 -1.254035e-06  1.346355e-05
+## ich_s_volume -0.001285278 -1.254035e-06  2.945316e-05 -1.887093e-05
+## ivh_s_volume -0.001316243  1.346355e-05 -1.887093e-05  6.221973e-04</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a><span class="co"># Robust standard errors</span></span>
+<span id="cb43-2"><a href="#cb43-2" tabindex="-1"></a>sandwich<span class="sc">::</span><span class="fu">vcovHC</span>(<span class="at">x =</span> pr_mis_glm, <span class="at">type =</span> <span class="st">&quot;HC3&quot;</span>)</span></code></pre></div>
+<pre><code>##               (Intercept)           age  ich_s_volume  ivh_s_volume
+## (Intercept)   0.263262683 -3.112090e-03 -1.349840e-03 -0.0014409131
+## age          -0.003112090  5.179135e-05 -9.534434e-07  0.0000144568
+## ich_s_volume -0.001349840 -9.534434e-07  3.044098e-05 -0.0000171047
+## ivh_s_volume -0.001440913  1.445680e-05 -1.710470e-05  0.0006168577</code></pre>
+<p>These can be passed as an argument to other functions for computing confidence intervals for contrasts and marginal means.</p>
+<hr />
+</div>
+<div id="bootstrap-estimator" class="section level3" number="4.6.2">
+<h3><span class="header-section-number">4.6.2</span> Bootstrap Estimator</h3>
+<p>The bootstrap procedure uses resampling to obtain an estimate of the variance of the sampling distribution of an estimator. In R, this is done using the <code>boot</code> package, which is part of base R.</p>
+<p>First, we need to write a function to produce the statistic of interest. In this case, we will bootstrap the Mann-Whitney U statistic: see the <a href="#ordinal_estimands">estimands</a> for more information on this estimand. The first argument to this function must be the data, and the second argument should be a vector of indices for our bootstrap sample, and any other arguments can be supplied thereafter.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a><span class="co"># 1. Write a function that produces the test statistic:</span></span>
+<span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a>wilcox_to_auc <span class="ot">&lt;-</span></span>
+<span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a>  <span class="cf">function</span>(data, <span class="at">indices =</span> <span class="cn">NULL</span>, formula){</span>
+<span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a>    <span class="co"># Input data must be a data.frame</span></span>
+<span id="cb45-5"><a href="#cb45-5" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">all</span>(<span class="fu">class</span>(data) <span class="sc">==</span> <span class="st">&quot;data.frame&quot;</span>)){</span>
+<span id="cb45-6"><a href="#cb45-6" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;`data` must be a data.frame: use `as.data.frame()` for a tibble.&quot;</span>)</span>
+<span id="cb45-7"><a href="#cb45-7" tabindex="-1"></a>    }</span>
+<span id="cb45-8"><a href="#cb45-8" tabindex="-1"></a>    </span>
+<span id="cb45-9"><a href="#cb45-9" tabindex="-1"></a>    <span class="co"># If bootstrap indices not supplied, use entire dataset</span></span>
+<span id="cb45-10"><a href="#cb45-10" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.null</span>(indices)) indices <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)</span>
+<span id="cb45-11"><a href="#cb45-11" tabindex="-1"></a>    </span>
+<span id="cb45-12"><a href="#cb45-12" tabindex="-1"></a>    <span class="co"># Extract Outcome/Treatment from Formula</span></span>
+<span id="cb45-13"><a href="#cb45-13" tabindex="-1"></a>    outcome <span class="ot">&lt;-</span> <span class="fu">all.vars</span>(<span class="fu">update</span>(formula, . <span class="sc">~</span> <span class="dv">0</span>))</span>
+<span id="cb45-14"><a href="#cb45-14" tabindex="-1"></a>    treatment <span class="ot">&lt;-</span> <span class="fu">all.vars</span>(<span class="fu">update</span>(formula, <span class="dv">0</span> <span class="sc">~</span> .))</span>
+<span id="cb45-15"><a href="#cb45-15" tabindex="-1"></a>    <span class="fu">stopifnot</span>(<span class="fu">length</span>(treatment) <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb45-16"><a href="#cb45-16" tabindex="-1"></a>    </span>
+<span id="cb45-17"><a href="#cb45-17" tabindex="-1"></a>    <span class="co"># Convert outcome to numeric using levels: Assumes levels are ordered</span></span>
+<span id="cb45-18"><a href="#cb45-18" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.numeric</span>(data[, outcome])){</span>
+<span id="cb45-19"><a href="#cb45-19" tabindex="-1"></a>      data[, outcome] <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data[, outcome])</span>
+<span id="cb45-20"><a href="#cb45-20" tabindex="-1"></a>    }</span>
+<span id="cb45-21"><a href="#cb45-21" tabindex="-1"></a>    </span>
+<span id="cb45-22"><a href="#cb45-22" tabindex="-1"></a>    <span class="co"># Run Wilcoxon Rank Sum on data using the bootstrap indices</span></span>
+<span id="cb45-23"><a href="#cb45-23" tabindex="-1"></a>    wrst_result <span class="ot">&lt;-</span></span>
+<span id="cb45-24"><a href="#cb45-24" tabindex="-1"></a>      <span class="fu">wilcox.test</span>(</span>
+<span id="cb45-25"><a href="#cb45-25" tabindex="-1"></a>        <span class="at">formula =</span> formula,</span>
+<span id="cb45-26"><a href="#cb45-26" tabindex="-1"></a>        <span class="at">data =</span> data[indices,]</span>
+<span id="cb45-27"><a href="#cb45-27" tabindex="-1"></a>      )</span>
+<span id="cb45-28"><a href="#cb45-28" tabindex="-1"></a>    </span>
+<span id="cb45-29"><a href="#cb45-29" tabindex="-1"></a>    <span class="co"># Compute AUC statistic</span></span>
+<span id="cb45-30"><a href="#cb45-30" tabindex="-1"></a>    <span class="fu">return</span>(wrst_result<span class="sc">$</span>statistic<span class="sc">/</span><span class="fu">prod</span>(<span class="fu">table</span>(data[indices, treatment])))</span>
+<span id="cb45-31"><a href="#cb45-31" tabindex="-1"></a>  }</span></code></pre></div>
+<p>Now, we call this function using <code>boot</code>, passing any arguments required: <code>boot</code> will resample the data, and pass the indices to the function, and evaluate the result. From the result, we can calculate the standard error or estimate of the bootstrap distribution:</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
+<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a><span class="co"># Perform 10,000 bootstraps of data</span></span>
+<span id="cb46-4"><a href="#cb46-4" tabindex="-1"></a>n_boot_samples <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb46-5"><a href="#cb46-5" tabindex="-1"></a></span>
+<span id="cb46-6"><a href="#cb46-6" tabindex="-1"></a>mrs_365d_auc_boot <span class="ot">&lt;-</span></span>
+<span id="cb46-7"><a href="#cb46-7" tabindex="-1"></a>  boot<span class="sc">::</span><span class="fu">boot</span>(</span>
+<span id="cb46-8"><a href="#cb46-8" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">as.data.frame</span>(sim_miii),</span>
+<span id="cb46-9"><a href="#cb46-9" tabindex="-1"></a>    <span class="at">statistic =</span> wilcox_to_auc,</span>
+<span id="cb46-10"><a href="#cb46-10" tabindex="-1"></a>    <span class="at">R =</span> n_boot_samples,</span>
+<span id="cb46-11"><a href="#cb46-11" tabindex="-1"></a>    <span class="at">formula =</span> mrs_365d <span class="sc">~</span> arm</span>
+<span id="cb46-12"><a href="#cb46-12" tabindex="-1"></a>  )</span></code></pre></div>
+<p>Once the bootstrap procedure is complete, we can view and summarize the results.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a><span class="co"># Bootstrap Standard Error</span></span>
+<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a><span class="fu">sd</span>(mrs_365d_auc_boot<span class="sc">$</span>t[,<span class="dv">1</span>])</span></code></pre></div>
+<pre><code>## [1] 0.02515884</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a><span class="co"># Bootstrap Variance (SE^2)</span></span>
+<span id="cb49-2"><a href="#cb49-2" tabindex="-1"></a><span class="fu">var</span>(mrs_365d_auc_boot<span class="sc">$</span>t[,<span class="dv">1</span>])</span></code></pre></div>
+<pre><code>## [1] 0.000632967</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" tabindex="-1"></a><span class="co"># Produce a histogram and quantile-quantile plot</span></span>
+<span id="cb51-2"><a href="#cb51-2" tabindex="-1"></a><span class="fu">plot</span>(mrs_365d_auc_boot)</span></code></pre></div>
+<p><img src="_main_files/figure-html/Boot-Example-Step-3-Use-Results-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Confidence intervals can be computed using <code>boot::boot.ci</code>:</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a>mrs_365d_auc_boot_ci <span class="ot">&lt;-</span></span>
+<span id="cb52-2"><a href="#cb52-2" tabindex="-1"></a>  boot<span class="sc">::</span><span class="fu">boot.ci</span>(</span>
+<span id="cb52-3"><a href="#cb52-3" tabindex="-1"></a>    <span class="at">boot.out =</span> mrs_365d_auc_boot,</span>
+<span id="cb52-4"><a href="#cb52-4" tabindex="-1"></a>    <span class="at">conf =</span> <span class="fl">0.95</span>,</span>
+<span id="cb52-5"><a href="#cb52-5" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;bca&quot;</span>,</span>
+<span id="cb52-6"><a href="#cb52-6" tabindex="-1"></a>    <span class="at">index =</span> <span class="dv">1</span></span>
+<span id="cb52-7"><a href="#cb52-7" tabindex="-1"></a>  )</span></code></pre></div>
+<p>The results can be printed out or extracted for use elsewhere:</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" tabindex="-1"></a><span class="co"># boot.ci result</span></span>
+<span id="cb53-2"><a href="#cb53-2" tabindex="-1"></a>mrs_365d_auc_boot_ci</span></code></pre></div>
+<pre><code>## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 10000 bootstrap replicates
+## 
+## CALL : 
+## boot::boot.ci(boot.out = mrs_365d_auc_boot, conf = 0.95, type = &quot;bca&quot;, 
+##     index = 1)
+## 
+## Intervals : 
+## Level       BCa          
+## 95%   ( 0.5022,  0.6005 )  
+## Calculations and Intervals on Original Scale</code></pre>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" tabindex="-1"></a><span class="co"># Extract the lower/upper confidence limits</span></span>
+<span id="cb55-2"><a href="#cb55-2" tabindex="-1"></a>mrs_365d_auc_boot_ci_result <span class="ot">&lt;-</span></span>
+<span id="cb55-3"><a href="#cb55-3" tabindex="-1"></a>  <span class="fu">tail</span>(<span class="at">x =</span> mrs_365d_auc_boot_ci<span class="sc">$</span>bca[<span class="dv">1</span>,], <span class="at">n =</span> <span class="dv">2</span>)</span>
+<span id="cb55-4"><a href="#cb55-4" tabindex="-1"></a></span>
+<span id="cb55-5"><a href="#cb55-5" tabindex="-1"></a><span class="co"># Print out result</span></span>
+<span id="cb55-6"><a href="#cb55-6" tabindex="-1"></a>mrs_365d_auc_boot_ci_result</span></code></pre></div>
+<pre><code>##                     
+## 0.5022205 0.6005486</code></pre>
+<p>The most straightforward way to calculate a p-value using the bootstrap involves finding the smallest value of <span class="math inline">\(\alpha\)</span> at which the <span class="math inline">\(100(1 - \alpha)\%\)</span> confidence interval does not contain the null value, resulting in a rejection of the null hypothesis. While not implemented in <code>boot</code>, this can be done using a binary search algorithm for the values of <span class="math inline">\(\alpha\)</span> typically used in practice: <span class="math inline">\(0.05 \ge \alpha \ge 0.0001\)</span>.</p>
+<hr />
+</div>
+</div>
+<div id="addressing-multiplicity" class="section level2" number="4.7">
+<h2><span class="header-section-number">4.7</span> Addressing Multiplicity</h2>
+<p>For pivotal trials, it is often required to have an analysis plan that control the probability of rejecting at least one truly null hypothesis, also known as the familywise type I error rate (FWER). When there are more than one primary comparison of interest, due to having multiple pairwise treatment contrasts, endpoints, sequential analyses, or timepoints, a strategy must be used to control the FWER at a pre-specified level.</p>
+<p>A later chapter is devoted to <a href="#groupsequential">Group Sequential Designs</a>, a methodology for doing pre-planned analyses that allow stopping a randomized trial early for success or futility. When all hypotheses are tested simultaneously, the <a href="https://cran.r-project.org/web/packages/multcomp/index.html">multcomp</a> package allows for decisions and confidence intervals that appropriately control the FWER. When there is a specific ordering to how hypotheses are tested, the <a href="https://cran.r-project.org/web/packages/gMCP/index.html">gMCP</a> package implements graphical methods for addressing multiple comparisons. We will focus mainly on controlling the FWER for one pairwise treatment comparison on a single endpoint, with one or more pre-planned analyses.</p>
+
+</div>
+</div>
+<div id="applying-covariate-adjustment-ancova-g-computation-dr-wls" class="section level1" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Applying Covariate Adjustment: ANCOVA, G-Computation, DR-WLS</h1>
+<p>In this next section, we will use R to produce the ANCOVA estimator, get an estimate of its standard error, and compare its precision to an unadjusted analysis using R. For this example we will use the Buprenorphine tapering trial data (CTN-03).</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" tabindex="-1"></a>data_url <span class="ot">&lt;-</span></span>
+<span id="cb57-2"><a href="#cb57-2" tabindex="-1"></a>  <span class="st">&quot;https://github.com/jbetz-jhu/CovariateAdjustmentTutorial/raw/main/SIMULATED_CTN03_220506.Rdata&quot;</span></span>
+<span id="cb57-3"><a href="#cb57-3" tabindex="-1"></a></span>
+<span id="cb57-4"><a href="#cb57-4" tabindex="-1"></a><span class="fu">load</span>(<span class="at">file =</span> <span class="fu">url</span>(data_url))</span></code></pre></div>
+<p>This .Rdata file contains two datasets: <code>ctn03_sim</code>, which has no missing data, and <code>ctn03_sim_mar</code>, where a simulated missing data mechanism has been applied.</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a><span class="co"># 1. Regress final outcome (VAS at end of taper) on treatment assignment and</span></span>
+<span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a><span class="co"># outcome assessed at baseline (VAS at baseline)</span></span>
+<span id="cb58-3"><a href="#cb58-3" tabindex="-1"></a>vas_ancova_1 <span class="ot">&lt;-</span></span>
+<span id="cb58-4"><a href="#cb58-4" tabindex="-1"></a>  <span class="fu">lm</span>(</span>
+<span id="cb58-5"><a href="#cb58-5" tabindex="-1"></a>    <span class="at">formula =</span> vas_crave_opiates_eot <span class="sc">~</span> arm <span class="sc">+</span> vas_crave_opiates_bl,</span>
+<span id="cb58-6"><a href="#cb58-6" tabindex="-1"></a>    <span class="at">data =</span> ctn03_sim_mar</span>
+<span id="cb58-7"><a href="#cb58-7" tabindex="-1"></a>  )</span>
+<span id="cb58-8"><a href="#cb58-8" tabindex="-1"></a></span>
+<span id="cb58-9"><a href="#cb58-9" tabindex="-1"></a><span class="fu">summary</span>(vas_ancova_1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = vas_crave_opiates_eot ~ arm + vas_crave_opiates_bl, 
+##     data = ctn03_sim_mar)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -54.193 -21.747  -6.874  15.151  71.637 
+## 
+## Coefficients:
+##                      Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)          24.05363    2.27269  10.584  &lt; 2e-16 ***
+## arm7-day             -2.17932    2.82195  -0.772     0.44    
+## vas_crave_opiates_bl  0.35910    0.07595   4.728 3.29e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 25.96 on 350 degrees of freedom
+##   (163 observations deleted due to missingness)
+## Multiple R-squared:  0.06006,    Adjusted R-squared:  0.05469 
+## F-statistic: 11.18 on 2 and 350 DF,  p-value: 1.962e-05</code></pre>
+<p>Note that the standard error reported by <code>lm()</code> is the model-based standard error, not a robust standard error or bootstrap standard error.</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a><span class="co"># 2. Generate predictions based on fitted model:</span></span>
+<span id="cb60-2"><a href="#cb60-2" tabindex="-1"></a><span class="co"># Their predicted outcome if they were assigned to treatment (7-day taper)</span></span>
+<span id="cb60-3"><a href="#cb60-3" tabindex="-1"></a><span class="co"># Their predicted outcome if they were assigned to control (28-day taper)</span></span>
+<span id="cb60-4"><a href="#cb60-4" tabindex="-1"></a>expected_vas_7_day <span class="ot">&lt;-</span></span>
+<span id="cb60-5"><a href="#cb60-5" tabindex="-1"></a>  <span class="fu">predict</span>(</span>
+<span id="cb60-6"><a href="#cb60-6" tabindex="-1"></a>    <span class="at">object =</span> vas_ancova_1,</span>
+<span id="cb60-7"><a href="#cb60-7" tabindex="-1"></a>    <span class="at">newdata =</span></span>
+<span id="cb60-8"><a href="#cb60-8" tabindex="-1"></a>      <span class="fu">within</span>(</span>
+<span id="cb60-9"><a href="#cb60-9" tabindex="-1"></a>        <span class="at">data =</span> ctn03_sim_mar,</span>
+<span id="cb60-10"><a href="#cb60-10" tabindex="-1"></a>        <span class="at">expr =</span> {arm <span class="ot">=</span> <span class="st">&quot;7-day&quot;</span>}</span>
+<span id="cb60-11"><a href="#cb60-11" tabindex="-1"></a>      ),</span>
+<span id="cb60-12"><a href="#cb60-12" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;response&quot;</span></span>
+<span id="cb60-13"><a href="#cb60-13" tabindex="-1"></a>  )</span>
+<span id="cb60-14"><a href="#cb60-14" tabindex="-1"></a></span>
+<span id="cb60-15"><a href="#cb60-15" tabindex="-1"></a>expected_vas_28_day <span class="ot">&lt;-</span></span>
+<span id="cb60-16"><a href="#cb60-16" tabindex="-1"></a>  <span class="fu">predict</span>(</span>
+<span id="cb60-17"><a href="#cb60-17" tabindex="-1"></a>    <span class="at">object =</span> vas_ancova_1,</span>
+<span id="cb60-18"><a href="#cb60-18" tabindex="-1"></a>    <span class="at">newdata =</span></span>
+<span id="cb60-19"><a href="#cb60-19" tabindex="-1"></a>      <span class="fu">within</span>(</span>
+<span id="cb60-20"><a href="#cb60-20" tabindex="-1"></a>        <span class="at">data =</span> ctn03_sim_mar,</span>
+<span id="cb60-21"><a href="#cb60-21" tabindex="-1"></a>        <span class="at">expr =</span> {arm <span class="ot">=</span> <span class="st">&quot;28-day&quot;</span>}</span>
+<span id="cb60-22"><a href="#cb60-22" tabindex="-1"></a>      ),</span>
+<span id="cb60-23"><a href="#cb60-23" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;response&quot;</span></span>
+<span id="cb60-24"><a href="#cb60-24" tabindex="-1"></a>  )</span>
+<span id="cb60-25"><a href="#cb60-25" tabindex="-1"></a></span>
+<span id="cb60-26"><a href="#cb60-26" tabindex="-1"></a></span>
+<span id="cb60-27"><a href="#cb60-27" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
+<span id="cb60-28"><a href="#cb60-28" tabindex="-1"></a>  expected_vas_7_day,</span>
+<span id="cb60-29"><a href="#cb60-29" tabindex="-1"></a>  expected_vas_28_day,</span>
+<span id="cb60-30"><a href="#cb60-30" tabindex="-1"></a>  ctn03_sim_mar[, <span class="fu">c</span>(<span class="st">&quot;arm&quot;</span>, <span class="st">&quot;vas_crave_opiates_eot&quot;</span>, <span class="st">&quot;vas_crave_opiates_bl&quot;</span>)]</span>
+<span id="cb60-31"><a href="#cb60-31" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb60-32"><a href="#cb60-32" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
+<pre><code>##   expected_vas_7_day expected_vas_28_day   arm vas_crave_opiates_eot
+## 1           27.97901            30.15833 7-day                    NA
+## 2           24.38801            26.56733 7-day                     5
+## 3           32.64731            34.82663 7-day                    31
+## 4           24.38801            26.56733 7-day                    40
+## 5           28.69721            30.87653 7-day                    51
+## 6           26.18351            28.36283 7-day                     1
+##   vas_crave_opiates_bl
+## 1                   17
+## 2                    7
+## 3                   30
+## 4                    7
+## 5                   19
+## 6                   12</code></pre>
+<p>Once we’ve generated these predictions, we can compute the ANCOVA estimate of the average treatment effect:</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a><span class="fu">mean</span>(expected_vas_7_day)</span></code></pre></div>
+<pre><code>## [1] 26.88292</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a><span class="fu">mean</span>(expected_vas_28_day)</span></code></pre></div>
+<pre><code>## [1] 29.06224</code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" tabindex="-1"></a>vas_ancova_estimate <span class="ot">&lt;-</span> <span class="fu">mean</span>(expected_vas_7_day) <span class="sc">-</span> <span class="fu">mean</span>(expected_vas_28_day)</span>
+<span id="cb66-2"><a href="#cb66-2" tabindex="-1"></a>vas_ancova_estimate</span></code></pre></div>
+<pre><code>## [1] -2.179321</code></pre>
+<p>Notice this is the exact same as the regression coefficient for <code>arm</code> in the regression model, since there’s no treatment-covariate interactions and an identity link function. We can obtain the standard error of the estimate two ways. The first way is using the <code>margins::margins()</code> command, using the robust standard errors from <code>sandwich::vcovHC</code>:</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" tabindex="-1"></a>vas_ancova_margins <span class="ot">&lt;-</span></span>
+<span id="cb68-2"><a href="#cb68-2" tabindex="-1"></a>  margins<span class="sc">::</span><span class="fu">margins</span>(</span>
+<span id="cb68-3"><a href="#cb68-3" tabindex="-1"></a>    <span class="at">model =</span> vas_ancova_1,</span>
+<span id="cb68-4"><a href="#cb68-4" tabindex="-1"></a>    <span class="co"># Specify treatment variable</span></span>
+<span id="cb68-5"><a href="#cb68-5" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">&quot;arm&quot;</span>,</span>
+<span id="cb68-6"><a href="#cb68-6" tabindex="-1"></a>    <span class="co"># Convert to outcome scale, not link scale</span></span>
+<span id="cb68-7"><a href="#cb68-7" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;response&quot;</span>,</span>
+<span id="cb68-8"><a href="#cb68-8" tabindex="-1"></a>    <span class="co"># Obtain robust standard errors</span></span>
+<span id="cb68-9"><a href="#cb68-9" tabindex="-1"></a>    <span class="at">vcov =</span> sandwich<span class="sc">::</span><span class="fu">vcovHC</span>(<span class="at">x =</span> vas_ancova_1, <span class="at">type =</span> <span class="st">&quot;HC3&quot;</span>)</span>
+<span id="cb68-10"><a href="#cb68-10" tabindex="-1"></a>  )</span>
+<span id="cb68-11"><a href="#cb68-11" tabindex="-1"></a></span>
+<span id="cb68-12"><a href="#cb68-12" tabindex="-1"></a><span class="fu">summary</span>(<span class="at">object =</span> vas_ancova_margins, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code></pre></div>
+<pre><code>##    factor     AME     SE       z      p   lower  upper
+##  arm7-day -2.1793 2.8680 -0.7599 0.4473 -7.8005 3.4418</code></pre>
+<p>You’ll see that we now have a standard error, p-value under the hypothesis that the marginal effect is 0, and a 95% Confidence Interval for the estimate. Another way to obtain these is the bias corrected and accelerated (BCa) non-parametric bootstrap:</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" tabindex="-1"></a><span class="co"># Write a function to produce the ANCOVA estimate</span></span>
+<span id="cb70-2"><a href="#cb70-2" tabindex="-1"></a>margins_fun <span class="ot">&lt;-</span></span>
+<span id="cb70-3"><a href="#cb70-3" tabindex="-1"></a>  <span class="cf">function</span>(</span>
+<span id="cb70-4"><a href="#cb70-4" tabindex="-1"></a>    data,</span>
+<span id="cb70-5"><a href="#cb70-5" tabindex="-1"></a>    <span class="at">indices =</span> <span class="cn">NULL</span>,</span>
+<span id="cb70-6"><a href="#cb70-6" tabindex="-1"></a>    formula,</span>
+<span id="cb70-7"><a href="#cb70-7" tabindex="-1"></a>    family,</span>
+<span id="cb70-8"><a href="#cb70-8" tabindex="-1"></a>    term,</span>
+<span id="cb70-9"><a href="#cb70-9" tabindex="-1"></a>    <span class="at">contrast =</span> <span class="fu">c</span>(<span class="st">&quot;difference&quot;</span>, <span class="st">&quot;ratio&quot;</span>)[<span class="dv">1</span>]</span>
+<span id="cb70-10"><a href="#cb70-10" tabindex="-1"></a>  ){</span>
+<span id="cb70-11"><a href="#cb70-11" tabindex="-1"></a>    <span class="co"># Input data must be a data.frame</span></span>
+<span id="cb70-12"><a href="#cb70-12" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">all</span>(<span class="fu">class</span>(data) <span class="sc">==</span> <span class="st">&quot;data.frame&quot;</span>)){</span>
+<span id="cb70-13"><a href="#cb70-13" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;`data` must be a data.frame: use `as.data.frame()` for a tibble.&quot;</span>)</span>
+<span id="cb70-14"><a href="#cb70-14" tabindex="-1"></a>    }</span>
+<span id="cb70-15"><a href="#cb70-15" tabindex="-1"></a>    </span>
+<span id="cb70-16"><a href="#cb70-16" tabindex="-1"></a>    <span class="co"># If bootstrap indices not supplied, use entire dataset</span></span>
+<span id="cb70-17"><a href="#cb70-17" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.null</span>(indices)) indices <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)</span>
+<span id="cb70-18"><a href="#cb70-18" tabindex="-1"></a>    </span>
+<span id="cb70-19"><a href="#cb70-19" tabindex="-1"></a>    data <span class="ot">&lt;-</span> data[indices,]</span>
+<span id="cb70-20"><a href="#cb70-20" tabindex="-1"></a>    </span>
+<span id="cb70-21"><a href="#cb70-21" tabindex="-1"></a>    glm_fit <span class="ot">&lt;-</span></span>
+<span id="cb70-22"><a href="#cb70-22" tabindex="-1"></a>      <span class="fu">glm</span>(</span>
+<span id="cb70-23"><a href="#cb70-23" tabindex="-1"></a>        <span class="at">formula =</span> formula,</span>
+<span id="cb70-24"><a href="#cb70-24" tabindex="-1"></a>        <span class="at">family =</span> family,</span>
+<span id="cb70-25"><a href="#cb70-25" tabindex="-1"></a>        <span class="at">data =</span> data</span>
+<span id="cb70-26"><a href="#cb70-26" tabindex="-1"></a>      )</span>
+<span id="cb70-27"><a href="#cb70-27" tabindex="-1"></a>    </span>
+<span id="cb70-28"><a href="#cb70-28" tabindex="-1"></a>    tx_levels <span class="ot">&lt;-</span> <span class="fu">levels</span>(data[, term])</span>
+<span id="cb70-29"><a href="#cb70-29" tabindex="-1"></a>    </span>
+<span id="cb70-30"><a href="#cb70-30" tabindex="-1"></a>    e_y_1 <span class="ot">&lt;-</span></span>
+<span id="cb70-31"><a href="#cb70-31" tabindex="-1"></a>      <span class="fu">predict</span>(</span>
+<span id="cb70-32"><a href="#cb70-32" tabindex="-1"></a>        <span class="at">object =</span> glm_fit,</span>
+<span id="cb70-33"><a href="#cb70-33" tabindex="-1"></a>        <span class="at">newdata =</span> </span>
+<span id="cb70-34"><a href="#cb70-34" tabindex="-1"></a>          <span class="fu">within</span>(</span>
+<span id="cb70-35"><a href="#cb70-35" tabindex="-1"></a>            data,</span>
+<span id="cb70-36"><a href="#cb70-36" tabindex="-1"></a>            <span class="at">expr =</span> <span class="fu">assign</span>(<span class="at">x =</span> term, <span class="at">value =</span> tx_levels[<span class="dv">2</span>])</span>
+<span id="cb70-37"><a href="#cb70-37" tabindex="-1"></a>          ),</span>
+<span id="cb70-38"><a href="#cb70-38" tabindex="-1"></a>        </span>
+<span id="cb70-39"><a href="#cb70-39" tabindex="-1"></a>        <span class="at">type =</span> <span class="st">&quot;response&quot;</span></span>
+<span id="cb70-40"><a href="#cb70-40" tabindex="-1"></a>      )</span>
+<span id="cb70-41"><a href="#cb70-41" tabindex="-1"></a>    </span>
+<span id="cb70-42"><a href="#cb70-42" tabindex="-1"></a>    e_y_0 <span class="ot">&lt;-</span></span>
+<span id="cb70-43"><a href="#cb70-43" tabindex="-1"></a>      <span class="fu">predict</span>(</span>
+<span id="cb70-44"><a href="#cb70-44" tabindex="-1"></a>        <span class="at">object =</span> glm_fit,</span>
+<span id="cb70-45"><a href="#cb70-45" tabindex="-1"></a>        <span class="at">newdata =</span> </span>
+<span id="cb70-46"><a href="#cb70-46" tabindex="-1"></a>          <span class="fu">within</span>(</span>
+<span id="cb70-47"><a href="#cb70-47" tabindex="-1"></a>            data,</span>
+<span id="cb70-48"><a href="#cb70-48" tabindex="-1"></a>            <span class="at">expr =</span> <span class="fu">assign</span>(<span class="at">x =</span> term, <span class="at">value =</span> tx_levels[<span class="dv">1</span>])</span>
+<span id="cb70-49"><a href="#cb70-49" tabindex="-1"></a>          ),</span>
+<span id="cb70-50"><a href="#cb70-50" tabindex="-1"></a>        </span>
+<span id="cb70-51"><a href="#cb70-51" tabindex="-1"></a>        <span class="at">type =</span> <span class="st">&quot;response&quot;</span></span>
+<span id="cb70-52"><a href="#cb70-52" tabindex="-1"></a>      )</span>
+<span id="cb70-53"><a href="#cb70-53" tabindex="-1"></a>    </span>
+<span id="cb70-54"><a href="#cb70-54" tabindex="-1"></a>    <span class="cf">if</span>(contrast <span class="sc">==</span> <span class="st">&quot;difference&quot;</span>){</span>
+<span id="cb70-55"><a href="#cb70-55" tabindex="-1"></a>      <span class="fu">return</span>(<span class="fu">mean</span>(e_y_1) <span class="sc">-</span> <span class="fu">mean</span>(e_y_0))</span>
+<span id="cb70-56"><a href="#cb70-56" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (contrast <span class="sc">==</span> <span class="st">&quot;ratio&quot;</span>){</span>
+<span id="cb70-57"><a href="#cb70-57" tabindex="-1"></a>      <span class="fu">return</span>(<span class="fu">mean</span>(e_y_1)<span class="sc">/</span><span class="fu">mean</span>(e_y_0))</span>
+<span id="cb70-58"><a href="#cb70-58" tabindex="-1"></a>    }</span>
+<span id="cb70-59"><a href="#cb70-59" tabindex="-1"></a>  }</span>
+<span id="cb70-60"><a href="#cb70-60" tabindex="-1"></a></span>
+<span id="cb70-61"><a href="#cb70-61" tabindex="-1"></a>vas_ancova_boot <span class="ot">&lt;-</span></span>
+<span id="cb70-62"><a href="#cb70-62" tabindex="-1"></a>  boot<span class="sc">::</span><span class="fu">boot</span>(</span>
+<span id="cb70-63"><a href="#cb70-63" tabindex="-1"></a>    <span class="at">data =</span> ctn03_sim_mar,</span>
+<span id="cb70-64"><a href="#cb70-64" tabindex="-1"></a>    <span class="at">statistic =</span> margins_fun,</span>
+<span id="cb70-65"><a href="#cb70-65" tabindex="-1"></a>    <span class="at">R =</span> <span class="dv">10000</span>,</span>
+<span id="cb70-66"><a href="#cb70-66" tabindex="-1"></a>      <span class="at">formula =</span> vas_crave_opiates_eot <span class="sc">~</span> arm <span class="sc">+</span> vas_crave_opiates_bl,</span>
+<span id="cb70-67"><a href="#cb70-67" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>),</span>
+<span id="cb70-68"><a href="#cb70-68" tabindex="-1"></a>    <span class="at">term =</span> <span class="st">&quot;arm&quot;</span></span>
+<span id="cb70-69"><a href="#cb70-69" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" tabindex="-1"></a><span class="co"># Bootstrap results</span></span>
+<span id="cb71-2"><a href="#cb71-2" tabindex="-1"></a>vas_ancova_boot</span></code></pre></div>
+<pre><code>## 
+## ORDINARY NONPARAMETRIC BOOTSTRAP
+## 
+## 
+## Call:
+## boot::boot(data = ctn03_sim_mar, statistic = margins_fun, R = 10000, 
+##     formula = vas_crave_opiates_eot ~ arm + vas_crave_opiates_bl, 
+##     family = gaussian(link = &quot;identity&quot;), term = &quot;arm&quot;)
+## 
+## 
+## Bootstrap Statistics :
+##      original    bias    std. error
+## t1* -2.179321 0.0631477    2.816499</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" tabindex="-1"></a><span class="co"># Bootstrap Standard Error</span></span>
+<span id="cb73-2"><a href="#cb73-2" tabindex="-1"></a><span class="fu">sd</span>(vas_ancova_boot<span class="sc">$</span>t[,<span class="dv">1</span>])</span></code></pre></div>
+<pre><code>## [1] 2.816499</code></pre>
+<p>We can extract the standard error and produce a 95% confidence interval:</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" tabindex="-1"></a>vas_ancova_boot_ci <span class="ot">&lt;-</span></span>
+<span id="cb75-2"><a href="#cb75-2" tabindex="-1"></a>  boot<span class="sc">::</span><span class="fu">boot.ci</span>(</span>
+<span id="cb75-3"><a href="#cb75-3" tabindex="-1"></a>    <span class="at">boot.out =</span> vas_ancova_boot,</span>
+<span id="cb75-4"><a href="#cb75-4" tabindex="-1"></a>    <span class="at">conf =</span> <span class="fl">0.95</span>,</span>
+<span id="cb75-5"><a href="#cb75-5" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;bca&quot;</span></span>
+<span id="cb75-6"><a href="#cb75-6" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" tabindex="-1"></a>vas_ancova_boot_ci</span></code></pre></div>
+<p>We can compare these to the results from <code>margins::margins()</code>:</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" tabindex="-1"></a><span class="co"># Margins SE</span></span>
+<span id="cb77-2"><a href="#cb77-2" tabindex="-1"></a>ancova_margins_se <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="at">object =</span> vas_ancova_margins, <span class="at">level =</span> <span class="fl">0.95</span>)<span class="sc">$</span>SE</span>
+<span id="cb77-3"><a href="#cb77-3" tabindex="-1"></a>ancova_margins_se</span></code></pre></div>
+<pre><code>## [1] 2.867989</code></pre>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" tabindex="-1"></a><span class="co"># Bootstrap SE</span></span>
+<span id="cb79-2"><a href="#cb79-2" tabindex="-1"></a>ancova_boot_se <span class="ot">&lt;-</span> <span class="fu">sd</span>(vas_ancova_boot<span class="sc">$</span>t[,<span class="dv">1</span>])</span>
+<span id="cb79-3"><a href="#cb79-3" tabindex="-1"></a>ancova_boot_se</span></code></pre></div>
+<pre><code>## [1] 2.816499</code></pre>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" tabindex="-1"></a><span class="co"># Compare as ratio</span></span>
+<span id="cb81-2"><a href="#cb81-2" tabindex="-1"></a>ancova_margins_se<span class="sc">/</span>ancova_boot_se</span></code></pre></div>
+<pre><code>## [1] 1.018282</code></pre>
+<p>The standard errors are nearly identical using the estimated marginal effect with robust standard errors or the bootstrap.</p>
+<hr />
+<div id="calculating-precision-gain" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Calculating Precision Gain</h2>
+<p>Asymptotically, the ANCOVA estimate should have precision that is equal or better than an unadjusted analysis. We can calculate the precision gain by taking the ratio of the variances, i.e. the squared standard errors, of the adjusted estimator to the unadjusted estimator.</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" tabindex="-1"></a>vas_t_test <span class="ot">&lt;-</span></span>
+<span id="cb83-2"><a href="#cb83-2" tabindex="-1"></a>  <span class="fu">t.test</span>(</span>
+<span id="cb83-3"><a href="#cb83-3" tabindex="-1"></a>    <span class="at">formula =</span> vas_crave_opiates_eot <span class="sc">~</span> arm,</span>
+<span id="cb83-4"><a href="#cb83-4" tabindex="-1"></a>    <span class="at">data =</span> ctn03_sim_mar,</span>
+<span id="cb83-5"><a href="#cb83-5" tabindex="-1"></a>    <span class="at">var.equal =</span> <span class="cn">FALSE</span></span>
+<span id="cb83-6"><a href="#cb83-6" tabindex="-1"></a>  )</span>
+<span id="cb83-7"><a href="#cb83-7" tabindex="-1"></a></span>
+<span id="cb83-8"><a href="#cb83-8" tabindex="-1"></a>vas_t_test</span></code></pre></div>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  vas_crave_opiates_eot by arm
+## t = 0.093598, df = 316.77, p-value = 0.9255
+## alternative hypothesis: true difference in means between group 28-day and group 7-day is not equal to 0
+## 95 percent confidence interval:
+##  -5.418971  5.960313
+## sample estimates:
+## mean in group 28-day  mean in group 7-day 
+##             28.01325             27.74257</code></pre>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" tabindex="-1"></a><span class="co"># Get unadjusted standard error</span></span>
+<span id="cb85-2"><a href="#cb85-2" tabindex="-1"></a>t_test_se <span class="ot">&lt;-</span> vas_t_test<span class="sc">$</span>stderr</span>
+<span id="cb85-3"><a href="#cb85-3" tabindex="-1"></a>t_test_se</span></code></pre></div>
+<pre><code>## [1] 2.891841</code></pre>
+<p>The precision gain is equal to the ratio of the variance, which is the square of the standard error:</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" tabindex="-1"></a><span class="co"># Percentage reduction in variance adjusting for baseline outcome</span></span>
+<span id="cb87-2"><a href="#cb87-2" tabindex="-1"></a><span class="dv">100</span><span class="sc">*</span>(<span class="dv">1</span> <span class="sc">-</span> (ancova_margins_se<span class="sc">/</span>t_test_se)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 1.642819</code></pre>
+<p>The precision gain in this particular example is rather small, but we have only adjusted for one potential covariate. However, there are several other baseline variables we did not include in the model. We can see if the gain in precision is larger when these other variables are included. We should also include the stability dose in the outcome, since randomization was stratified by this variable:</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" tabindex="-1"></a>vas_ancova_2 <span class="ot">&lt;-</span></span>
+<span id="cb89-2"><a href="#cb89-2" tabindex="-1"></a>  <span class="fu">glm</span>(</span>
+<span id="cb89-3"><a href="#cb89-3" tabindex="-1"></a>    <span class="at">formula =</span> vas_crave_opiates_eot <span class="sc">~</span> </span>
+<span id="cb89-4"><a href="#cb89-4" tabindex="-1"></a>      arm <span class="sc">+</span> vas_crave_opiates_bl <span class="sc">+</span> stability_dose <span class="sc">+</span></span>
+<span id="cb89-5"><a href="#cb89-5" tabindex="-1"></a>      arsw_score_bl <span class="sc">+</span> cows_total_score_bl <span class="sc">+</span></span>
+<span id="cb89-6"><a href="#cb89-6" tabindex="-1"></a>      vas_current_withdrawal_bl <span class="sc">+</span> vas_study_tx_help_bl <span class="sc">+</span> uds_any_positive_bl,</span>
+<span id="cb89-7"><a href="#cb89-7" tabindex="-1"></a>    <span class="at">data =</span> ctn03_sim_mar</span>
+<span id="cb89-8"><a href="#cb89-8" tabindex="-1"></a>  )</span>
+<span id="cb89-9"><a href="#cb89-9" tabindex="-1"></a></span>
+<span id="cb89-10"><a href="#cb89-10" tabindex="-1"></a>vas_ancova_margins_2 <span class="ot">&lt;-</span></span>
+<span id="cb89-11"><a href="#cb89-11" tabindex="-1"></a>  margins<span class="sc">::</span><span class="fu">margins</span>(</span>
+<span id="cb89-12"><a href="#cb89-12" tabindex="-1"></a>    <span class="at">model =</span> vas_ancova_2,</span>
+<span id="cb89-13"><a href="#cb89-13" tabindex="-1"></a>    <span class="co"># Specify treatment variable</span></span>
+<span id="cb89-14"><a href="#cb89-14" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">&quot;arm&quot;</span>,</span>
+<span id="cb89-15"><a href="#cb89-15" tabindex="-1"></a>    <span class="co"># Convert to outcome scale, not link scale</span></span>
+<span id="cb89-16"><a href="#cb89-16" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;response&quot;</span>,</span>
+<span id="cb89-17"><a href="#cb89-17" tabindex="-1"></a>    <span class="co"># Obtain robust standard errors</span></span>
+<span id="cb89-18"><a href="#cb89-18" tabindex="-1"></a>    <span class="at">vcov =</span> sandwich<span class="sc">::</span><span class="fu">vcovHC</span>(<span class="at">x =</span> vas_ancova_2, <span class="at">type =</span> <span class="st">&quot;HC3&quot;</span>)</span>
+<span id="cb89-19"><a href="#cb89-19" tabindex="-1"></a>  )</span>
+<span id="cb89-20"><a href="#cb89-20" tabindex="-1"></a></span>
+<span id="cb89-21"><a href="#cb89-21" tabindex="-1"></a>ancova_margins_2_se <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="at">object =</span> vas_ancova_margins_2, <span class="at">level =</span> <span class="fl">0.95</span>)<span class="sc">$</span>SE</span>
+<span id="cb89-22"><a href="#cb89-22" tabindex="-1"></a></span>
+<span id="cb89-23"><a href="#cb89-23" tabindex="-1"></a><span class="co"># Percentage reduction in variance adjusting for baseline outcome</span></span>
+<span id="cb89-24"><a href="#cb89-24" tabindex="-1"></a><span class="dv">100</span><span class="sc">*</span>(<span class="dv">1</span> <span class="sc">-</span> (ancova_margins_2_se<span class="sc">/</span>t_test_se)<span class="sc">^</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 7.590248</code></pre>
+<p>Including these other covariates leads to a larger gain in precision.</p>
+<hr />
+</div>
+<div id="covariate-adjustment-with-binary-outcomes" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Covariate Adjustment with Binary Outcomes</h2>
+<p>When the outcome is binary, the only difference in the approach is fitting a logistic regression with a nonlinear link instead of multiple regression with an identity link:</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" tabindex="-1"></a>uds_opioids_glm <span class="ot">&lt;-</span></span>
+<span id="cb91-2"><a href="#cb91-2" tabindex="-1"></a>  <span class="fu">glm</span>(</span>
+<span id="cb91-3"><a href="#cb91-3" tabindex="-1"></a>    <span class="at">formula =</span> </span>
+<span id="cb91-4"><a href="#cb91-4" tabindex="-1"></a>      uds_opioids_eot <span class="sc">==</span> <span class="st">&quot;Negative&quot;</span> <span class="sc">~</span> </span>
+<span id="cb91-5"><a href="#cb91-5" tabindex="-1"></a>      arm <span class="sc">+</span> uds_opioids_bl <span class="sc">+</span> stability_dose <span class="sc">+</span></span>
+<span id="cb91-6"><a href="#cb91-6" tabindex="-1"></a>      arsw_score_bl <span class="sc">+</span> cows_total_score_bl <span class="sc">+</span></span>
+<span id="cb91-7"><a href="#cb91-7" tabindex="-1"></a>      vas_current_withdrawal_bl <span class="sc">+</span> vas_study_tx_help_bl,</span>
+<span id="cb91-8"><a href="#cb91-8" tabindex="-1"></a>    <span class="at">data =</span> ctn03_sim_mar,</span>
+<span id="cb91-9"><a href="#cb91-9" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>)</span>
+<span id="cb91-10"><a href="#cb91-10" tabindex="-1"></a>  )</span>
+<span id="cb91-11"><a href="#cb91-11" tabindex="-1"></a></span>
+<span id="cb91-12"><a href="#cb91-12" tabindex="-1"></a><span class="fu">summary</span>(uds_opioids_glm)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = uds_opioids_eot == &quot;Negative&quot; ~ arm + uds_opioids_bl + 
+##     stability_dose + arsw_score_bl + cows_total_score_bl + vas_current_withdrawal_bl + 
+##     vas_study_tx_help_bl, family = binomial(link = &quot;logit&quot;), 
+##     data = ctn03_sim_mar)
+## 
+## Coefficients:
+##                            Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                0.019885   0.759146   0.026  0.97910    
+## arm7-day                   0.257685   0.265805   0.969  0.33232    
+## uds_opioids_blPositive    -2.607045   0.297263  -8.770  &lt; 2e-16 ***
+## stability_dose16 mg        1.168914   0.459625   2.543  0.01098 *  
+## stability_dose24 mg        1.170684   0.428484   2.732  0.00629 ** 
+## arsw_score_bl             -0.002279   0.012769  -0.178  0.85837    
+## cows_total_score_bl        0.187241   0.110601   1.693  0.09047 .  
+## vas_current_withdrawal_bl -0.015190   0.013636  -1.114  0.26529    
+## vas_study_tx_help_bl       0.001393   0.006972   0.200  0.84165    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 467.70  on 352  degrees of freedom
+## Residual deviance: 362.37  on 344  degrees of freedom
+##   (163 observations deleted due to missingness)
+## AIC: 380.37
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>Logistic regression gives coefficients on the log odds scale, which can be exponentiated to obtain a conditional odds ratio, a relative measure. The <code>margins::margins</code> function gives the marginal estimate on the risk difference scale, which is an absolute measure:</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" tabindex="-1"></a>uds_opioids_margins <span class="ot">&lt;-</span></span>
+<span id="cb93-2"><a href="#cb93-2" tabindex="-1"></a>  margins<span class="sc">::</span><span class="fu">margins</span>(</span>
+<span id="cb93-3"><a href="#cb93-3" tabindex="-1"></a>    <span class="at">model =</span> uds_opioids_glm,</span>
+<span id="cb93-4"><a href="#cb93-4" tabindex="-1"></a>    <span class="co"># Specify treatment variable</span></span>
+<span id="cb93-5"><a href="#cb93-5" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">&quot;arm&quot;</span>,</span>
+<span id="cb93-6"><a href="#cb93-6" tabindex="-1"></a>    <span class="co"># Convert to outcome scale, not link scale</span></span>
+<span id="cb93-7"><a href="#cb93-7" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;response&quot;</span>,</span>
+<span id="cb93-8"><a href="#cb93-8" tabindex="-1"></a>    <span class="co"># Obtain robust standard errors</span></span>
+<span id="cb93-9"><a href="#cb93-9" tabindex="-1"></a>    <span class="at">vcov =</span> sandwich<span class="sc">::</span><span class="fu">vcovHC</span>(<span class="at">x =</span> uds_opioids_glm, <span class="at">type =</span> <span class="st">&quot;HC3&quot;</span>)</span>
+<span id="cb93-10"><a href="#cb93-10" tabindex="-1"></a>  )</span>
+<span id="cb93-11"><a href="#cb93-11" tabindex="-1"></a></span>
+<span id="cb93-12"><a href="#cb93-12" tabindex="-1"></a><span class="fu">summary</span>(uds_opioids_margins)</span></code></pre></div>
+<pre><code>##    factor    AME     SE      z      p   lower  upper
+##  arm7-day 0.0433 0.0469 0.9238 0.3556 -0.0486 0.1353</code></pre>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" tabindex="-1"></a><span class="fu">confint</span>(uds_opioids_margins)</span></code></pre></div>
+<pre><code>##                lower     upper
+## arm7-day -0.04860374 0.1352633</code></pre>
+<p>A risk ratio could be obtained by using <code>margins_fun</code> from above, specifying <code>contrast = "ratio"</code>, and obtaining the standard error and confidence interval via the bootstrap. In the event that a marginal odds ratio is of interest, specifying <code>type = "link"</code> in the <code>margins::margins</code> call gives a marginal log odds ratio, which could be exponentiated to obtain a marginal odds ratio.</p>
+<hr />
+</div>
+<div id="stratified-randomization-covariate-adjustment" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> Stratified Randomization &amp; Covariate Adjustment</h2>
+<p>When stratified randomization is employed, additional benefits in precision can be realized by using covariate adjustment and a variance estimator designed for covariate adaptive designs. First, source the ICAD code from Github:</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" tabindex="-1"></a>icad_link <span class="ot">&lt;-</span></span>
+<span id="cb97-2"><a href="#cb97-2" tabindex="-1"></a>  <span class="st">&quot;https://raw.githubusercontent.com/BingkaiWang/covariate-adaptive/master/R/ICAD.R&quot;</span></span>
+<span id="cb97-3"><a href="#cb97-3" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">url</span>(icad_link))</span></code></pre></div>
+<p>Next, we specify which covariates are included in the model, excluding those in the strata variable, and call ICAD:</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" tabindex="-1"></a>baseline_covariates <span class="ot">&lt;-</span></span>
+<span id="cb98-2"><a href="#cb98-2" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;uds_opioids_bl&quot;</span>, <span class="st">&quot;arsw_score_bl&quot;</span>, <span class="st">&quot;cows_total_score_bl&quot;</span>,</span>
+<span id="cb98-3"><a href="#cb98-3" tabindex="-1"></a>    <span class="st">&quot;vas_current_withdrawal_bl&quot;</span>, <span class="st">&quot;vas_study_tx_help_bl&quot;</span>)</span>
+<span id="cb98-4"><a href="#cb98-4" tabindex="-1"></a></span>
+<span id="cb98-5"><a href="#cb98-5" tabindex="-1"></a>vas_icad <span class="ot">&lt;-</span></span>
+<span id="cb98-6"><a href="#cb98-6" tabindex="-1"></a>  <span class="fu">ICAD</span>(</span>
+<span id="cb98-7"><a href="#cb98-7" tabindex="-1"></a>    <span class="at">Y =</span> <span class="dv">1</span><span class="sc">*</span>(ctn03_sim_mar<span class="sc">$</span>uds_opioids_eot <span class="sc">==</span> <span class="st">&quot;Negative&quot;</span>), </span>
+<span id="cb98-8"><a href="#cb98-8" tabindex="-1"></a>    <span class="at">A =</span> <span class="dv">1</span><span class="sc">*</span>(ctn03_sim_mar<span class="sc">$</span>arm <span class="sc">==</span> <span class="st">&quot;7-day&quot;</span>), <span class="co"># Treatment indicator - Must be 1/0</span></span>
+<span id="cb98-9"><a href="#cb98-9" tabindex="-1"></a>    <span class="at">Strata =</span> ctn03_sim_mar<span class="sc">$</span>stability_dose, <span class="co"># Randomization Stratum</span></span>
+<span id="cb98-10"><a href="#cb98-10" tabindex="-1"></a>    <span class="at">W =</span> ctn03_sim_mar[, baseline_covariates], <span class="co"># Baseline Covariates</span></span>
+<span id="cb98-11"><a href="#cb98-11" tabindex="-1"></a>    <span class="at">pi =</span> <span class="fl">0.5</span>, <span class="co"># 1:1 Randomization,</span></span>
+<span id="cb98-12"><a href="#cb98-12" tabindex="-1"></a>    <span class="at">family =</span> <span class="st">&quot;binomial&quot;</span></span>
+<span id="cb98-13"><a href="#cb98-13" tabindex="-1"></a>  )</span></code></pre></div>
+<pre><code>## Warning in eval(family$initialize): non-integer #successes in a binomial glm!</code></pre>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" tabindex="-1"></a>vas_icad</span></code></pre></div>
+<pre><code>##                            est         var    CI.lower  CI.upper
+## unadjsed            0.07068389 0.002601561 -0.02928505 0.1706528
+## adjusted-for-strata 0.07374103 0.002601386 -0.02622455 0.1737066
+## adjusted-for-all    0.04332980 0.001889907 -0.04187583 0.1285354
+## drwls               0.04427818 0.002044182 -0.04433696 0.1328933</code></pre>
+<p>We can see that the ‘adjusted-for-all’ estimator, which uses a specialized variance estimator for covariate adaptive designs, has a lower variance than the covariate adjusted estimator obtained using <code>margins</code>, even though we are adjusting for the same covariates. This is the result of the additional precision gains from the covariate-adaptive variance estimator. The doubly robust weighted least squares (<code>drwls</code>) estimator will be discussed later on.</p>
+<p>Specifying <code>family = "binomial"</code> allows for marginal effects with binary outcomes:</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" tabindex="-1"></a>baseline_covariates <span class="ot">&lt;-</span></span>
+<span id="cb102-2"><a href="#cb102-2" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;vas_crave_opiates_bl&quot;</span>, <span class="st">&quot;arsw_score_bl&quot;</span>,</span>
+<span id="cb102-3"><a href="#cb102-3" tabindex="-1"></a>    <span class="st">&quot;cows_total_score_bl&quot;</span>, <span class="st">&quot;vas_current_withdrawal_bl&quot;</span>, <span class="st">&quot;vas_study_tx_help_bl&quot;</span>,</span>
+<span id="cb102-4"><a href="#cb102-4" tabindex="-1"></a>    <span class="st">&quot;uds_any_positive_bl&quot;</span>)</span>
+<span id="cb102-5"><a href="#cb102-5" tabindex="-1"></a></span>
+<span id="cb102-6"><a href="#cb102-6" tabindex="-1"></a>uds_icad <span class="ot">&lt;-</span></span>
+<span id="cb102-7"><a href="#cb102-7" tabindex="-1"></a>  <span class="fu">ICAD</span>(</span>
+<span id="cb102-8"><a href="#cb102-8" tabindex="-1"></a>    <span class="at">Y =</span> ctn03_sim_mar<span class="sc">$</span>vas_crave_opiates_eot, </span>
+<span id="cb102-9"><a href="#cb102-9" tabindex="-1"></a>    <span class="at">A =</span> <span class="dv">1</span><span class="sc">*</span>(ctn03_sim_mar<span class="sc">$</span>arm <span class="sc">==</span> <span class="st">&quot;7-day&quot;</span>), <span class="co"># Treatment indicator - Must be 1/0</span></span>
+<span id="cb102-10"><a href="#cb102-10" tabindex="-1"></a>    <span class="at">Strata =</span> ctn03_sim_mar<span class="sc">$</span>stability_dose, <span class="co"># Randomization Stratum</span></span>
+<span id="cb102-11"><a href="#cb102-11" tabindex="-1"></a>    <span class="at">W =</span> ctn03_sim_mar[, baseline_covariates], <span class="co"># Baseline Covariates</span></span>
+<span id="cb102-12"><a href="#cb102-12" tabindex="-1"></a>    <span class="at">pi =</span> <span class="fl">0.5</span> <span class="co"># 1:1 Randomization</span></span>
+<span id="cb102-13"><a href="#cb102-13" tabindex="-1"></a>  )</span>
+<span id="cb102-14"><a href="#cb102-14" tabindex="-1"></a></span>
+<span id="cb102-15"><a href="#cb102-15" tabindex="-1"></a>uds_icad</span></code></pre></div>
+<pre><code>##                            est      var  CI.lower CI.upper
+## unadjsed            -0.2706708 8.068289 -5.837896 5.296555
+## adjusted-for-strata -0.5224149 8.068084 -6.089570 5.044740
+## adjusted-for-all    -0.9106801 6.581495 -5.938855 4.117495
+## drwls               -0.9485718 6.956200 -6.117900 4.220757</code></pre>
+<hr />
+</div>
+<div id="missing-outcome-data-inverse-weighting" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> Missing Outcome Data: Inverse Weighting</h2>
+<p>So far, we have not discussed the issue of missing outcome data. While the G-computation estimator is robust to arbitrary model misspecification, it is only valid if data are missing completely at random (MCAR): missingness is unrelated to either the observed or unobserved data. If this were the case, we should not see any association between the baseline covariates and missingness in the VAS opiate craving scores at the end-of-taper visit. We can assess this using a generalized additive model (GAM):</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" tabindex="-1"></a>vas_mar_glm <span class="ot">&lt;-</span></span>
+<span id="cb104-2"><a href="#cb104-2" tabindex="-1"></a>  mgcv<span class="sc">::</span><span class="fu">gam</span>(</span>
+<span id="cb104-3"><a href="#cb104-3" tabindex="-1"></a>    <span class="at">formula =</span> </span>
+<span id="cb104-4"><a href="#cb104-4" tabindex="-1"></a>      <span class="fu">is.na</span>(vas_crave_opiates_eot) <span class="sc">~</span></span>
+<span id="cb104-5"><a href="#cb104-5" tabindex="-1"></a>      arm <span class="sc">+</span> stability_dose <span class="sc">+</span></span>
+<span id="cb104-6"><a href="#cb104-6" tabindex="-1"></a>      <span class="fu">s</span>(age) <span class="sc">+</span> sex <span class="sc">+</span></span>
+<span id="cb104-7"><a href="#cb104-7" tabindex="-1"></a>      <span class="fu">s</span>(vas_crave_opiates_bl) <span class="sc">+</span> <span class="fu">s</span>(arsw_score_bl) <span class="sc">+</span> <span class="fu">s</span>(cows_total_score_bl) <span class="sc">+</span></span>
+<span id="cb104-8"><a href="#cb104-8" tabindex="-1"></a>      <span class="fu">s</span>(vas_current_withdrawal_bl) <span class="sc">+</span> <span class="fu">s</span>(vas_study_tx_help_bl) <span class="sc">+</span></span>
+<span id="cb104-9"><a href="#cb104-9" tabindex="-1"></a>      uds_any_positive_bl,</span>
+<span id="cb104-10"><a href="#cb104-10" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>),</span>
+<span id="cb104-11"><a href="#cb104-11" tabindex="-1"></a>    <span class="at">data =</span> ctn03_sim_mar</span>
+<span id="cb104-12"><a href="#cb104-12" tabindex="-1"></a>  )</span>
+<span id="cb104-13"><a href="#cb104-13" tabindex="-1"></a></span>
+<span id="cb104-14"><a href="#cb104-14" tabindex="-1"></a><span class="fu">summary</span>(vas_mar_glm)</span></code></pre></div>
+<pre><code>## 
+## Family: binomial 
+## Link function: logit 
+## 
+## Formula:
+## is.na(vas_crave_opiates_eot) ~ arm + stability_dose + s(age) + 
+##     sex + s(vas_crave_opiates_bl) + s(arsw_score_bl) + s(cows_total_score_bl) + 
+##     s(vas_current_withdrawal_bl) + s(vas_study_tx_help_bl) + 
+##     uds_any_positive_bl
+## 
+## Parametric coefficients:
+##                             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                 -1.80921    0.56096  -3.225  0.00126 ** 
+## arm7-day                    -1.01189    0.20978  -4.824 1.41e-06 ***
+## stability_dose16 mg          1.74449    0.57581   3.030  0.00245 ** 
+## stability_dose24 mg          1.46083    0.56381   2.591  0.00957 ** 
+## sexFemale                    0.11516    0.22339   0.516  0.60620    
+## uds_any_positive_blPositive -0.07541    0.21609  -0.349  0.72711    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Approximate significance of smooth terms:
+##                                edf Ref.df Chi.sq p-value   
+## s(age)                       1.758  2.210  1.947  0.4526   
+## s(vas_crave_opiates_bl)      1.000  1.000  1.436  0.2308   
+## s(arsw_score_bl)             1.000  1.000  7.327  0.0068 **
+## s(cows_total_score_bl)       3.110  3.839  6.372  0.1944   
+## s(vas_current_withdrawal_bl) 2.120  2.692  7.016  0.0561 . 
+## s(vas_study_tx_help_bl)      1.000  1.000  1.542  0.2143   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## R-sq.(adj) =  0.0853   Deviance explained = 9.61%
+## UBRE = 0.18961  Scale est. = 1         n = 516</code></pre>
+<p>The GAM model shows that, all other things being equal, missingness was lower in the 7-day arm, higher in individuals on 16 or 24 mg stability doses, and was associated with some of the baseline outcome measures. In the next section, we will discuss methods that can be robust to model misspecification and do not require the MCAR assumption.</p>
+
+</div>
+</div>
+<div id="doublyrobust" class="section level1" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Doubly Robust Estimators</h1>
+<div id="augmented-inverse-probability-weighted-estimation" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Augmented Inverse Probability Weighted Estimation</h2>
+<hr />
+</div>
+<div id="targeted-maximum-likelihood-estimation" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Targeted Maximum Likelihood Estimation</h2>
+
+</div>
+</div>
+<div id="timetoevent" class="section level1" number="7">
+<h1><span class="header-section-number">Chapter 7</span> Time-To-Event Outcomes</h1>
+<p>We will illustrate covariate adjustment for time-to-event outcomes using the simulated MISTIE III dataset. The code to load this data is in the chapter on <a href="#Load_MISTIE">Using R</a>. Here we are interested in whether the minimally invasive surgery procedure improves survival in the first 90 days after randomization.</p>
+<hr />
+<div id="unadjusted-estimators" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> Unadjusted Estimators</h2>
+<p>Before discussing covariate adjustment in time-to-event outcomes, it is worth reviewing unadjusted methods, the assumptions needed for their valid use, and their interpretation.</p>
+<p>The Kaplan-Meier (or K-M) estimate of the survival function is one of the most ubiquitous approaches to time-to-event outcomes. The K-M estimator assumes that censoring occurs independent of event time in each treatment arm. This is often violated when baseline covariates associated with event times and dropout <span class="citation">(<a href="#ref-Diaz2018">Dı́az et al. 2018</a>)</span>.</p>
+<p>The Logrank test and the Cox Proportional Hazards model are closely related to each other and <a href="#hazard_ratio">the proportional hazards assumption</a>. The Logrank Test provides a valid test of the null hypothesis if censoring is independent of treatment or the event time in each treatment arm <span class="citation">(<a href="#ref-VanLancker2021">Lancker, Dukes, and Vansteelandt 2021</a>)</span>. While its validity does not depend on the proportional hazards (PH) assumption, its power is greatest when the PH assumption is true. When the PH assumption does not hold, weighted logrank tests can improve power by emphasizing different parts of the survival curve <span class="citation">(<a href="#ref-Lin2017">Lin and León 2017</a>)</span>.</p>
+<p>The Cox Proportional Hazards (PH) Model provides a valid test of the null hypothesis if the sandwich covariance estimator is used and censoring is either conditionally independent of treatment assignment given the covariates or conditionally independent of the covariates given treatment assignment. As previously mentioned, the <a href="#hazard_ratio">proportional hazards assumption</a> may not be known to hold a priori, presents difficulties in interpretation when the assumption does not empirically hold, and does not quantify the amount of time a participant can expect to be event free under a particular treatment <span class="citation">(<a href="#ref-Rudser2012">Rudser, LeBlanc, and Emerson 2012</a>)</span>.</p>
+<p>The Restricted Mean Survival Time assumes that <span class="math inline">\(\ldots\)</span>.
+The Survival Probability assumes that <span class="math inline">\(\ldots\)</span>.</p>
+<hr />
+<div id="kaplan-meier-estimator" class="section level3" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> Kaplan-Meier Estimator</h3>
+<p><img src="_main_files/figure-html/KM-MISTIE-Survival-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="logrank-test" class="section level3" number="7.1.2">
+<h3><span class="header-section-number">7.1.2</span> Logrank Test</h3>
+<p>The Logrank test (and the <span class="math inline">\(G^{\rho}\)</span> family of tests) can be performed using the <code>survival::survdiff</code> function:</p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" tabindex="-1"></a>survival<span class="sc">::</span><span class="fu">survdiff</span>(</span>
+<span id="cb106-2"><a href="#cb106-2" tabindex="-1"></a>  <span class="at">formula =</span></span>
+<span id="cb106-3"><a href="#cb106-3" tabindex="-1"></a>    <span class="fu">Surv</span>(<span class="at">time =</span> days_on_study,</span>
+<span id="cb106-4"><a href="#cb106-4" tabindex="-1"></a>         <span class="at">event =</span> died_on_study) <span class="sc">~</span> arm,</span>
+<span id="cb106-5"><a href="#cb106-5" tabindex="-1"></a>  <span class="at">data =</span> sim_miii</span>
+<span id="cb106-6"><a href="#cb106-6" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## Call:
+## survival::survdiff(formula = Surv(time = days_on_study, event = died_on_study) ~ 
+##     arm, data = sim_miii)
+## 
+##                N Observed Expected (O-E)^2/E (O-E)^2/V
+## arm=medical  250       64     49.6      4.19      8.06
+## arm=surgical 250       40     54.4      3.82      8.06
+## 
+##  Chisq= 8.1  on 1 degrees of freedom, p= 0.005</code></pre>
+<hr />
+</div>
+<div id="cox-proportional-hazards-model" class="section level3" number="7.1.3">
+<h3><span class="header-section-number">7.1.3</span> Cox Proportional Hazards Model</h3>
+<p>The Cox Proportional Hazards model can be fitted using the <code>survival::coxph</code> function: the specification of the model is done using a formula object, with a <code>survival::Surv</code> object on the left hand side, and the covariates specified on the right hand side. To obtain the robust variance estimate of the coefficients, the <code>robust</code> argument should be set to <code>TRUE</code>. See <code>?survival::coxph</code> for more details, such as handling of tied survival times.</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" tabindex="-1"></a>unadjusted_cox <span class="ot">&lt;-</span></span>
+<span id="cb108-2"><a href="#cb108-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">coxph</span>(</span>
+<span id="cb108-3"><a href="#cb108-3" tabindex="-1"></a>    <span class="at">formula =</span></span>
+<span id="cb108-4"><a href="#cb108-4" tabindex="-1"></a>      <span class="fu">Surv</span>(<span class="at">time =</span> days_on_study,</span>
+<span id="cb108-5"><a href="#cb108-5" tabindex="-1"></a>           <span class="at">event =</span> died_on_study) <span class="sc">~</span> arm,</span>
+<span id="cb108-6"><a href="#cb108-6" tabindex="-1"></a>    <span class="at">ties =</span> <span class="st">&quot;efron&quot;</span>,</span>
+<span id="cb108-7"><a href="#cb108-7" tabindex="-1"></a>    <span class="at">robust =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb108-8"><a href="#cb108-8" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
+<span id="cb108-9"><a href="#cb108-9" tabindex="-1"></a>  )</span>
+<span id="cb108-10"><a href="#cb108-10" tabindex="-1"></a></span>
+<span id="cb108-11"><a href="#cb108-11" tabindex="-1"></a><span class="fu">summary</span>(unadjusted_cox)</span></code></pre></div>
+<pre><code>## Call:
+## survival::coxph(formula = Surv(time = days_on_study, event = died_on_study) ~ 
+##     arm, data = sim_miii, ties = &quot;efron&quot;, robust = TRUE)
+## 
+##   n= 500, number of events= 104 
+## 
+##                coef exp(coef) se(coef) robust se      z Pr(&gt;|z|)   
+## armsurgical -0.5670    0.5672   0.2016    0.1995 -2.841  0.00449 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+##             exp(coef) exp(-coef) lower .95 upper .95
+## armsurgical    0.5672      1.763    0.3836    0.8387
+## 
+## Concordance= 0.575  (se = 0.024 )
+## Likelihood ratio test= 8.16  on 1 df,   p=0.004
+## Wald test            = 8.07  on 1 df,   p=0.004
+## Score (logrank) test = 8.12  on 1 df,   p=0.004,   Robust = 8.03  p=0.005
+## 
+##   (Note: the likelihood ratio and score tests assume independence of
+##      observations within a cluster, the Wald and robust score tests do not).</code></pre>
+<p>Tests for the proportional hazards assumption using weighted residuals can be obtained using <code>survival::cox.zph</code>.</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" tabindex="-1"></a>unadjusted_cox_ph_test <span class="ot">&lt;-</span></span>
+<span id="cb110-2"><a href="#cb110-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">cox.zph</span>(unadjusted_cox)</span>
+<span id="cb110-3"><a href="#cb110-3" tabindex="-1"></a></span>
+<span id="cb110-4"><a href="#cb110-4" tabindex="-1"></a><span class="fu">print</span>(unadjusted_cox_ph_test)</span></code></pre></div>
+<pre><code>##        chisq df      p
+## arm     9.85  1 0.0017
+## GLOBAL  9.85  1 0.0017</code></pre>
+<p>In addition to test statistics, plots can be used to visualize how covariate effects vary by time on study:</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" tabindex="-1"></a><span class="co"># Plot Proportionality Results</span></span>
+<span id="cb112-2"><a href="#cb112-2" tabindex="-1"></a><span class="fu">plot</span>(unadjusted_cox_ph_test,</span>
+<span id="cb112-3"><a href="#cb112-3" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Proportional Hazards Test&quot;</span>)</span>
+<span id="cb112-4"><a href="#cb112-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img src="_main_files/figure-html/Unadjusted-Cox-PH-Plot-MISTIE-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Here we see that the hazard ratio for treatment arm is negative initially, reflecting lower mortality after randomization in the surgical arm. The magnitude of this effect decreases with time, eventually becoming indistinguishable from zero. This pattern of mortality and time-varying treatment effect is consistent with the fact that most stroke-related mortality occurs in the few weeks following its initial onset, and the intervention is only expected to address mortality related to the initial hemorrhagic stroke. In such a setting, we might expect a violation of the proportional hazards assumption at some point in follow-up, but not know how the treatment effect varies in time.</p>
+<hr />
+</div>
+<div id="survival-probability" class="section level3" number="7.1.4">
+<h3><span class="header-section-number">7.1.4</span> Survival Probability</h3>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" tabindex="-1"></a>surv_metadata_unadj <span class="ot">&lt;-</span></span>
+<span id="cb113-2"><a href="#cb113-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">survrct</span>(</span>
+<span id="cb113-3"><a href="#cb113-3" tabindex="-1"></a>    <span class="at">outcome.formula =</span></span>
+<span id="cb113-4"><a href="#cb113-4" tabindex="-1"></a>      <span class="fu">Surv</span>(days_on_study, died_on_study) <span class="sc">~</span> tx, </span>
+<span id="cb113-5"><a href="#cb113-5" tabindex="-1"></a>    <span class="at">trt.formula =</span> tx <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb113-6"><a href="#cb113-6" tabindex="-1"></a>    <span class="at">data =</span> sim_miii,</span>
+<span id="cb113-7"><a href="#cb113-7" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" tabindex="-1"></a>surv_prob_unadj <span class="ot">&lt;-</span> </span>
+<span id="cb114-2"><a href="#cb114-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">survprob</span>(</span>
+<span id="cb114-3"><a href="#cb114-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_unadj,</span>
+<span id="cb114-4"><a href="#cb114-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
+<span id="cb114-5"><a href="#cb114-5" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" tabindex="-1"></a>surv_prob_unadj</span></code></pre></div>
+<hr />
+</div>
+<div id="restricted-mean-survival-time-rmst" class="section level3" number="7.1.5">
+<h3><span class="header-section-number">7.1.5</span> Restricted Mean Survival Time (RMST)</h3>
+<p>The <code>survRM2</code> package can be used to obtain the RMST in each arm, as well as differences and ratios of the RMST between treatment arms:</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" tabindex="-1"></a><span class="fu">with</span>(</span>
+<span id="cb116-2"><a href="#cb116-2" tabindex="-1"></a>  sim_miii,</span>
+<span id="cb116-3"><a href="#cb116-3" tabindex="-1"></a>  survRM2<span class="sc">::</span><span class="fu">rmst2</span>(</span>
+<span id="cb116-4"><a href="#cb116-4" tabindex="-1"></a>    <span class="at">time =</span> days_on_study,</span>
+<span id="cb116-5"><a href="#cb116-5" tabindex="-1"></a>    <span class="at">status =</span> died_on_study,</span>
+<span id="cb116-6"><a href="#cb116-6" tabindex="-1"></a>    <span class="at">arm =</span> tx,</span>
+<span id="cb116-7"><a href="#cb116-7" tabindex="-1"></a>    <span class="at">tau =</span> <span class="dv">90</span></span>
+<span id="cb116-8"><a href="#cb116-8" tabindex="-1"></a>  )</span>
+<span id="cb116-9"><a href="#cb116-9" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## 
+## The truncation time: tau = 90  was specified. 
+## 
+## Restricted Mean Survival Time (RMST) by arm 
+##                Est.    se lower .95 upper .95
+## RMST (arm=1) 84.510 1.160    82.237    86.783
+## RMST (arm=0) 75.744 1.932    71.957    79.531
+## 
+## 
+## Restricted Mean Time Lost (RMTL) by arm 
+##                Est.    se lower .95 upper .95
+## RMTL (arm=1)  5.490 1.160     3.217     7.763
+## RMTL (arm=0) 14.256 1.932    10.469    18.043
+## 
+## 
+## Between-group contrast 
+##                       Est. lower .95 upper .95 p
+## RMST (arm=1)-(arm=0) 8.766     4.350    13.182 0
+## RMST (arm=1)/(arm=0) 1.116     1.054     1.181 0
+## RMTL (arm=1)/(arm=0) 0.385     0.235     0.630 0</code></pre>
+<p>This can also be done using the <code>adjrct</code> package. Once the “survival metadata” has been produced using the <code>adjrct::survrct</code> function, the metadata can be passed to the <code>adjrct::rmst</code> function.</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" tabindex="-1"></a>rmst_unadj <span class="ot">&lt;-</span> </span>
+<span id="cb118-2"><a href="#cb118-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">rmst</span>(</span>
+<span id="cb118-3"><a href="#cb118-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_unadj,</span>
+<span id="cb118-4"><a href="#cb118-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
+<span id="cb118-5"><a href="#cb118-5" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" tabindex="-1"></a>rmst_unadj</span></code></pre></div>
+<hr />
+</div>
+</div>
+<div id="event-driven-trials" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> Event-Driven Trials</h2>
+<hr />
+</div>
+<div id="covariate-adjusted-estimators" class="section level2" number="7.3">
+<h2><span class="header-section-number">7.3</span> Covariate-Adjusted Estimators</h2>
+<hr />
+<div id="kaplan-meier-estimator-1" class="section level3" number="7.3.1">
+<h3><span class="header-section-number">7.3.1</span> Kaplan-Meier Estimator</h3>
+<hr />
+</div>
+<div id="survival-probability-1" class="section level3" number="7.3.2">
+<h3><span class="header-section-number">7.3.2</span> Survival Probability</h3>
+<hr />
+</div>
+<div id="restricted-mean-survival-time-rmst-1" class="section level3" number="7.3.3">
+<h3><span class="header-section-number">7.3.3</span> Restricted Mean Survival Time (RMST)</h3>
+
+</div>
+</div>
+</div>
+<div id="groupsequential" class="section level1" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Group Sequential Designs</h1>
+<hr />
+<div id="group-sequential-designs" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> Group Sequential Designs</h2>
+<hr />
+</div>
+<div id="power-sample-size-calculations" class="section level2" number="8.2">
+<h2><span class="header-section-number">8.2</span> Power &amp; Sample Size Calculations</h2>
+<hr />
+</div>
+<div id="analyses-unadjusted-and-adjusted" class="section level2" number="8.3">
+<h2><span class="header-section-number">8.3</span> Analyses: Unadjusted and Adjusted</h2>
+
+</div>
+</div>
+<div id="informationadaptive" class="section level1" number="9">
+<h1><span class="header-section-number">Chapter 9</span> Information Adaptive Designs</h1>
+<hr />
+<div id="information-adaptive-designs" class="section level2" number="9.1">
+<h2><span class="header-section-number">9.1</span> Information Adaptive Designs</h2>
+<hr />
+</div>
+<div id="power-sample-size-calculations-1" class="section level2" number="9.2">
+<h2><span class="header-section-number">9.2</span> Power &amp; Sample Size Calculations</h2>
+<hr />
+</div>
+<div id="analyses-unadjusted-and-adjusted-1" class="section level2" number="9.3">
+<h2><span class="header-section-number">9.3</span> Analyses: Unadjusted and Adjusted</h2>
+
+</div>
+</div>
+<div id="recommendations" class="section level1" number="10">
+<h1><span class="header-section-number">Chapter 10</span> Guidance on Applying Covariate Adjustment</h1>
+<div id="missing-covariates" class="section level2" number="10.1">
+<h2><span class="header-section-number">10.1</span> Missing Covariates</h2>
+<ul>
+<li>How much missingness is too much</li>
+<li>Approaches and justification for missing covariates</li>
+<li>Preserving independence of covariates and treatment</li>
+</ul>
+<hr />
+</div>
+<div id="statistical-analysis-plans" class="section level2" number="10.2">
+<h2><span class="header-section-number">10.2</span> Statistical Analysis Plans</h2>
+<hr />
+</div>
+<div id="sample-size-for-adjusted-vs.-unadjusted" class="section level2" number="10.3">
+<h2><span class="header-section-number">10.3</span> Sample size for adjusted vs. unadjusted</h2>
+<hr />
+</div>
+<div id="number-of-parameters-vs.-sample-size" class="section level2" number="10.4">
+<h2><span class="header-section-number">10.4</span> Number of parameters vs. sample size</h2>
+<ul>
+<li>Adjusting for sites in multi-site trial</li>
+</ul>
+<hr />
+</div>
+<div id="data-adaptive-covariate-adjustment" class="section level2" number="10.5">
+<h2><span class="header-section-number">10.5</span> Data-Adaptive Covariate Adjustment</h2>
+
+</div>
+</div>
+<div id="appendices" class="section level1" number="11">
+<h1><span class="header-section-number">Chapter 11</span> Appendices</h1>
+<div id="appendix_a_glossary" class="section level2" number="11.1">
+<h2><span class="header-section-number">11.1</span> Appendix A: Glossary of Terms</h2>
+</div>
+<div id="appendix_b_using_r" class="section level2" number="11.2">
+<h2><span class="header-section-number">11.2</span> Appendix B: Resources for Using R</h2>
+<p>There are a lot of excellent existing resources on learning and using R in practice. A non-exhaustive list of these resources are below.</p>
+<ul>
+<li>Getting Started
+<ul>
+<li><a href="https://cran.r-project.org/doc/manuals/r-release/R-intro.html">R Project: An Introduction to R</a></li>
+<li><a href="https://education.rstudio.com/">Rstudio Educational Resources</a></li>
+<li><a href="https://rstudio.cloud/learn/primers">Rstudio Primers</a></li>
+<li><a href="https://r4ds.had.co.nz/">R for Data Science</a></li>
+<li><a href="https://rafalab.github.io/dsbook/">Introduction to Data Science</a></li>
+<li><a href="https://bookdown.org/rdpeng/exdata/">Exploratory Data Analysis with R</a></li>
+<li><a href="https://www.coursera.org/specializations/data-science-foundations-r">Coursera Data Science Foundations using R</a></li>
+<li><a href="https://www.edx.org/course/data-science-r-basics">edX Data Science: R Basics</a></li>
+<li><a href="https://happygitwithr.com/">Happy Git and GitHub for the useR</a></li>
+<li><a href="https://r-graph-gallery.com/">The R Graph Gallery</a></li>
+</ul></li>
+<li>Quick References
+<ul>
+<li><a href="https://rstudio.com/resources/cheatsheets/">RStudio Cheat Sheets</a></li>
+</ul></li>
+<li>Programming &amp; Advanced Topics
+<ul>
+<li><a href="https://rstudio-education.github.io/hopr/">Hands On Programming with R</a></li>
+<li><a href="https://adv-r.hadley.nz/">Advanced R</a></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Diaz2018" class="csl-entry">
+Dı́az, Iván, Elizabeth Colantuoni, Daniel F. Hanley, and Michael Rosenblum. 2018. <span>“Improved Precision in the Analysis of Randomized Trials with Survival Outcomes, Without Assuming Proportional Hazards.”</span> <em>Lifetime Data Analysis</em> 25 (3): 439–68. <a href="https://doi.org/10.1007/s10985-018-9428-5">https://doi.org/10.1007/s10985-018-9428-5</a>.
+</div>
+<div id="ref-DobsonBarnett2018" class="csl-entry">
+Dobson, Annette J., and Adrian G. Barnett. 2018. <em>An Introduction to Generalized Linear Models, Fourth Edition</em>. Chapman; Hall/<span>CRC</span>. <a href="https://doi.org/10.1201/9781315182780">https://doi.org/10.1201/9781315182780</a>.
+</div>
+<div id="ref-VanLancker2021" class="csl-entry">
+Lancker, Kelly Van, Oliver Dukes, and Stijn Vansteelandt. 2021. <span>“Principled Selection of Baseline Covariates to Account for Censoring in Randomized Trials with a Survival Endpoint.”</span> <em>Statistics in Medicine</em> 40 (18): 4108–21. <a href="https://doi.org/10.1002/sim.9017">https://doi.org/10.1002/sim.9017</a>.
+</div>
+<div id="ref-Lin2017" class="csl-entry">
+Lin, Ray S., and Larry F. León. 2017. <span>“Estimation of Treatment Effects in Weighted Log-Rank Tests.”</span> <em>Contemporary Clinical Trials Communications</em> 8 (December): 147–55. <a href="https://doi.org/10.1016/j.conctc.2017.09.004">https://doi.org/10.1016/j.conctc.2017.09.004</a>.
+</div>
+<div id="ref-Rudser2012" class="csl-entry">
+Rudser, Kyle D., Michael L. LeBlanc, and Scott S. Emerson. 2012. <span>“Distribution-Free Inference on Contrasts of Arbitrary Summary Measures of Survival.”</span> <em>Statistics in Medicine</em> 31 (16): 1722–37. <a href="https://doi.org/10.1002/sim.4505">https://doi.org/10.1002/sim.4505</a>.
+</div>
+<div id="ref-Wang2020" class="csl-entry">
+Wang, Bingkai, Ryoko Susukida, Ramin Mojtabai, Masoumeh Amin-Esmaeili, and Michael Rosenblum. 2020. <span>“Model-Robust Inference for Clinical Trials That Improve Precision by Stratified Randomization and Covariate Adjustment.”</span> <a href="https://arxiv.org/abs/1910.13954">https://arxiv.org/abs/1910.13954</a>.
+</div>
+</div>
+</div>
+<p style="text-align: center;">
+</p>
+</div>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+</body>
+</html>

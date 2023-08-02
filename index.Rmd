@@ -2,7 +2,10 @@
 title: "Covariate Adjustment in Randomized Trials"
 author: "Josh Betz, Kelly van Lancker, and Michael Rosenblum"
 site: bookdown::bookdown_site
-documentclass: book
+output:
+  bookdown::html_book:
+    theme: united
+    split_by: none
 bibliography: covariate_adjustment.bib
 url: https://covariateadjustment.github.io
 description: |
@@ -34,10 +37,37 @@ knitr::opts_chunk$set(
 
 set.seed(54321)
 
+if(!file.exists(file.path(getwd(), "docs"))){
+  dir.create(file.path(getwd(), "docs"), recursive = TRUE)
+}
+
 if(!file.exists(file.path(getwd(), "docs", ".nojekyll"))){
   file.create(file.path(getwd(), "docs", ".nojekyll"))
-} 
+}
 ```
+
+
+```{r Load-or-Cache_results}
+results_code_file <-
+  "cache_results.r"
+cached_results_file <-
+  "covariateadjustment_github_io_cached.Rdata"
+
+results_code_path <-
+  file.path(getwd(), results_code_file)
+
+cached_results_path <-
+  file.path(getwd(), cached_results_file)
+cached_results_exist <-
+  file.exists(cached_results_path)
+
+if(cached_results_exist) {
+  load(file = cached_results_path)
+} else {
+  source(file = results_code_path)
+}
+```
+
 
 # Covariate Adjustment: Opportunities and Challenges
 

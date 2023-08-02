@@ -18,14 +18,14 @@ mann-whitney-m-w-estimand
 log-odds-ratio-lor
 survival_estimands
 survival-function
-hazard-ratio
+hazard_ratio
 restricted-mean-survival-time
 using_r
 installing-packages
 packages-from-cran
 packages-from-github
 loading-packages-into-workspace
-loading-the-data-mistie-iii
+Load_MISTIE
 assessing-baseline-balance
 visualizing-data
 fitting-regression-models
@@ -37,6 +37,7 @@ bootstrap-estimator
 addressing-multiplicity
 applying-covariate-adjustment-ancova-g-computation-dr-wls
 calculating-precision-gain
+covariate-adjustment-with-binary-outcomes
 stratified-randomization-covariate-adjustment
 missing-outcome-data-inverse-weighting
 doublyrobust
@@ -46,6 +47,7 @@ timetoevent
 unadjusted-estimators
 kaplan-meier-estimator
 logrank-test
+cox-proportional-hazards-model
 survival-probability
 restricted-mean-survival-time-rmst
 event-driven-trials
@@ -70,5 +72,3 @@ data-adaptive-covariate-adjustment
 appendices
 appendix_a_glossary
 appendix_b_using_r
-references
-cover-image-path-to-the-social-sharing-image-like-imagescover.jpg

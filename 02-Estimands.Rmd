@@ -182,7 +182,7 @@ $$\theta_{RSP} = \frac{Pr(Y \ge \tau \vert A = 1)}{Pr(Y \ge \tau \vert A = 0)}$$
 
 
 
-### Hazard Ratio
+### Hazard Ratio {#hazard_ratio}
 
 The hazard rate for individuals receiving treatment $A = a$, denoted $h^{(a)}(t)$, is the instantaneous rate of the event of interest at time $t$ among individuals who have not yet experienced the event:
 

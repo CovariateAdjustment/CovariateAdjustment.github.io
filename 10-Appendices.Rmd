@@ -24,4 +24,4 @@ There are a lot of excellent existing resources on learning and using R in pract
     - [Hands On Programming with R](https://rstudio-education.github.io/hopr/)
     - [Advanced R](https://adv-r.hadley.nz/)
 
-# References
+`r if (knitr::is_html_output()) '# References {-}'`
