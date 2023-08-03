@@ -4,12 +4,12 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Covariate Adjustment in Randomized Trials</title>
+  <title>Chapter 8 Ordinal Outcomes | Covariate Adjustment in Randomized Trials</title>
   <meta name="description" content="<p>This a series of tutorials meant to help investigators apply covariate
 adjusted analyses in randomized trials.</p>" />
   <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Covariate Adjustment in Randomized Trials" />
+  <meta property="og:title" content="Chapter 8 Ordinal Outcomes | Covariate Adjustment in Randomized Trials" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="<p>This a series of tutorials meant to help investigators apply covariate
@@ -17,7 +17,7 @@ adjusted analyses in randomized trials.</p>" />
   <meta name="github-repo" content="covariateadjustment/covariateadjustment.github.io" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Covariate Adjustment in Randomized Trials" />
+  <meta name="twitter:title" content="Chapter 8 Ordinal Outcomes | Covariate Adjustment in Randomized Trials" />
   
   <meta name="twitter:description" content="<p>This a series of tutorials meant to help investigators apply covariate
 adjusted analyses in randomized trials.</p>" />
@@ -32,8 +32,8 @@ adjusted analyses in randomized trials.</p>" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="introduction.html"/>
+<link rel="prev" href="timetoevent.html"/>
+<link rel="next" href="groupsequential.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -304,113 +304,17 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Covariate Adjustment in Randomized Trials</h1>
-<p class="author"><em>Josh Betz, Kelly van Lancker, and Michael Rosenblum</em></p>
-</div>
-<div id="covariate-adjustment-opportunities-and-challenges" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">Chapter 1</span> Covariate Adjustment: Opportunities and Challenges<a href="index.html#covariate-adjustment-opportunities-and-challenges" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Randomized trials are an important tool for generating evidence to inform practice in medicine, public health, science, and industry. Planning ethical, informative, and cost-effective studies requires many careful considerations during the development of the study design and statistical analysis plan. One of these considerations should be how to utilize the information about study participants that is known before randomization takes place. Variables observed prior to randomization, known as baseline covariates, can provide information about the outcomes that are observed during the study. Leveraging the information in baseline covariates could improve our inference about the potential benefits or harms of an intervention. Utilizing this information effectively in the study design and analysis plan has the potential to reduce the number of participants required or the duration of the study without sacrificing the precision of our inference. Such methods can make evaluating interventions more ethical and cost effective, and is generally supported by regulatory agencies.</p>
-<p>This book is about the practice of applying covariate adjustment in randomized trials. While there are many approaches for covariate adjustment, our focus will be on estimating the average outcome in a population under different potential treatment assignments, known as marginal treatment effects. Investigators may be interested in comparing the average outcome within strata of a population under different potential treatment assignments, which are known as conditional treatment effects. While conditional treatment effects will arise in our discussion along the way, they will not be our primary focus.</p>
-<p>Since randomized trials serve such an important role in policy and practice, stakeholders may be understandably cautious about changing how such research is carried out. It is important that investigators, regulators, reviewers, and readers trust the methods chosen for an application and understand how they compare to potential alternative approaches. It is natural to ask what assumptions are required for the validity of a covariate adjusted analysis, how such results should be interpreted, and how these differ from an unadjusted approach.</p>
-<p>The methods that we consider should meet certain acceptability criteria. Firstly, an acceptable approach must not change the statistical and scientific focus of investigation. In other words, our covariate-adjusted approach should infer about the same quantities of interest, or estimands, as an unadjusted approach. Secondly, an acceptable approach must not require stronger, more restrictive assumptions: the assumptions for the validity of a covariate-adjusted approach should be the same or less stringent than an unadjusted approach. Finally, a covariate-adjusted approach should have the same or better precision than the unadjusted estimator.</p>
-<p>Statisticians rely on regression models in many contexts to relate covariate information to an outcome of interest. Before interpreting regression coefficients, there is often a great deal of consideration put into choosing an appropriate specification for the model: which variables should be included in the model, how they should be included, and how to link the covariates to the scale of the outcome. Appropriate interpretation and application of models requires some assumptions about how closely the fitted model is to the true data generating process, which is unknown in practice.</p>
-<p>Since regression models are used to perform covariate adjustment, it is natural to ask whether using such models also requires assumptions about how closely the specified model is to the true data generating process. What may be surprising to some is that covariate adjusted analyses can be valid under arbitrary model misspecification. Even though covariate adjustment may use regression models to construct an estimator, the validity of the resulting estimator does not require that the model is correctly specified. This is particularly important if we are to have covariate-adjusted methods that do not require stronger assumptions than an unadjusted analysis. Use of regression models allow us to do covariate-adjusted analyses for continuous, binary, ordinal, or time-to-event outcomes, allowing them to be applied to many research areas and questions.</p>
-<p>While covariate adjustment has the potential to improve precision and make research more ethical and cost effective, there are still challenges to be addressed in practice. Firstly, the amount of precision gained by using covariate adjustment is not known a priori. We need study designs and analysis plans that guarantee the desired level of statistical power and control of error rates irrespective of the amount of precision gained by using covariate adjustment. Secondly, we need a theoretical framework which includes a broad class of estimators in a single framework. The methods employed must address missing data due to dropout, and incomplete data from participants whose outcomes have yet to be collected. Investigators need the information to effectively advocate for the use of these methods with stakeholders, regulators, and reviewers. Practitioners need validated, freely available software to make applying these methods straightforward. Finally, general guidance and best practices need to be established so as to make covariate adjusted analyses as well understood and trusted as their unadjusted counterparts. We will address each of these challenges in the material ahead.</p>
-<hr />
-<div id="using-this-book" class="section level2 hasAnchor" number="1.1">
-<h2><span class="header-section-number">1.1</span> Using this Book<a href="index.html#using-this-book" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>This book is meant to provide worked examples to help practitioners apply covariate adjustment in practice. The material will be most accessible to a reader who has a good understanding of probability and statistics (confidence intervals, hypothesis testing), generalized linear models, and survival analysis. Some familiarity with concepts in randomized trials and causal inference is helpful, but not required. In order to make these methods broadly available, we provide worked examples using the R environment for statistical computing, which is free and open source software. While not all users may be familiar with R, we provide example code and links to additional resources to help users understand how to apply it in practice. The data in our examples are simulated from actual randomized trial data, meant to mimic key features such as missingness patterns and the distribution of outcomes and covariates.</p>
-<p>We will start with an overview of key ideas and findings from research in randomized trial methodology. From there, we will discuss different targets of inference, or estimands, that may be of interest to investigators. Afterwards, we provide a brief overview of using R, and how to install the necessary software to perform covariate adjustment. With the necessary background in place, we will begin with the most simple and commonly used approach for covariate adjustment, the analysis of covariance (ANCOVA), show how this approach can be generalized to binary and other types of outcomes. From there, we will discuss how to address the issues of missing data in baseline covariates and outcomes using doubly robust methods.</p>
-<p>Since randomized trials are often designed with incomplete and imprecise information, the study design should incorporate pre-planned analyses to determine if the study should continue or be stopped for either success or futility. We discuss how covariate adjustment can be integrated into such analysis plans. Finally, we discuss some recommendations for applying these methods in practice.</p>
-<hr />
-</div>
-<div id="case-studies" class="section level2 hasAnchor" number="1.2">
-<h2><span class="header-section-number">1.2</span> Case Studies<a href="index.html#case-studies" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The datasets used in our examples are simulated data based on actual randomized trials, with considerable effort spent making the data as realistic as possible. The original study data was used to create regression models for the outcomes of interest and missingness patterns. Next, simulated covariate data were created by resampling the original covariate data, and perturbing the resampled data. Simulated outcome data and missingness patterns were generated using predictions from the outcome regression models, using the simulated covariates as input.</p>
-<hr />
-<div id="ctn_03" class="section level3 hasAnchor" number="1.2.1">
-<h3><span class="header-section-number">1.2.1</span> Buprenorphine tapering schedule and illicit opioid use: CTN-03<a href="index.html#ctn_03" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p><a href="https://pubmed.ncbi.nlm.nih.gov/19149822">CTN-03</a> (<a href="https://clinicaltrials.gov/show/NCT00078117">NCT00078117</a>) was two-arm a phase III trial to compare two potential tapering schedules of the drug buprenorphine, a pharmacotherapy for opioid dependence. At the time of the study design, there was considerable variation in tapering schedules in practice, and a knowledge gap in terms of the best way to administer buprenorphine to control withdrawal symptoms and give the greatest chance of abstinence at the end of treatment. It was hypothesized that a longer taper schedule would result in greater likelihood of a participant being retained on study and providing opioid-free urine samples at the end of the drug taper schedule.</p>
-<p>Participants were randomized 1:1 to a 7-day or 28-day taper using stratified block randomization across 11 sites in 10 US cities. Randomization was stratified by the maintenance dose of buprenorphine at stabilization: 8, 16, or 24 mg. The structure of the CTN-03 simulated data is as follows:</p>
-<ul>
-<li>Baseline Covariates
-<ul>
-<li><code>age</code>: Participant age at baseline</li>
-<li><code>sex</code>: Participant sex</li>
-<li><code>race</code>: Participant race</li>
-<li><code>ethnic</code>: Participant ethnicity</li>
-<li><code>marital</code>: Participant marital status</li>
-</ul></li>
-<li>Randomization Information
-<ul>
-<li><code>arm</code>: Treatment Arm</li>
-<li><code>stability_dose</code>: Stratification Factor</li>
-</ul></li>
-<li>Baseline (<code>_bl</code>) &amp; End-Of-Taper (<code>_eot</code>) Outcomes:
-<ul>
-<li><code>arsw_score</code>: Adjective Rating Scale for Withdrawal (ARSW) Score at baseline</li>
-<li><code>cows_score</code>: Clinical Opiate Withdrawal Scale (COWS) Score at baseline</li>
-<li><code>cows_category</code>: COWS Severity Category - Ordinal</li>
-<li><code>vas_crave_opiates</code>: Visual Analog Scale (VAS) - Self report of opiate cravings</li>
-<li><code>vas_current_withdrawal</code>: Visual Analog Scale (VAS) - Current withdrawal symptoms</li>
-<li><code>vas_study_tx_help</code>: Visual Analog Scale (VAS) - Study treatment helping symptoms</li>
-<li><code>uds_opioids</code>: Urine Drug Screen Result - Opioids</li>
-<li><code>uds_oxycodone</code>: Urine Drug Screen Result - Oxycodone</li>
-<li><code>uds_any_positive</code>: Urine Drug Screen - Any positive result</li>
-</ul></li>
-</ul>
-<hr />
-</div>
-<div id="mistie_iii" class="section level3 hasAnchor" number="1.2.2">
-<h3><span class="header-section-number">1.2.2</span> Functional Outcome in Hemorrhagic Stroke: MISTIE III<a href="index.html#mistie_iii" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Hemorrhagic stroke occurs when a blood vessel in the brain ruptures, causing a bleed inside the skull. The bleeding from an ICH can occur in the brain tissue itself (an intracerebral hemorrhage, or ICH), or in the fluid-filled channels in the brain (an intraventricular hemorrhage, or IVH). The <a href="https://doi.org/10.1016/s0140-6736(19)30195-3">MISTIE III</a> trial (<a href="https://clinicaltrials.gov/show/NCT01827046">NCT01827046</a>) was a phase III study comparing a minimally invasive surgical intervention to conventional medical management for the treatment of spontaneous, non-traumatic ICH.</p>
-<p>In this study, participants were randomized 1:1 to receive either standard-of-care medical management or a minimal invasive surgery with Alteplase for ICH removal. Outcomes were measured at 30, 180, and 365-days post-randomization using the Modified Rankin Scale (MRS), which measures functional outcome on a scale ranging from 0 (no residual symptoms) to 6 (death). The MRS was collapsed into a binary variable, representing a score of 0-3 (no symptoms to moderate disability but able to walk without assistance) or 4-6 (unable to walk or attend to daily activities without assistance to death). Survival was also assessed, with patients administratively censored on the date of their final MRS assessment.</p>
-<p>The data from MISTIE III was used to create a synthetic dataset for educational purposes. Baseline covariates include demographics, medications and comorbidities, characteristics of the stroke (location of the ICH lesion, the size of the ICH and IVH lesions on CT scans), and neurological status on presentation to the hospital (the Glasgow Coma Scale, or GCS).</p>
-<p>In addition to the longitudinal measures of the MRS at 30-, 180-, and 365-days post randomization, mortality data are included. The structure of the data is as follows:</p>
-<ul>
-<li><code>sim_participant_id</code>: Patient id</li>
-<li>Baseline Covariates
-<ul>
-<li><code>age</code>: Age in years</li>
-<li><code>male</code>: male sex</li>
-<li><code>hx_cvd</code>: cardiovascular disease history</li>
-<li><code>hx_hyperlipidemia</code>: hyperlipidemia history</li>
-<li><code>on_anticoagulants</code>: on anticoagulant medication</li>
-<li><code>on_antiplatelets</code>: on antiplatelet medication</li>
-<li><code>ich_location</code>: intracerebral hemorrhage location: (<code>Lobar</code>, <code>Deep</code>)</li>
-<li><code>ich_s_volume</code>: intracerebral hemorrhage volume on stability scan</li>
-<li><code>ivh_s_volume</code>: intraventricular hemorrhage volume on stability scan</li>
-<li><code>gcs_category</code>: presenting Glasgow Coma Score (GCS)</li>
-</ul></li>
-<li>Treatment:
-<ul>
-<li><code>arm</code>: treatment arm</li>
-<li><code>ich_eot_volume</code>: intracerebral hemorrhage volume on end-of-treatment scan</li>
-</ul></li>
-<li>Outcome:
-<ul>
-<li><code>mrs_30d</code>: MRS at 30 days (<code>0-3</code>, <code>4</code>, <code>5</code>, <code>6</code>)</li>
-<li><code>mrs_30d_complete</code>: MRS at 30 days if no data were missing</li>
-<li><code>mrs_180d</code>: MRS at 180 days (<code>0-2</code>, <code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>)</li>
-<li><code>mrs_180d_complete</code>: MRS at 180 days if no data were missing</li>
-<li><code>mrs_365d</code>: MRS at 365 days (<code>0-1</code>, <code>2</code>, <code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>)</li>
-<li><code>mrs_365d_complete</code>: MRS at 365 days if no data were missing</li>
-<li><code>days_on_study</code>: days until death or administrative censoring</li>
-<li><code>died_on_study</code>: participant died (<code>1</code>) or is censored (<code>0</code>)</li>
-</ul></li>
-</ul>
+<div id="ordinal" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Ordinal Outcomes<a href="ordinal.html#ordinal" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 
-</div>
-</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="introduction.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="timetoevent.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="groupsequential.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -441,7 +345,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/covariateadjustment/covariateadjustment.github.io/edit/main/index.Rmd",
+"link": "https://github.com/covariateadjustment/covariateadjustment.github.io/edit/main/07-Ordinal-Outcomes.Rmd",
 "text": "Edit"
 },
 "history": {

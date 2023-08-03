@@ -57,6 +57,7 @@ covariate-adjusted-estimators
 kaplan-meier-estimator-1
 survival-probability-1
 restricted-mean-survival-time-rmst-1
+ordinal
 groupsequential
 group-sequential-designs
 power-sample-size-calculations
@@ -66,6 +67,7 @@ information-adaptive-designs
 power-sample-size-calculations-1
 analyses-unadjusted-and-adjusted-1
 recommendations
+relevant-regulatory-guidance
 missing-covariates
 statistical-analysis-plans
 sample-size-for-adjusted-vs.-unadjusted

@@ -1,5 +1,14 @@
 # Guidance on Applying Covariate Adjustment {#recommendations}
 
+## Relevant Regulatory Guidance
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
 
 ## Missing Covariates
 
