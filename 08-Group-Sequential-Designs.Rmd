@@ -1,5 +1,9 @@
 # Group Sequential Designs {#groupsequential}
 
+https://rinpharma.shinyapps.io/gsdesign/
+https://arxiv.org/pdf/2303.01040.pdf
+https://www.rpact.org/vignettes/planning/rpact_boundary_examples/
+gsDesign
 
 
 

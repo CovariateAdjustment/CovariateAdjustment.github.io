@@ -306,7 +306,24 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="ordinal" class="section level1 hasAnchor" number="8">
 <h1><span class="header-section-number">Chapter 8</span> Ordinal Outcomes<a href="ordinal.html#ordinal" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>There are several possible <a href="estimands.html#ordinal_estimands">estimands for ordinal outcomes</a>, all of which can be estimated using the <code>drord</code> package on CRAN. The simulated <a href="index.html#mistie_iii">MISTIE III dataset</a> has an ordinal outcome, the modified Rankin scale, representing functional outcome after stroke <span class="citation">(<a href="#ref-Hanley2019">Hanley et al. 2019</a>)</span>.</p>
+<p>The original study categorized this into ‘good’ (0-3) and ‘poor’ (4-6) outcomes: categorizing this outcome as a binary variable can be viewed as a special case of a utility function, with ‘good’ outcomes receiving a utility of 1, and ‘poor’ outcomes receiving a utility of 0. Binary categorization requires choosing a cutoff on the scale of the outcome, with the optimal choice in cutoff depending on the severity of baseline illness and resulting prognosis in the population to be treated, all of which have implications for the ability to identify meaningful treatment effects if they exist <span class="citation">(<a href="#ref-Bath2012">Bath et al. 2012</a>)</span>.</p>
+<p>We will use a set of utilities designed to incorporate patient preferences and demands on providers, which also further differentiates the categories within the 0-3 and 4-6 range of the modified Rankin Score <span class="citation">(<a href="#ref-Chaisinanunkul2015">Chaisinanunkul et al. 2015</a>)</span>.</p>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="ordinal.html#cb185-1" tabindex="-1"></a>mrs_weights <span class="ot">&lt;-</span></span>
+<span id="cb185-2"><a href="ordinal.html#cb185-2" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;0&quot;</span> <span class="ot">=</span> <span class="fl">1.0</span>, <span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="fl">0.91</span>, <span class="st">&quot;2&quot;</span> <span class="ot">=</span> <span class="fl">0.76</span>, <span class="st">&quot;3&quot;</span> <span class="ot">=</span> <span class="fl">0.65</span>, <span class="st">&quot;4&quot;</span> <span class="ot">=</span> <span class="fl">0.33</span>, <span class="st">&quot;5&quot;</span> <span class="ot">=</span> <span class="dv">0</span>, <span class="st">&quot;6&quot;</span> <span class="ot">=</span> <span class="dv">0</span>)</span></code></pre></div>
 
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Bath2012" class="csl-entry">
+Bath, Philip M. W., Kennedy R. Lees, Peter D. Schellinger, Hernan Altman, Martin Bland, Cheryl Hogg, George Howard, and Jeffrey L. Saver. 2012. <span>“Statistical Analysis of the Primary Outcome in Acute Stroke Trials.”</span> <em>Stroke</em> 43 (4): 1171–78. <a href="https://doi.org/10.1161/strokeaha.111.641456">https://doi.org/10.1161/strokeaha.111.641456</a>.
+</div>
+<div id="ref-Chaisinanunkul2015" class="csl-entry">
+Chaisinanunkul, Napasri, Opeolu Adeoye, Roger J. Lewis, James C. Grotta, Joseph Broderick, Tudor G. Jovin, Raul G. Nogueira, et al. 2015. <span>“Adopting a Patient-Centered Approach to Primary Outcome Analysis of Acute Stroke Trials Using a Utility-Weighted Modified Rankin Scale.”</span> <em>Stroke</em> 46 (8): 2238–43. <a href="https://doi.org/10.1161/strokeaha.114.008547">https://doi.org/10.1161/strokeaha.114.008547</a>.
+</div>
+<div id="ref-Hanley2019" class="csl-entry">
+Hanley, Daniel F, Richard E Thompson, Michael Rosenblum, Gayane Yenokyan, Karen Lane, Nichol McBee, Steven W Mayo, et al. 2019. <span>“Efficacy and Safety of Minimally Invasive Surgery with Thrombolysis in Intracerebral Haemorrhage Evacuation (<span>MISTIE</span> <span>III</span>): A Randomised, Controlled, Open-Label, Blinded Endpoint Phase 3 Trial.”</span> <em>The Lancet</em> 393 (10175): 1021–32. <a href="https://doi.org/10.1016/s0140-6736(19)30195-3">https://doi.org/10.1016/s0140-6736(19)30195-3</a>.
+</div>
 </div>
             </section>
 

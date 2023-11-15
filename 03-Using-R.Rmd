@@ -109,7 +109,7 @@ It is possible that different packages contain a function of the same name. For 
 
 ## Loading the Data: MISTIE-III {#Load_MISTIE}
 
-The [data dictionary](#mistie_iii) and more information about the MISTIE III study were presented earlier. All of the data needed for the examples are available on the web. To load these, we create a file connection to the URL using the `url()` function, and then use `read.csv()` to read in the comma separated values (CSV) file. To load data from a local file path, the `file.path()` function is useful for creating file paths. We can start by loading the simulated MISTIE III data. Once we have loaded the full data, we can use `dplyr::slice` to take the first 500 rows.
+The [data dictionary](#mistie_iii) and more information about the MISTIE III study were presented earlier [@Hanley2019]. All of the data needed for the examples are available on the web. To load these, we create a file connection to the URL using the `url()` function, and then use `read.csv()` to read in the comma separated values (CSV) file. To load data from a local file path, the `file.path()` function is useful for creating file paths. We can start by loading the simulated MISTIE III data. Once we have loaded the full data, we can use `dplyr::slice` to take the first 500 rows.
 
 ```{r Load-MISTIE-III-Data}
 data_url <-

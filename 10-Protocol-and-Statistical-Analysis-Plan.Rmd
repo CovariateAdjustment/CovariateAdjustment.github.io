@@ -1,0 +1,81 @@
+# Protocol and Statistical Analysis Plan Considerations {#protocol_sap}
+
+The design, conduct, monitoring, and analysis of a randomized trial are dictated by the study protocol and statistical analysis plan (SAP). Information from the study protocol are also included in clinical trial registries such as [ClinicalTrials.gov](https://clinicaltrials.gov/) and the [WHO's International Clinical Trials Registry Platform](https://www.who.int/clinical-trials-registry-platform). The [NIH and FDA have a template for Phase II and III IND/IDE trial protocols](https://grants.nih.gov/policy/clinical-trials/protocol-template.htm). While there is no accompanying template for the statistical analysis plan, researchers have published recommendations to help provide guidance on statistical analysis plans [@Gamble2017].
+
+Rather than specifying the full details of the analysis in a protocol, a synopsis can be included, with a reference to the section of the statistical analysis plan where a full specification is located. This can limit redundancy and make it easier to maintain consistency across study documentation.
+
+
+
+
+## Study Protocol
+
+Below are elements of the study protocol, and how they should be adapted to include covariate adjustment. Sections are numbered according to the [NIH/FDA protocol template](https://grants.nih.gov/policy/clinical-trials/protocol-template.htm).
+
+### Sample Size Justification (9.4.1)
+
+If a study is designed using a fixed sample size or group sequential design (GSD), covariate adjustment can be added by appropriately modifying the protocol and statistical analysis plan. The protocol often provides an overview of the statistical approach, with the full specification of the analyses included in the Statistical Analysis Plan. Justification for doing a covariate adjusted analysis in a study designed around an unadjusted analyses can include references which show that methods give equal or better precision and power than unadjusted methods. References for the methods discussed are in [Appendix C](#appendix_c_references_by_method).
+
+Information adaptive trials are designed with a target level of information or precision, with interim analyses planned when varying fractions of this target are reached. A maximum sample size is set, and if the trial is not stopped at any interim analyses, the final analysis occurs when either the target level of information or the maximum sample size is reached, whichever comes first. The sample size justification should include both a justification of the information level and the maximum sample size. 
+
+As with any other sample size justification, plausible ranges of nuisance parameters (variances of continuous outcomes, proportions of binary outcomes, etc.) should be evaluated in the justification.
+
+
+
+
+#### Interim Analyses
+
+When interim analyses are included in the study design, the method for controlling the familywise type I error rate should be reported, including the number of analyses, and how the total type I error rate is to be allocated at each analysis ($\alpha$-spending) [@Jennison1999].
+
+Since group sequential designs depend on the independent increments assumption, the protocol and analysis plan should reference the methodology used to ensure this assumption holds when covariate or intermediate outcome information is used in interim analyses [@VanLancker2022].
+
+A notable difference for information adaptive designs is that if information accrues at a much lower rate than expected, the maximum sample size may be reached before some interim analyses occur. In such cases, the number of analyses and $\alpha$-spending must be adjusted.
+
+
+
+
+### General Approach (9.4.1)
+
+The general approach for hypothesis testing and confidence intervals should be outlined. Methodological and software references for variance estimation are included below.
+
+
+
+
+#### Robust Covariance
+
+Estimates, confidence intervals, and hypothesis tests for estimated marginal means will be computed using the `marigns` package [@margins_package], using the robust covariance matrix estimated by the `sandwich` package [@Zeileis2006].
+
+
+
+
+#### Nonparametric Bootstrap
+
+Confidence intervals will be calculated using the using the bias corrected and accelerated (BCA) nonparametric bootstrap using 10,000 bootstrap replications [@Efron1994]. The *p*-value for hypothesis tests will be computed by finding the smallest value of $\alpha$ for which the $100(1 - \alpha)\%$ confidence interval does not contain the null value of the statistic, which will be performed using a binary search.
+
+
+
+### Analysis of the Primary/Secondary Endpoints (9.4.2-3)
+
+The description of the covariate adjustment approach should include the [estimand of interest](#estimands) and the method used to estimate this quantity. While full specification of the analysis, including defining which covariates are included and how, can be relegated to the statistical analysis plan.
+
+
+
+
+#### Example: Doubly Robust Estimators
+
+The primary analysis will estimate the average treatment effect on the risk difference scale using a doubly-robust estimator. The construction of the estimator consists of a propensity score, which models the probability of treatment assignment, a missingness model, which models the probability of having the primary endpoint observed, and an outcome model, which models the distribution of the primary endpoint. The propensity score model includes covariates measured prior to randomization (baseline covariates). The missingness and outcome models include baseline covariates and treatment assignment.
+
+The fitted probabilities of treatment assignment (from the propensity score model) and being observed at follow up (from the missingness models) are used to compute weights which adjust for both imbalances between randomized groups and missing outcome data. These weights are used in an outcome regression model, which is used to predict the outcome of each individual under each treatment assignment. The  average treatment effect (also known as average marginal effect or predicted marginal mean) for each treatment is computed by averaging the predicted outcomes under that treatment.
+
+
+    
+    
+
+#### Example: MISTIE III
+
+The primary outcome is the modified Rankin Scale (mRS) assessed at the 1-year post-randomization study visit. Interviews used to score the mRS are recorded for independent assessment by trained examiners who are masked to treatment assignment. The mRS is an ordinal scale, ranging from 0 (no residual neurologic symptoms of stroke) to 6 (death). mRS scores will be categorized into a binary variable, with 1 indicating an mRS value of 0-3 ("good outcome"), and 0 indicating an mRS value of 4-6 ("poor outcome).
+
+The estimand of interest is the marginal relative risk of a good outcome under the treatment arm relative to the control arm: $Pr\{X\}$
+
+
+
+

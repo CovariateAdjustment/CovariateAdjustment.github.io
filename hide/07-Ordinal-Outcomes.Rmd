@@ -1,0 +1,214 @@
+# Ordinal Outcomes {#ordinal}
+
+There are several possible [estimands for ordinal outcomes](#ordinal_estimands), all of which can be estimated using the `drord` package on CRAN. The simulated [MISTIE III dataset](#mistie_iii) has an ordinal outcome, the modified Rankin scale, representing functional outcome after stroke [@Hanley2019].
+
+The original study categorized this into 'good' (0-3) and 'poor' (4-6) outcomes: categorizing this outcome as a binary variable can be viewed as a special case of a utility function, with 'good' outcomes receiving a utility of 1, and 'poor' outcomes receiving a utility of 0. This type of binary categorization requires choosing a cutoff on the scale of the outcome, with the optimal choice in cutoff depending on the severity of baseline illness and resulting prognosis in the population to be treated, all of which have implications for the ability to identify meaningful treatment effects if they exist [@Bath2012].
+
+
+
+
+## Unadjusted Estimators
+
+
+### Difference in Mean Utility
+
+For the differences in mean utility, we will use a set of utilities designed to incorporate patient preferences and demands on providers, which also further differentiates the categories within the 0-3 and 4-6 range of the modified Rankin Score [@Chaisinanunkul2015].
+
+```{r Construct-Weight-Function}
+mrs_weights <-
+  c("0" = 1.0, "1" = 0.91, "2" = 0.76, "3" = 0.65, "4" = 0.33, "5" = 0, "6" = 0)
+```
+
+After defining the utility function, these can be applied to the ordinal outcome:
+
+```{r Apply-Weights-to-Ordinal-Outcome}
+# sim_miii <-
+#   sim_miii %>% 
+#   dplyr::mutate(
+#     mrs_365d_utility =
+#       case_when(
+#         # Levels 0-1 were pooled during modeling of data due to low frequency.
+#         mrs_365d %in% c("0-1") ~ mrs_weights["1"],
+#         mrs_365d %in% c("2") ~ mrs_weights["2"],
+#         mrs_365d %in% c("3") ~ mrs_weights["3"],
+#         mrs_365d %in% c("4") ~ mrs_weights["4"],
+#         mrs_365d %in% c("5") ~ mrs_weights["5"],
+#         mrs_365d %in% c("6") ~ mrs_weights["6"]
+#       ),
+#     
+#     mrs_365d_numeric = as.numeric(mrs_365d),
+#     
+#     mrs_365d_ordered =
+#       ordered(x = mrs_365d)
+#   )
+```
+
+
+Once the utilities have been applied, the analyses for the difference in mean utility are the same as for a continuous outcome:
+
+
+```{r Fit-Model-for-Mean-Utility-Unadjusted}
+# mrs_365d_utility_lm_unadj <-
+#   lm(
+#     formula = mrs_365d_utility ~ arm,
+#     data = sim_miii
+#   )
+# 
+# mrs_365d_utility_margins_unadj <-
+#   margins::margins(
+#     model = mrs_365d_utility_lm_unadj,
+#     variables = "arm",
+#     type = "response",
+#     vcov = sandwich::vcovHC(x = mrs_365d_utility_lm_unadj, type = "HC3")
+#   )
+# 
+# summary(object = mrs_365d_utility_lm_margins, level = 0.95)
+```
+
+
+```{r Mean-Utility-Unadjusted-Results, echo = FALSE}
+# mrs_365d_utility_result_unadj <-
+#   with(
+#     summary(object = mrs_365d_utility_margins_unadj, level = 0.95),
+#     dplyr::tibble(
+#       estimate = AME, se = SE, l95 = lower, u95 = upper, p_value = p
+#     )
+#   )
+```
+
+<!-- In this example, we can see that assigning all patients to the surgical intervention would lead to a `r round(mrs_365d_utility_result_unadj$estimate, 3)` point increase in mean utility compared to assigning all patients to standard medical management (95% CI: `r round(mrs_365d_utility_result_unadj$l95, 3)`, `r round(mrs_365d_utility_result_unadj$u95, 3)`). -->
+
+This estimate and its precision can be compared to the covariate-adjusted estimate:
+
+
+```{r}
+# mrs_365d_utility_lm_adj <-
+#   lm(
+#     formula = mrs_365d_utility ~ arm +
+#       age + male + hx_cvd + hx_hyperlipidemia +
+#       on_anticoagulants + on_antiplatelets +
+#       ich_location + ich_s_volume + ivh_s_volume,
+#     data = sim_miii
+#   )
+# 
+# summary(mrs_365d_utility_lm_adj)
+```
+
+
+```{r Compute-Marginal-Effect-Mean-Utility-Adjusted}
+# mrs_365d_utility_result_adj  <-
+#   margins::margins(
+#     model = mrs_365d_utility_lm_adj,
+#     variables = "arm",
+#     type = "response",
+#     vcov = sandwich::vcovHC(x = mrs_365d_utility_lm_adj, type = "HC3")
+#   )
+# 
+# summary(object = mrs_365d_utility_lm_margins, level = 0.95)
+```
+
+
+```{r Mean-Utility-Adjusted-Results, echo = FALSE}
+# mrs_365d_utility_result_adj <-
+#   with(
+#     summary(object = mrs_365d_utility_result_adj, level = 0.95),
+#     dplyr::tibble(
+#       estimate = AME, se = SE, l95 = lower, u95 = upper, p_value = p
+#     )
+#   )
+# 
+# mrs_365d_utility_var_pct_reduction <-
+#   100*(1 - mrs_365d_utility_result_adj$se^2/mrs_365d_utility_result_unadj$se^2)
+```
+
+<!-- Using covariate adjustment, we would infer that assigning all patients to the surgical intervention would lead to a `r round(mrs_365d_utility_result_adj$estimate, 3)` point increase in mean utility compared to assigning all patients to standard medical management (95% CI: `r round(mrs_365d_utility_result_adj$l95, 3)`, `r round(mrs_365d_utility_result_adj$u95, 3)`). -->
+
+<!-- Adjusting for covariates gives a `r round(mrs_365d_utility_var_pct_reduction, 1)`% reduction in the variance of our estimate. -->
+
+
+
+
+## Mann-Whitney
+
+The Mann-Whitney test procedure is identical to the two-sample Wilcoxon Rank Sum test: this allows us to compute the unadjusted estimate using the results of `wilcox.test`, and dividing it by the product of the sample sizes in each group.
+
+```{r}
+# mrs_365d_mann_whitney_unadj <-
+#   wilcox.test(
+#     as.numeric(mrs_365d) ~ arm,
+#     data = sim_miii
+#   )
+# 
+# mrs_365d_mann_whitney_unadj
+```
+
+
+```{r}
+# mrs_365d_mann_whitney_unadj <-
+#   mrs_365d_mann_whitney_unadj$statistic/prod(table(sim_miii$arm))
+```
+
+Computing a confidence interval for this can be done using the nonparametric bootstrap:
+
+```{r}
+# # 1. Write a function to compute the statistic to be bootstrapped
+# wilcox_to_auc <-
+#   function(data, indices = NULL, outcome, treatment){
+#     if(is.null(indices)) indices <- 1:nrow(data)
+#     
+#     wrst_formula <- as.formula(paste(outcome, treatment, sep = "~"))
+#     
+#     wrst_result <-
+#       wilcox.test(
+#         formula = wrst_formula,
+#         data = data[indices,]
+#       )
+#     
+#     wrst_result$statistic/prod(table(data[indices, treatment]))
+#   }
+# 
+# # 2. Call boot() using statistic function
+# mrs_365d_mann_whitney_unadj_boot <-
+#   boot(
+#     data = sim_miii,
+#     statistic = wilcox_to_auc,
+#     R = 10000,
+#     outcome = "as.numeric(mrs_365d)",
+#     treatment = "arm"
+#   )
+# 
+# # 3. Call boot.ci to get BCA confidence interval
+# mrs_365d_mann_whitney_unadj_boot_ci <-
+#   boot.ci(
+#     boot.out = mrs_365d_mann_whitney_unadj_boot,
+#     type = "bca"
+#   )
+# 
+# # Review Results
+# mrs_365d_mann_whitney_unadj_boot_ci
+
+```
+
+
+
+
+The probability that a randomly-selected individual from the treatment population would have a better outcome than a randomly-selected individual from the control population from the test statistic. This is given by taking the test statistic and dividing it by the product of the sample sizes in each group:
+
+```{r Mann-Whitney-Adjusted-drord}
+# mrs_365d_mann_whitney_adj <-
+#   with(sim_miii,
+#        drord::drord(
+#          out = mrs_365d_utility,
+#          treat = tx,
+#          covar = 
+#            data.frame(
+#              age, male, hx_cvd, hx_hyperlipidemia,
+#              on_anticoagulants, on_antiplatelets,
+#              ich_location, ich_s_volume, ivh_s_volume
+#            ),
+#          param = "mann_whitney",
+#          ci = "bca",
+#          nboot = 1000
+#        )
+#   )
+```

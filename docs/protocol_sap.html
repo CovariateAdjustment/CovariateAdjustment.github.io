@@ -4,12 +4,12 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Introduction | Covariate Adjustment in Randomized Trials</title>
+  <title>Chapter 10 Protocol and Statistical Analysis Plan Considerations | Covariate Adjustment in Randomized Trials</title>
   <meta name="description" content="<p>This a series of tutorials meant to help investigators apply covariate
 adjusted analyses in randomized trials.</p>" />
   <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Introduction | Covariate Adjustment in Randomized Trials" />
+  <meta property="og:title" content="Chapter 10 Protocol and Statistical Analysis Plan Considerations | Covariate Adjustment in Randomized Trials" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="<p>This a series of tutorials meant to help investigators apply covariate
@@ -17,7 +17,7 @@ adjusted analyses in randomized trials.</p>" />
   <meta name="github-repo" content="covariateadjustment/covariateadjustment.github.io" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Introduction | Covariate Adjustment in Randomized Trials" />
+  <meta name="twitter:title" content="Chapter 10 Protocol and Statistical Analysis Plan Considerations | Covariate Adjustment in Randomized Trials" />
   
   <meta name="twitter:description" content="<p>This a series of tutorials meant to help investigators apply covariate
 adjusted analyses in randomized trials.</p>" />
@@ -32,8 +32,8 @@ adjusted analyses in randomized trials.</p>" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="estimands.html"/>
+<link rel="prev" href="informationadaptive.html"/>
+<link rel="next" href="recommendations.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -313,53 +313,73 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="introduction" class="section level1 hasAnchor" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Introduction<a href="introduction.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>In this section, we will lay out the notation for the following chapters, discuss what assumptions are required for these methods to be applied, and survey the literature on covariate adjustment. While the examples and notation focus on trials with two treatment arms, most methods can be applied to trials with more than two treatment arms.</p>
-<hr />
-<div id="notation" class="section level2 hasAnchor" number="2.1">
-<h2><span class="header-section-number">2.1</span> Notation and Assumptions<a href="introduction.html#notation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Let <span class="math inline">\(A\)</span> denote a binary treatment assignment: <span class="math inline">\(A = 1\)</span> indicates assignment to receive the treatment of interest, and <span class="math inline">\(A = 0\)</span> indicates assignment to the control or comparator group. Let <span class="math inline">\(Y\)</span> denote the outcome of interest, and <span class="math inline">\(X\)</span> denote a vector of baseline covariates. If stratified randomization is used, let <span class="math inline">\(X_{S}\)</span> denote the stratification variables, and <span class="math inline">\(X_{\bar{S}}\)</span> denote the other baseline covariates, and <span class="math inline">\(X = (X_{S}, X_{\bar{S}})\)</span>. We assume that treatment assignment is independent of the baseline covariates, i.e. <span class="math inline">\(A \perp X\)</span>, or if stratified randomization is used, that the treatment assignment is conditionally independent of the other covariates given the stratification variables, i.e. <span class="math inline">\(A \perp\!\!\!\perp X_{\bar{S}} \vert X_{S}\)</span>. Each participant’s data is assumed to be independent, identically distributed (IID) draws from an unknown distribution <span class="math inline">\(P(X, A, Y)\)</span>.</p>
-<p>In order to include covariate information in an analysis, we have to specify how these covariates relate to the outcome in a regression model, which models a conditional distribution of the outcome as as a function of the covariates. In most circumstances, the validity of our inference from regression models depends on how close the regression model’s specification reflects the true data generation mechanism, which is almost always unknown. This may make investigators understandably reluctant to use covariate adjusted methods, as they do not want the validity of the analysis to depend on assumptions of a correctly specified model.</p>
-<p>What may be surprising is that there are covariate adjustment methods that provide valid estimates of the treatment effect, even if the models used to obtain these estimates are arbitrarily misspecified. Having models that more closely reflect the underlying data generating mechanism improves precision and power. Additionally, covariate adjusted estimators also can have precision that is equal or better than the unadjusted estimators.</p>
-<hr />
+<div id="protocol_sap" class="section level1 hasAnchor" number="10">
+<h1><span class="header-section-number">Chapter 10</span> Protocol and Statistical Analysis Plan Considerations<a href="protocol_sap.html#protocol_sap" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>The design, conduct, monitoring, and analysis of a randomized trial are dictated by the study protocol and statistical analysis plan (SAP). Information from the study protocol are also included in clinical trial registries such as <a href="https://clinicaltrials.gov/">ClinicalTrials.gov</a> and the <a href="https://www.who.int/clinical-trials-registry-platform">WHO’s International Clinical Trials Registry Platform</a>. The <a href="https://grants.nih.gov/policy/clinical-trials/protocol-template.htm">NIH and FDA have a template for Phase II and III IND/IDE trial protocols</a>. While there is no accompanying template for the statistical analysis plan, researchers have published recommendations to help provide guidance on statistical analysis plans <span class="citation">(<a href="#ref-Gamble2017">Gamble et al. 2017</a>)</span>.</p>
+<p>Rather than specifying the full details of the analysis in a protocol, a synopsis can be included, with a reference to the section of the statistical analysis plan where a full specification is located. This can limit redundancy and make it easier to maintain consistency across study documentation.</p>
+<div id="study-protocol" class="section level2 hasAnchor" number="10.1">
+<h2><span class="header-section-number">10.1</span> Study Protocol<a href="protocol_sap.html#study-protocol" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Below are elements of the study protocol, and how they should be adapted to include covariate adjustment. Sections are numbered according to the <a href="https://grants.nih.gov/policy/clinical-trials/protocol-template.htm">NIH/FDA protocol template</a>.</p>
+<div id="sample-size-justification-9.4.1" class="section level3 hasAnchor" number="10.1.1">
+<h3><span class="header-section-number">10.1.1</span> Sample Size Justification (9.4.1)<a href="protocol_sap.html#sample-size-justification-9.4.1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>If a study is designed using a fixed sample size or group sequential design (GSD), covariate adjustment can be added by appropriately modifying the protocol and statistical analysis plan. The protocol often provides an overview of the statistical approach, with the full specification of the analyses included in the Statistical Analysis Plan. Justification for doing a covariate adjusted analysis in a study designed around an unadjusted analyses can include references which show that methods give equal or better precision and power than unadjusted methods. References for the methods discussed are in <a href="appendices.html#appendix_c_references_by_method">Appendix C</a>.</p>
+<p>Information adaptive trials are designed with a target level of information or precision, with interim analyses planned when varying fractions of this target are reached. A maximum sample size is set, and if the trial is not stopped at any interim analyses, the final analysis occurs when either the target level of information or the maximum sample size is reached, whichever comes first. The sample size justification should include both a justification of the information level and the maximum sample size.</p>
+<p>As with any other sample size justification, plausible ranges of nuisance parameters (variances of continuous outcomes, proportions of binary outcomes, etc.) should be evaluated in the justification.</p>
+<div id="interim-analyses" class="section level4 hasAnchor" number="10.1.1.1">
+<h4><span class="header-section-number">10.1.1.1</span> Interim Analyses<a href="protocol_sap.html#interim-analyses" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>When interim analyses are included in the study design, the method for controlling the familywise type I error rate should be reported, including the number of analyses, and how the total type I error rate is to be allocated at each analysis (<span class="math inline">\(\alpha\)</span>-spending) <span class="citation">(<a href="#ref-Jennison1999">Jennison and Turnbull 1999</a>)</span>.</p>
+<p>Since group sequential designs depend on the independent increments assumption, the protocol and analysis plan should reference the methodology used to ensure this assumption holds when covariate or intermediate outcome information is used in interim analyses <span class="citation">(<a href="#ref-VanLancker2022">Van Lancker, Betz, and Rosenblum 2022</a>)</span>.</p>
+<p>A notable difference for information adaptive designs is that if information accrues at a much lower rate than expected, the maximum sample size may be reached before some interim analyses occur. In such cases, the number of analyses and <span class="math inline">\(\alpha\)</span>-spending must be adjusted.</p>
 </div>
-<div id="ancova" class="section level2 hasAnchor" number="2.2">
-<h2><span class="header-section-number">2.2</span> The Analysis of Covariance (ANCOVA)<a href="introduction.html#ancova" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The ANCOVA is perhaps the best known method for covariate adjustment with a continuous outcome. The simplest version of an ANCOVA is a linear regression of the final outcome <span class="math inline">\(Y\)</span> on the baseline covariate <span class="math inline">\(X\)</span>, usually the outcome measured at baseline, and treatment assignment <span class="math inline">\(A\)</span>:</p>
-<p><span class="math display">\[Y_{i} = \beta_{0} + \beta_{X}X_{i} + \beta_{A}A_{i} + \epsilon_{i}\]</span></p>
-<p>This regression model assumes that the final outcome is linearly related to the outcome at baseline, with an additive effect of treatment. Even if the true relationship between the final outcome and the baseline covariate is nonlinear, includes interactions, and includes other variables that are omitted from the model, the ANCOVA estimate will provide a consistent estimate of the treatment effect that is as precise or even more precise than an unadjusted estimate. An outcome model that more accurately reflects the data generating mechanism will improve precision, but is not required for a consistent estimate of the outcome.</p>
-<p>Linear regression involves the conditional mean, but we are interested in a marginal treatment effect. In order to obtain a marginal treatment effect, we need to marginalize (i.e. average over) the variation in the covariates:</p>
-<p><span class="math display">\[\hat{\mu}_{1} = \hat{E}[Y \vert A = 1] = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y_{i} \vert A_{i} = 1, X_{i}]\]</span></p>
-<p>In the case of the simple ANCOVA model with only one covariate, the marginal mean under treatment would be:</p>
-<p><span class="math display">\[\hat{\mu}_{1} = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y_{i} \vert A_{i} = 1, X_{i}] = \frac{1}{n} \sum_{i=1}^{n} (\hat{\beta}_{0} + \hat{\beta}_{X}X_{i} + \hat{\beta}_{A}) = \hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n} + \hat{\beta}_{A}\]</span>
-Note that this utilizes the covariate data from the entire sample, not just those who were assigned to receive the active treatment. The marginal mean under control would be:</p>
-<p><span class="math display">\[\hat{\mu}_{0} = \frac{1}{n} \sum_{i=1}^{n} \hat{E}[Y_{i} \vert A_{i} = 0, X_{i}] = \frac{1}{n} \sum_{i=1}^{n} (\hat{\beta}_{0} + \hat{\beta}_{X}X_{i}) = \hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n}\]</span>
-Likewise, our marginal estimate of the mean under control utilizes the covariate data from the entire sample, not just those who were assigned to receive the control treatment. Our estimate of the average treatment effect would be the contrast between these quantities:</p>
-<p><span class="math display">\[\hat{\theta}_{ATE} = \hat{\mu}_{1} - \hat{\mu}_{0} = (\hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n} + \hat{\beta}_{A}) - (\hat{\beta}_{0} + \hat{\beta}_{X}\bar{X}_{n}) = \hat{\beta}_{A}\]</span></p>
-<p>The procedure for gives us the same result as we would have otherwise used to estimate the treatment effect: the regression coefficient associated with treatment. When there are no treatment-by-covariate interactions and the model does not use a nonlinear link function, the conditional effect and the marginal effect coincide. However, the approach outlined here is applicable to a wide range of outcome models, including those using link functions, like logistic regression, or models that include treatment-by-covariate interactions. Computing the variance or standard errors of the estimate involves the use of the nonparametric bootstrap or appropriate robust standard errors for the study design and model specification.</p>
-<hr />
 </div>
-<div id="generalizing-the-ancova-g-computation" class="section level2 hasAnchor" number="2.3">
-<h2><span class="header-section-number">2.3</span> Generalizing the ANCOVA: G-computation<a href="introduction.html#generalizing-the-ancova-g-computation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In general, if we have a regression model <span class="math inline">\(\hat{f}(X, A) = \hat{E}[Y \vert A, X]\)</span>, we can obtain the average treatment effect by respectively computing the marginal mean under treatment and control, and taking a contrast between these quantities:</p>
-<p><span class="math display">\[\hat{\theta}_{ATE} = \hat{\mu_{1}} - \hat{\mu_{0}} = \left(\frac{1}{n} \sum_{i=1}^{n} \hat{f}(X_{i}, A_{i} = 1) \right) - \left(\frac{1}{n} \sum_{i=1}^{n} \hat{f}(X_{i}, A_{i} = 0) \right)\]</span>
-This approach is known as G-computation or the standardization estimator. This allows us to obtain the average treatment effect for regression models which may include interactions or use a nonlinear link function, such as logistic regression.</p>
-<hr />
+<div id="general-approach-9.4.1" class="section level3 hasAnchor" number="10.1.2">
+<h3><span class="header-section-number">10.1.2</span> General Approach (9.4.1)<a href="protocol_sap.html#general-approach-9.4.1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The general approach for hypothesis testing and confidence intervals should be outlined. Methodological and software references for variance estimation are included below.</p>
+<div id="robust-covariance" class="section level4 hasAnchor" number="10.1.2.1">
+<h4><span class="header-section-number">10.1.2.1</span> Robust Covariance<a href="protocol_sap.html#robust-covariance" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Estimates, confidence intervals, and hypothesis tests for estimated marginal means will be computed using the <code>marigns</code> package <span class="citation">(<a href="#ref-margins_package">Leeper 2021</a>)</span>, using the robust covariance matrix estimated by the <code>sandwich</code> package <span class="citation">(<a href="#ref-Zeileis2006">Zeileis 2006</a>)</span>.</p>
 </div>
-<div id="combining-covariate-adjustment-and-stratified-randomization" class="section level2 hasAnchor" number="2.4">
-<h2><span class="header-section-number">2.4</span> Combining Covariate Adjustment and Stratified Randomization<a href="introduction.html#combining-covariate-adjustment-and-stratified-randomization" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Stratified randomization is a way of addressing the potential for baseline imbalance in covariates at the design phase by having a separate randomization sequence for each stratum of baseline variables. Each randomization sequence is constructed by randomly choosing a block size (e.g. 1, 2, or 4 participants per treatment arm), and then permuting the order of the treatment labels in each block. For example, below is a sequence of three blocks, the first with size 3, the second and third with size 2.</p>
-<p><code>[ABBABA][BABA][BAAB]</code></p>
-<p>Randomly choosing block sizes makes it difficult to anticipate when blocks begin and end, and thus which treatment the next participant will receive. Balance between treatment arms within a stratum is achieved whenever a block is completed. Stratifying randomization on too many variables can lead to many incomplete blocks, and thus poor within-stratum balance in treatment allocation. Stratified randomization generally provides the greatest benefit in efficiency when there is high variability between strata and lower variability within strata.</p>
-<p>When stratified randomization is utilized, it is generally recommended to adjust for the stratification variables in the analysis. Unfortunately, this may not be done in practice. Additional improvements in efficiency can be realized using a variance estimator specifically designed for stratified randomization designs <span class="citation">(<a href="#ref-Wang2021">Wang et al. 2021</a>)</span>.</p>
+<div id="nonparametric-bootstrap" class="section level4 hasAnchor" number="10.1.2.2">
+<h4><span class="header-section-number">10.1.2.2</span> Nonparametric Bootstrap<a href="protocol_sap.html#nonparametric-bootstrap" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Confidence intervals will be calculated using the using the bias corrected and accelerated (BCA) nonparametric bootstrap using 10,000 bootstrap replications <span class="citation">(<a href="#ref-Efron1994">Efron and Tibshirani 1994</a>)</span>. The <em>p</em>-value for hypothesis tests will be computed by finding the smallest value of <span class="math inline">\(\alpha\)</span> for which the <span class="math inline">\(100(1 - \alpha)\%\)</span> confidence interval does not contain the null value of the statistic, which will be performed using a binary search.</p>
+</div>
+</div>
+<div id="analysis-of-the-primarysecondary-endpoints-9.4.2-3" class="section level3 hasAnchor" number="10.1.3">
+<h3><span class="header-section-number">10.1.3</span> Analysis of the Primary/Secondary Endpoints (9.4.2-3)<a href="protocol_sap.html#analysis-of-the-primarysecondary-endpoints-9.4.2-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The description of the covariate adjustment approach should include the <a href="estimands.html#estimands">estimand of interest</a> and the method used to estimate this quantity. While full specification of the analysis, including defining which covariates are included and how, can be relegated to the statistical analysis plan.</p>
+<div id="example-doubly-robust-estimators" class="section level4 hasAnchor" number="10.1.3.1">
+<h4><span class="header-section-number">10.1.3.1</span> Example: Doubly Robust Estimators<a href="protocol_sap.html#example-doubly-robust-estimators" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The primary analysis will estimate the average treatment effect on the risk difference scale using a doubly-robust estimator. The construction of the estimator consists of a propensity score, which models the probability of treatment assignment, a missingness model, which models the probability of having the primary endpoint observed, and an outcome model, which models the distribution of the primary endpoint. The propensity score model includes covariates measured prior to randomization (baseline covariates). The missingness and outcome models include baseline covariates and treatment assignment.</p>
+<p>The fitted probabilities of treatment assignment (from the propensity score model) and being observed at follow up (from the missingness models) are used to compute weights which adjust for both imbalances between randomized groups and missing outcome data. These weights are used in an outcome regression model, which is used to predict the outcome of each individual under each treatment assignment. The average treatment effect (also known as average marginal effect or predicted marginal mean) for each treatment is computed by averaging the predicted outcomes under that treatment.</p>
+</div>
+<div id="example-mistie-iii" class="section level4 hasAnchor" number="10.1.3.2">
+<h4><span class="header-section-number">10.1.3.2</span> Example: MISTIE III<a href="protocol_sap.html#example-mistie-iii" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The primary outcome is the modified Rankin Scale (mRS) assessed at the 1-year post-randomization study visit. Interviews used to score the mRS are recorded for independent assessment by trained examiners who are masked to treatment assignment. The mRS is an ordinal scale, ranging from 0 (no residual neurologic symptoms of stroke) to 6 (death). mRS scores will be categorized into a binary variable, with 1 indicating an mRS value of 0-3 (“good outcome”), and 0 indicating an mRS value of 4-6 (“poor outcome).</p>
+<p>The estimand of interest is the marginal relative risk of a good outcome under the treatment arm relative to the control arm: <span class="math inline">\(Pr\{X\}\)</span></p>
 
+</div>
+</div>
 </div>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-Wang2021" class="csl-entry">
-Wang, Bingkai, Ryoko Susukida, Ramin Mojtabai, Masoumeh Amin-Esmaeili, and Michael Rosenblum. 2021. <span>“Model-Robust Inference for Clinical Trials That Improve Precision by Stratified Randomization and Covariate Adjustment.”</span> <em>Journal of the American Statistical Association</em> 118 (542): 1152–63. <a href="https://doi.org/10.1080/01621459.2021.1981338">https://doi.org/10.1080/01621459.2021.1981338</a>.
+<div id="ref-Efron1994" class="csl-entry">
+Efron, Bradley, and Robert J. Tibshirani. 1994. <em>An Introduction to the Bootstrap</em>. Chapman; Hall/<span>CRC</span>. <a href="https://doi.org/10.1201/9780429246593">https://doi.org/10.1201/9780429246593</a>.
+</div>
+<div id="ref-Gamble2017" class="csl-entry">
+Gamble, Carrol, Ashma Krishan, Deborah Stocken, Steff Lewis, Edmund Juszczak, Caroline Doré, Paula R. Williamson, et al. 2017. <span>“Guidelines for the Content of Statistical Analysis Plans in Clinical Trials.”</span> <em><span>JAMA</span></em> 318 (23): 2337. <a href="https://doi.org/10.1001/jama.2017.18556">https://doi.org/10.1001/jama.2017.18556</a>.
+</div>
+<div id="ref-Jennison1999" class="csl-entry">
+Jennison, Christopher, and Bruce W. Turnbull. 1999. <em>Group Sequential Methods with Applications to Clinical Trials</em>. Chapman; Hall/<span>CRC</span>. <a href="https://doi.org/10.1201/9780367805326">https://doi.org/10.1201/9780367805326</a>.
+</div>
+<div id="ref-margins_package" class="csl-entry">
+Leeper, Thomas J. 2021. <em>Margins: Marginal Effects for Model Objects</em>.
+</div>
+<div id="ref-VanLancker2022" class="csl-entry">
+Van Lancker, Kelly, Joshua Betz, and Michael Rosenblum. 2022. <span>“Combining Covariate Adjustment with Group Sequential, Information Adaptive Designs to Improve Randomized Trial Efficiency.”</span> <em>arXiv Preprint arXiv:1409.0473</em>. <a href="https://doi.org/10.48550/ARXIV.2201.12921">https://doi.org/10.48550/ARXIV.2201.12921</a>.
+</div>
+<div id="ref-Zeileis2006" class="csl-entry">
+Zeileis, Achim. 2006. <span>“Object-Oriented Computation of Sandwich Estimators.”</span> <em>Journal of Statistical Software</em> 16 (9). <a href="https://doi.org/10.18637/jss.v016.i09">https://doi.org/10.18637/jss.v016.i09</a>.
 </div>
 </div>
             </section>
@@ -367,8 +387,8 @@ Wang, Bingkai, Ryoko Susukida, Ramin Mojtabai, Masoumeh Amin-Esmaeili, and Micha
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="estimands.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="informationadaptive.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="recommendations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -399,7 +419,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/covariateadjustment/covariateadjustment.github.io/edit/main/01-Introduction.Rmd",
+"link": "https://github.com/covariateadjustment/covariateadjustment.github.io/edit/main/10-Protocol-and-Statistical-Analysis-Plan.Rmd",
 "text": "Edit"
 },
 "history": {

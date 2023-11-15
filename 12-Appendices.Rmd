@@ -2,6 +2,12 @@
 
 ## Appendix A: Glossary of Terms {#appendix_a_glossary}
 
+ - Average Treatment Effect
+ - Conditional Treatment Effect
+ - Marginal Treatment Effect
+
+
+
 
 ## Appendix B: Resources for Using R {#appendix_b_using_r}
 
@@ -23,5 +29,15 @@ There are a lot of excellent existing resources on learning and using R in pract
   - Programming & Advanced Topics
     - [Hands On Programming with R](https://rstudio-education.github.io/hopr/)
     - [Advanced R](https://adv-r.hadley.nz/)
+
+
+
+
+## Appendix C: {#appendix_c_references_by_method}
+
+  - G-Computation, Standardization
+  - Inverse Probability Weighting
+  - Targeted Maximum Likelihood
+
 
 `r if (knitr::is_html_output()) '# References {-}'`

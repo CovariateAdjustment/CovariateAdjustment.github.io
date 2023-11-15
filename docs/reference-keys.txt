@@ -57,7 +57,6 @@ covariate-adjusted-estimators
 kaplan-meier-estimator-1
 survival-probability-1
 restricted-mean-survival-time-rmst-1
-ordinal
 groupsequential
 group-sequential-designs
 power-sample-size-calculations
@@ -66,6 +65,16 @@ informationadaptive
 information-adaptive-designs
 power-sample-size-calculations-1
 analyses-unadjusted-and-adjusted-1
+protocol_sap
+study-protocol
+sample-size-justification-9.4.1
+interim-analyses
+general-approach-9.4.1
+robust-covariance
+nonparametric-bootstrap
+analysis-of-the-primarysecondary-endpoints-9.4.2-3
+example-doubly-robust-estimators
+example-mistie-iii
 recommendations
 relevant-regulatory-guidance
 missing-covariates
@@ -76,3 +85,4 @@ data-adaptive-covariate-adjustment
 appendices
 appendix_a_glossary
 appendix_b_using_r
+appendix_c_references_by_method
