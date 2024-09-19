@@ -7,7 +7,7 @@
   <title>Chapter 7 Time-To-Event Outcomes | Covariate Adjustment in Randomized Trials</title>
   <meta name="description" content="<p>This a series of tutorials meant to help investigators apply covariate
 adjusted analyses in randomized trials.</p>" />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 7 Time-To-Event Outcomes | Covariate Adjustment in Randomized Trials" />
   <meta property="og:type" content="book" />
@@ -59,7 +59,7 @@ adjusted analyses in randomized trials.</p>" />
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -131,6 +131,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -248,12 +249,13 @@ div.csl-indent {
 <li class="chapter" data-level="7.1.4" data-path="timetoevent.html"><a href="timetoevent.html#survival-probability"><i class="fa fa-check"></i><b>7.1.4</b> Survival Probability</a></li>
 <li class="chapter" data-level="7.1.5" data-path="timetoevent.html"><a href="timetoevent.html#restricted-mean-survival-time-rmst"><i class="fa fa-check"></i><b>7.1.5</b> Restricted Mean Survival Time (RMST)</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="timetoevent.html"><a href="timetoevent.html#event-driven-trials"><i class="fa fa-check"></i><b>7.2</b> Event-Driven Trials</a></li>
-<li class="chapter" data-level="7.3" data-path="timetoevent.html"><a href="timetoevent.html#covariate-adjusted-estimators"><i class="fa fa-check"></i><b>7.3</b> Covariate-Adjusted Estimators</a>
+<li class="chapter" data-level="7.2" data-path="timetoevent.html"><a href="timetoevent.html#covariate-adjusted-estimators"><i class="fa fa-check"></i><b>7.2</b> Covariate-Adjusted Estimators</a>
 <ul>
-<li class="chapter" data-level="7.3.1" data-path="timetoevent.html"><a href="timetoevent.html#kaplan-meier-estimator-1"><i class="fa fa-check"></i><b>7.3.1</b> Kaplan-Meier Estimator</a></li>
-<li class="chapter" data-level="7.3.2" data-path="timetoevent.html"><a href="timetoevent.html#survival-probability-1"><i class="fa fa-check"></i><b>7.3.2</b> Survival Probability</a></li>
-<li class="chapter" data-level="7.3.3" data-path="timetoevent.html"><a href="timetoevent.html#restricted-mean-survival-time-rmst-1"><i class="fa fa-check"></i><b>7.3.3</b> Restricted Mean Survival Time (RMST)</a></li>
+<li class="chapter" data-level="7.2.1" data-path="timetoevent.html"><a href="timetoevent.html#covariate-adjusted-estimates-of-survival-function"><i class="fa fa-check"></i><b>7.2.1</b> Covariate Adjusted Estimates of Survival Function</a></li>
+<li class="chapter" data-level="7.2.2" data-path="timetoevent.html"><a href="timetoevent.html#conditional-hazard-ratio"><i class="fa fa-check"></i><b>7.2.2</b> Conditional Hazard Ratio</a></li>
+<li class="chapter" data-level="7.2.3" data-path="timetoevent.html"><a href="timetoevent.html#marginal-hazard-ratio"><i class="fa fa-check"></i><b>7.2.3</b> Marginal Hazard Ratio</a></li>
+<li class="chapter" data-level="7.2.4" data-path="timetoevent.html"><a href="timetoevent.html#survival-probability-1"><i class="fa fa-check"></i><b>7.2.4</b> Survival Probability</a></li>
+<li class="chapter" data-level="7.2.5" data-path="timetoevent.html"><a href="timetoevent.html#restricted-mean-survival-time-rmst-1"><i class="fa fa-check"></i><b>7.2.5</b> Restricted Mean Survival Time (RMST)</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="groupsequential.html"><a href="groupsequential.html"><i class="fa fa-check"></i><b>8</b> Group Sequential Designs</a>
@@ -334,12 +336,12 @@ The Survival Probability assumes that <span class="math inline">\(\ldots\)</span
 <div id="logrank-test" class="section level3 hasAnchor" number="7.1.2">
 <h3><span class="header-section-number">7.1.2</span> Logrank Test<a href="timetoevent.html#logrank-test" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The Logrank test (and the <span class="math inline">\(G^{\rho}\)</span> family of tests) can be performed using the <code>survival::survdiff</code> function:</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="timetoevent.html#cb109-1" tabindex="-1"></a>survival<span class="sc">::</span><span class="fu">survdiff</span>(</span>
-<span id="cb109-2"><a href="timetoevent.html#cb109-2" tabindex="-1"></a>  <span class="at">formula =</span></span>
-<span id="cb109-3"><a href="timetoevent.html#cb109-3" tabindex="-1"></a>    <span class="fu">Surv</span>(<span class="at">time =</span> days_on_study,</span>
-<span id="cb109-4"><a href="timetoevent.html#cb109-4" tabindex="-1"></a>         <span class="at">event =</span> died_on_study) <span class="sc">~</span> arm,</span>
-<span id="cb109-5"><a href="timetoevent.html#cb109-5" tabindex="-1"></a>  <span class="at">data =</span> sim_miii</span>
-<span id="cb109-6"><a href="timetoevent.html#cb109-6" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="timetoevent.html#cb98-1" tabindex="-1"></a>survival<span class="sc">::</span><span class="fu">survdiff</span>(</span>
+<span id="cb98-2"><a href="timetoevent.html#cb98-2" tabindex="-1"></a>  <span class="at">formula =</span></span>
+<span id="cb98-3"><a href="timetoevent.html#cb98-3" tabindex="-1"></a>    <span class="fu">Surv</span>(<span class="at">time =</span> days_on_study,</span>
+<span id="cb98-4"><a href="timetoevent.html#cb98-4" tabindex="-1"></a>         <span class="at">event =</span> died_on_study) <span class="sc">~</span> arm,</span>
+<span id="cb98-5"><a href="timetoevent.html#cb98-5" tabindex="-1"></a>  <span class="at">data =</span> sim_miii</span>
+<span id="cb98-6"><a href="timetoevent.html#cb98-6" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## Call:
 ## survival::survdiff(formula = Surv(time = days_on_study, event = died_on_study) ~ 
 ##     arm, data = sim_miii)
@@ -353,18 +355,18 @@ The Survival Probability assumes that <span class="math inline">\(\ldots\)</span
 </div>
 <div id="cox-proportional-hazards-model" class="section level3 hasAnchor" number="7.1.3">
 <h3><span class="header-section-number">7.1.3</span> Cox Proportional Hazards Model<a href="timetoevent.html#cox-proportional-hazards-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>The Cox Proportional Hazards model can be fitted using the <code>survival::coxph</code> function: the specification of the model is done using a formula object, with a <code>survival::Surv</code> object on the left hand side, and the covariates specified on the right hand side. To obtain the robust variance estimate of the coefficients, the <code>robust</code> argument should be set to <code>TRUE</code>. See <code>?survival::coxph</code> for more details, such as handling of tied survival times.</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="timetoevent.html#cb111-1" tabindex="-1"></a>unadjusted_cox <span class="ot">&lt;-</span></span>
-<span id="cb111-2"><a href="timetoevent.html#cb111-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">coxph</span>(</span>
-<span id="cb111-3"><a href="timetoevent.html#cb111-3" tabindex="-1"></a>    <span class="at">formula =</span></span>
-<span id="cb111-4"><a href="timetoevent.html#cb111-4" tabindex="-1"></a>      <span class="fu">Surv</span>(<span class="at">time =</span> days_on_study,</span>
-<span id="cb111-5"><a href="timetoevent.html#cb111-5" tabindex="-1"></a>           <span class="at">event =</span> died_on_study) <span class="sc">~</span> arm,</span>
-<span id="cb111-6"><a href="timetoevent.html#cb111-6" tabindex="-1"></a>    <span class="at">ties =</span> <span class="st">&quot;efron&quot;</span>,</span>
-<span id="cb111-7"><a href="timetoevent.html#cb111-7" tabindex="-1"></a>    <span class="at">robust =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb111-8"><a href="timetoevent.html#cb111-8" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
-<span id="cb111-9"><a href="timetoevent.html#cb111-9" tabindex="-1"></a>  )</span>
-<span id="cb111-10"><a href="timetoevent.html#cb111-10" tabindex="-1"></a></span>
-<span id="cb111-11"><a href="timetoevent.html#cb111-11" tabindex="-1"></a><span class="fu">summary</span>(unadjusted_cox)</span></code></pre></div>
+<p>The Cox Proportional Hazards model can be fitted using the <code>survival::coxph</code> function: the specification of the model is done using a formula object, with a <code>survival::Surv</code> object on the left hand side, and the covariates specified on the right hand side. To obtain the robust variance estimate of the coefficients, the <code>robust</code> argument should be set to <code>TRUE</code>. See <code>?survival::coxph</code> for more details, such as handling of tied survival times. Note that when the model only includes treatment assignment, it is estimating a marginal estimand, the marginal hazard ratio: when baseline covariates are included, it is estimating a conditional estimand, the hazard ratio conditional on the specified covariates.</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="timetoevent.html#cb100-1" tabindex="-1"></a>unadjusted_cox <span class="ot">&lt;-</span></span>
+<span id="cb100-2"><a href="timetoevent.html#cb100-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">coxph</span>(</span>
+<span id="cb100-3"><a href="timetoevent.html#cb100-3" tabindex="-1"></a>    <span class="at">formula =</span></span>
+<span id="cb100-4"><a href="timetoevent.html#cb100-4" tabindex="-1"></a>      <span class="fu">Surv</span>(<span class="at">time =</span> days_on_study,</span>
+<span id="cb100-5"><a href="timetoevent.html#cb100-5" tabindex="-1"></a>           <span class="at">event =</span> died_on_study) <span class="sc">~</span> arm,</span>
+<span id="cb100-6"><a href="timetoevent.html#cb100-6" tabindex="-1"></a>    <span class="at">ties =</span> <span class="st">&quot;efron&quot;</span>,</span>
+<span id="cb100-7"><a href="timetoevent.html#cb100-7" tabindex="-1"></a>    <span class="at">robust =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb100-8"><a href="timetoevent.html#cb100-8" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
+<span id="cb100-9"><a href="timetoevent.html#cb100-9" tabindex="-1"></a>  )</span>
+<span id="cb100-10"><a href="timetoevent.html#cb100-10" tabindex="-1"></a></span>
+<span id="cb100-11"><a href="timetoevent.html#cb100-11" tabindex="-1"></a><span class="fu">summary</span>(unadjusted_cox)</span></code></pre></div>
 <pre><code>## Call:
 ## survival::coxph(formula = Surv(time = days_on_study, event = died_on_study) ~ 
 ##     arm, data = sim_miii, ties = &quot;efron&quot;, robust = TRUE)
@@ -387,37 +389,38 @@ The Survival Probability assumes that <span class="math inline">\(\ldots\)</span
 ##   (Note: the likelihood ratio and score tests assume independence of
 ##      observations within a cluster, the Wald and robust score tests do not).</code></pre>
 <p>Tests for the proportional hazards assumption using weighted residuals can be obtained using <code>survival::cox.zph</code>.</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="timetoevent.html#cb113-1" tabindex="-1"></a>unadjusted_cox_ph_test <span class="ot">&lt;-</span></span>
-<span id="cb113-2"><a href="timetoevent.html#cb113-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">cox.zph</span>(unadjusted_cox)</span>
-<span id="cb113-3"><a href="timetoevent.html#cb113-3" tabindex="-1"></a></span>
-<span id="cb113-4"><a href="timetoevent.html#cb113-4" tabindex="-1"></a><span class="fu">print</span>(unadjusted_cox_ph_test)</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="timetoevent.html#cb102-1" tabindex="-1"></a>unadjusted_cox_ph_test <span class="ot">&lt;-</span></span>
+<span id="cb102-2"><a href="timetoevent.html#cb102-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">cox.zph</span>(unadjusted_cox)</span>
+<span id="cb102-3"><a href="timetoevent.html#cb102-3" tabindex="-1"></a></span>
+<span id="cb102-4"><a href="timetoevent.html#cb102-4" tabindex="-1"></a><span class="fu">print</span>(unadjusted_cox_ph_test)</span></code></pre></div>
 <pre><code>##        chisq df      p
 ## arm     9.85  1 0.0017
 ## GLOBAL  9.85  1 0.0017</code></pre>
 <p>In addition to test statistics, plots can be used to visualize how covariate effects vary by time on study:</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="timetoevent.html#cb115-1" tabindex="-1"></a><span class="co"># Plot Proportionality Results</span></span>
-<span id="cb115-2"><a href="timetoevent.html#cb115-2" tabindex="-1"></a><span class="fu">plot</span>(unadjusted_cox_ph_test,</span>
-<span id="cb115-3"><a href="timetoevent.html#cb115-3" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Proportional Hazards Test&quot;</span>)</span>
-<span id="cb115-4"><a href="timetoevent.html#cb115-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="timetoevent.html#cb104-1" tabindex="-1"></a><span class="co"># Plot Proportionality Results</span></span>
+<span id="cb104-2"><a href="timetoevent.html#cb104-2" tabindex="-1"></a><span class="fu">plot</span>(unadjusted_cox_ph_test,</span>
+<span id="cb104-3"><a href="timetoevent.html#cb104-3" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Proportional Hazards Test&quot;</span>)</span>
+<span id="cb104-4"><a href="timetoevent.html#cb104-4" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
 <p><img src="_main_files/figure-html/Unadjusted-Cox-PH-Plot-MISTIE-1.png" width="80%" style="display: block; margin: auto;" /></p>
-<p>Here we see that the hazard ratio for treatment arm is negative initially, reflecting lower mortality after randomization in the surgical arm. The magnitude of this effect decreases with time, eventually becoming indistinguishable from zero. This pattern of mortality and time-varying treatment effect is consistent with the fact that most stroke-related mortality occurs in the few weeks following its initial onset, and the intervention is only expected to address mortality related to the initial hemorrhagic stroke. In such a setting, we might expect a violation of the proportional hazards assumption at some point in follow-up, but not know how the treatment effect varies in time.</p>
+<p>Here we see that the hazard ratio for treatment arm is negative earlier in the study, reflecting lower mortality after randomization in the surgical arm. The magnitude of this effect decreases with time, eventually becoming indistinguishable from zero. Since the assumption that the hazards are approximately proportional over the follow-up period is not empirically supported, this complicates the interpretation of the estimated hazard ratio. The estimate represents a weighted average of the time-varying hazard ratio: what further complicates interpretation is that the weighting of the time-varying hazards depends on the distribution of censoring times, which are considered a nuisance parameter <span class="citation">(<a href="#ref-Rudser2012">Rudser, LeBlanc, and Emerson 2012</a>)</span>.</p>
+<p>Setting aside the issues of the proportional hazards assumption, based on the unadjusted analysis, the hazard of death would be 43% lower if all eligible patients were assigned to treatment instead of control.</p>
 <hr />
 </div>
 <div id="survival-probability" class="section level3 hasAnchor" number="7.1.4">
 <h3><span class="header-section-number">7.1.4</span> Survival Probability<a href="timetoevent.html#survival-probability" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="timetoevent.html#cb116-1" tabindex="-1"></a>surv_metadata_unadj <span class="ot">&lt;-</span></span>
-<span id="cb116-2"><a href="timetoevent.html#cb116-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">survrct</span>(</span>
-<span id="cb116-3"><a href="timetoevent.html#cb116-3" tabindex="-1"></a>    <span class="at">outcome.formula =</span></span>
-<span id="cb116-4"><a href="timetoevent.html#cb116-4" tabindex="-1"></a>      <span class="fu">Surv</span>(days_on_study, died_on_study) <span class="sc">~</span> tx, </span>
-<span id="cb116-5"><a href="timetoevent.html#cb116-5" tabindex="-1"></a>    <span class="at">trt.formula =</span> tx <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb116-6"><a href="timetoevent.html#cb116-6" tabindex="-1"></a>    <span class="at">data =</span> sim_miii,</span>
-<span id="cb116-7"><a href="timetoevent.html#cb116-7" tabindex="-1"></a>  )</span></code></pre></div>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="timetoevent.html#cb117-1" tabindex="-1"></a>surv_prob_unadj <span class="ot">&lt;-</span> </span>
-<span id="cb117-2"><a href="timetoevent.html#cb117-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">survprob</span>(</span>
-<span id="cb117-3"><a href="timetoevent.html#cb117-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_unadj,</span>
-<span id="cb117-4"><a href="timetoevent.html#cb117-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
-<span id="cb117-5"><a href="timetoevent.html#cb117-5" tabindex="-1"></a>  )</span></code></pre></div>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="timetoevent.html#cb118-1" tabindex="-1"></a>surv_prob_unadj</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="timetoevent.html#cb105-1" tabindex="-1"></a>surv_metadata_unadj <span class="ot">&lt;-</span></span>
+<span id="cb105-2"><a href="timetoevent.html#cb105-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">survrct</span>(</span>
+<span id="cb105-3"><a href="timetoevent.html#cb105-3" tabindex="-1"></a>    <span class="at">outcome.formula =</span></span>
+<span id="cb105-4"><a href="timetoevent.html#cb105-4" tabindex="-1"></a>      <span class="fu">Surv</span>(days_on_study, died_on_study) <span class="sc">~</span> tx, </span>
+<span id="cb105-5"><a href="timetoevent.html#cb105-5" tabindex="-1"></a>    <span class="at">trt.formula =</span> tx <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb105-6"><a href="timetoevent.html#cb105-6" tabindex="-1"></a>    <span class="at">data =</span> sim_miii,</span>
+<span id="cb105-7"><a href="timetoevent.html#cb105-7" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="timetoevent.html#cb106-1" tabindex="-1"></a>surv_prob_unadj <span class="ot">&lt;-</span> </span>
+<span id="cb106-2"><a href="timetoevent.html#cb106-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">survprob</span>(</span>
+<span id="cb106-3"><a href="timetoevent.html#cb106-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_unadj,</span>
+<span id="cb106-4"><a href="timetoevent.html#cb106-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
+<span id="cb106-5"><a href="timetoevent.html#cb106-5" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="timetoevent.html#cb107-1" tabindex="-1"></a>surv_prob_unadj</span></code></pre></div>
 <pre><code>## Survival Probability Estimator: tmle</code></pre>
 <pre><code>## Marginal Survival Probability: Pr(T &gt; 90 | A = a)</code></pre>
 <pre><code>## Treatment Arm</code></pre>
@@ -433,20 +436,21 @@ The Survival Probability assumes that <span class="math inline">\(\ldots\)</span
 <pre><code>## Estimate: 0.1</code></pre>
 <pre><code>## Std. error: 0.03</code></pre>
 <pre><code>## 95% CI: (0.03, 0.16)</code></pre>
+<p>Without covariate adjustment, the probability of surviving at 90 days post randomization was 10 percent higher if everyone were assigned to treatment than if everyone were assigned to control.</p>
 <hr />
 </div>
 <div id="restricted-mean-survival-time-rmst" class="section level3 hasAnchor" number="7.1.5">
 <h3><span class="header-section-number">7.1.5</span> Restricted Mean Survival Time (RMST)<a href="timetoevent.html#restricted-mean-survival-time-rmst" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The <code>survRM2</code> package can be used to obtain the RMST in each arm, as well as differences and ratios of the RMST between treatment arms:</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="timetoevent.html#cb134-1" tabindex="-1"></a><span class="fu">with</span>(</span>
-<span id="cb134-2"><a href="timetoevent.html#cb134-2" tabindex="-1"></a>  sim_miii,</span>
-<span id="cb134-3"><a href="timetoevent.html#cb134-3" tabindex="-1"></a>  survRM2<span class="sc">::</span><span class="fu">rmst2</span>(</span>
-<span id="cb134-4"><a href="timetoevent.html#cb134-4" tabindex="-1"></a>    <span class="at">time =</span> days_on_study,</span>
-<span id="cb134-5"><a href="timetoevent.html#cb134-5" tabindex="-1"></a>    <span class="at">status =</span> died_on_study,</span>
-<span id="cb134-6"><a href="timetoevent.html#cb134-6" tabindex="-1"></a>    <span class="at">arm =</span> tx,</span>
-<span id="cb134-7"><a href="timetoevent.html#cb134-7" tabindex="-1"></a>    <span class="at">tau =</span> <span class="dv">90</span></span>
-<span id="cb134-8"><a href="timetoevent.html#cb134-8" tabindex="-1"></a>  )</span>
-<span id="cb134-9"><a href="timetoevent.html#cb134-9" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="timetoevent.html#cb123-1" tabindex="-1"></a><span class="fu">with</span>(</span>
+<span id="cb123-2"><a href="timetoevent.html#cb123-2" tabindex="-1"></a>  sim_miii,</span>
+<span id="cb123-3"><a href="timetoevent.html#cb123-3" tabindex="-1"></a>  survRM2<span class="sc">::</span><span class="fu">rmst2</span>(</span>
+<span id="cb123-4"><a href="timetoevent.html#cb123-4" tabindex="-1"></a>    <span class="at">time =</span> days_on_study,</span>
+<span id="cb123-5"><a href="timetoevent.html#cb123-5" tabindex="-1"></a>    <span class="at">status =</span> died_on_study,</span>
+<span id="cb123-6"><a href="timetoevent.html#cb123-6" tabindex="-1"></a>    <span class="at">arm =</span> tx,</span>
+<span id="cb123-7"><a href="timetoevent.html#cb123-7" tabindex="-1"></a>    <span class="at">tau =</span> <span class="dv">90</span></span>
+<span id="cb123-8"><a href="timetoevent.html#cb123-8" tabindex="-1"></a>  )</span>
+<span id="cb123-9"><a href="timetoevent.html#cb123-9" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## 
 ## The truncation time: tau = 90  was specified. 
 ## 
@@ -468,12 +472,12 @@ The Survival Probability assumes that <span class="math inline">\(\ldots\)</span
 ## RMST (arm=1)/(arm=0) 1.116     1.054     1.181 0
 ## RMTL (arm=1)/(arm=0) 0.385     0.235     0.630 0</code></pre>
 <p>This can also be done using the <code>adjrct</code> package. Once the “survival metadata” has been produced using the <code>adjrct::survrct</code> function, the metadata can be passed to the <code>adjrct::rmst</code> function.</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="timetoevent.html#cb136-1" tabindex="-1"></a>rmst_unadj <span class="ot">&lt;-</span> </span>
-<span id="cb136-2"><a href="timetoevent.html#cb136-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">rmst</span>(</span>
-<span id="cb136-3"><a href="timetoevent.html#cb136-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_unadj,</span>
-<span id="cb136-4"><a href="timetoevent.html#cb136-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
-<span id="cb136-5"><a href="timetoevent.html#cb136-5" tabindex="-1"></a>  )</span></code></pre></div>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="timetoevent.html#cb137-1" tabindex="-1"></a>rmst_unadj</span></code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="timetoevent.html#cb125-1" tabindex="-1"></a>rmst_unadj <span class="ot">&lt;-</span> </span>
+<span id="cb125-2"><a href="timetoevent.html#cb125-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">rmst</span>(</span>
+<span id="cb125-3"><a href="timetoevent.html#cb125-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_unadj,</span>
+<span id="cb125-4"><a href="timetoevent.html#cb125-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
+<span id="cb125-5"><a href="timetoevent.html#cb125-5" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="timetoevent.html#cb126-1" tabindex="-1"></a>rmst_unadj</span></code></pre></div>
 <pre><code>## RMST Estimator: tmle</code></pre>
 <pre><code>## Marginal RMST: E(min[T, 90] | A = a)</code></pre>
 <pre><code>## Treatment Arm</code></pre>
@@ -489,46 +493,186 @@ The Survival Probability assumes that <span class="math inline">\(\ldots\)</span
 <pre><code>## Estimate: 8.77</code></pre>
 <pre><code>## Std. error: 2.26</code></pre>
 <pre><code>## 95% CI: (4.34, 13.19)</code></pre>
+<p>Based on the unadjusted analysis, patients can expect to live 8.8 days longer in the first 90 days if everyone were assigned to treatment than if everyone were assigned to control.</p>
 <hr />
 </div>
 </div>
-<div id="event-driven-trials" class="section level2 hasAnchor" number="7.2">
-<h2><span class="header-section-number">7.2</span> Event-Driven Trials<a href="timetoevent.html#event-driven-trials" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="covariate-adjusted-estimators" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Covariate-Adjusted Estimators<a href="timetoevent.html#covariate-adjusted-estimators" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The code to produce a covariate adjusted analysis is usually a straightforward modification of the code used for an unadjusted analysis: in many cases, it is simply a matter of adding the baseline covariates into the regression model formula.</p>
+<p>Care must be taken, however, to evaluate the assumptions of the models being used where applicable, and ensure that the interpretation is consistent with the target of inference (marginal vs. conditional estimands).</p>
+<hr />
+<div id="covariate-adjusted-estimates-of-survival-function" class="section level3 hasAnchor" number="7.2.1">
+<h3><span class="header-section-number">7.2.1</span> Covariate Adjusted Estimates of Survival Function<a href="timetoevent.html#covariate-adjusted-estimates-of-survival-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Covariate adjustment can not only improve upon the precision of the Kaplan-Meier estimate of the survival function, it can also provide an estimate that requires less stringent assumptions for validity.</p>
 <hr />
 </div>
-<div id="covariate-adjusted-estimators" class="section level2 hasAnchor" number="7.3">
-<h2><span class="header-section-number">7.3</span> Covariate-Adjusted Estimators<a href="timetoevent.html#covariate-adjusted-estimators" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<hr />
-<div id="kaplan-meier-estimator-1" class="section level3 hasAnchor" number="7.3.1">
-<h3><span class="header-section-number">7.3.1</span> Kaplan-Meier Estimator<a href="timetoevent.html#kaplan-meier-estimator-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="conditional-hazard-ratio" class="section level3 hasAnchor" number="7.2.2">
+<h3><span class="header-section-number">7.2.2</span> Conditional Hazard Ratio<a href="timetoevent.html#conditional-hazard-ratio" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>As noted before, covariates can be added to the Cox model, however the resulting estimates are no longer marginal quantities, they are conditional on the specification of the covariates:</p>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="timetoevent.html#cb142-1" tabindex="-1"></a>adjusted_cox <span class="ot">&lt;-</span></span>
+<span id="cb142-2"><a href="timetoevent.html#cb142-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">coxph</span>(</span>
+<span id="cb142-3"><a href="timetoevent.html#cb142-3" tabindex="-1"></a>    <span class="at">formula =</span></span>
+<span id="cb142-4"><a href="timetoevent.html#cb142-4" tabindex="-1"></a>      <span class="fu">Surv</span>(<span class="at">time =</span> days_on_study,</span>
+<span id="cb142-5"><a href="timetoevent.html#cb142-5" tabindex="-1"></a>           <span class="at">event =</span> died_on_study) <span class="sc">~</span> arm <span class="sc">+</span></span>
+<span id="cb142-6"><a href="timetoevent.html#cb142-6" tabindex="-1"></a>      age <span class="sc">+</span> male <span class="sc">+</span> hx_cvd <span class="sc">+</span> hx_hyperlipidemia <span class="sc">+</span></span>
+<span id="cb142-7"><a href="timetoevent.html#cb142-7" tabindex="-1"></a>      on_anticoagulants <span class="sc">+</span> on_antiplatelets <span class="sc">+</span> ich_location <span class="sc">+</span></span>
+<span id="cb142-8"><a href="timetoevent.html#cb142-8" tabindex="-1"></a>      ich_s_volume <span class="sc">+</span> ivh_s_volume <span class="sc">+</span> gcs_category,</span>
+<span id="cb142-9"><a href="timetoevent.html#cb142-9" tabindex="-1"></a>    <span class="at">ties =</span> <span class="st">&quot;efron&quot;</span>,</span>
+<span id="cb142-10"><a href="timetoevent.html#cb142-10" tabindex="-1"></a>    <span class="at">robust =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb142-11"><a href="timetoevent.html#cb142-11" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
+<span id="cb142-12"><a href="timetoevent.html#cb142-12" tabindex="-1"></a>  )</span>
+<span id="cb142-13"><a href="timetoevent.html#cb142-13" tabindex="-1"></a></span>
+<span id="cb142-14"><a href="timetoevent.html#cb142-14" tabindex="-1"></a><span class="fu">summary</span>(adjusted_cox)</span></code></pre></div>
+<pre><code>## Call:
+## survival::coxph(formula = Surv(time = days_on_study, event = died_on_study) ~ 
+##     arm + age + male + hx_cvd + hx_hyperlipidemia + on_anticoagulants + 
+##         on_antiplatelets + ich_location + ich_s_volume + ivh_s_volume + 
+##         gcs_category, data = sim_miii, ties = &quot;efron&quot;, robust = TRUE)
+## 
+##   n= 500, number of events= 104 
+## 
+##                                     coef exp(coef)  se(coef) robust se      z
+## armsurgical                    -0.509103  0.601035  0.203415  0.204406 -2.491
+## age                             0.036377  1.037047  0.009365  0.008305  4.380
+## male1. Male                    -0.304160  0.737743  0.213932  0.221949 -1.370
+## hx_cvd1. Yes                    0.265474  1.304048  0.287065  0.317013  0.837
+## hx_hyperlipidemia1. Yes         0.162135  1.176019  0.233839  0.240778  0.673
+## on_anticoagulants1. Yes         0.288125  1.333925  0.368071  0.407977  0.706
+## on_antiplatelets1. Yes         -0.478800  0.619526  0.266844  0.276044 -1.735
+## ich_locationLobar              -0.048168  0.952973  0.216688  0.220998 -0.218
+## ich_s_volume                    0.008901  1.008941  0.006216  0.006349  1.402
+## ivh_s_volume                    0.035311  1.035942  0.022026  0.024108  1.465
+## gcs_category2. Moderate (9-12) -0.689235  0.501960  0.222362  0.229556 -3.002
+## gcs_category3. Mild (13-15)    -1.318338  0.267580  0.298357  0.293425 -4.493
+##                                Pr(&gt;|z|)    
+## armsurgical                     0.01275 *  
+## age                            1.19e-05 ***
+## male1. Male                     0.17056    
+## hx_cvd1. Yes                    0.40236    
+## hx_hyperlipidemia1. Yes         0.50071    
+## on_anticoagulants1. Yes         0.48005    
+## on_antiplatelets1. Yes          0.08283 .  
+## ich_locationLobar               0.82746    
+## ich_s_volume                    0.16093    
+## ivh_s_volume                    0.14300    
+## gcs_category2. Moderate (9-12)  0.00268 ** 
+## gcs_category3. Mild (13-15)    7.03e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+##                                exp(coef) exp(-coef) lower .95 upper .95
+## armsurgical                       0.6010     1.6638    0.4026    0.8972
+## age                               1.0370     0.9643    1.0203    1.0541
+## male1. Male                       0.7377     1.3555    0.4775    1.1398
+## hx_cvd1. Yes                      1.3040     0.7668    0.7006    2.4274
+## hx_hyperlipidemia1. Yes           1.1760     0.8503    0.7336    1.8852
+## on_anticoagulants1. Yes           1.3339     0.7497    0.5996    2.9676
+## on_antiplatelets1. Yes            0.6195     1.6141    0.3607    1.0642
+## ich_locationLobar                 0.9530     1.0493    0.6180    1.4696
+## ich_s_volume                      1.0089     0.9911    0.9965    1.0216
+## ivh_s_volume                      1.0359     0.9653    0.9881    1.0861
+## gcs_category2. Moderate (9-12)    0.5020     1.9922    0.3201    0.7872
+## gcs_category3. Mild (13-15)       0.2676     3.7372    0.1506    0.4756
+## 
+## Concordance= 0.73  (se = 0.023 )
+## Likelihood ratio test= 63.8  on 12 df,   p=5e-09
+## Wald test            = 72.35  on 12 df,   p=1e-10
+## Score (logrank) test = 66.35  on 12 df,   p=2e-09,   Robust = 50.27  p=1e-06
+## 
+##   (Note: the likelihood ratio and score tests assume independence of
+##      observations within a cluster, the Wald and robust score tests do not).</code></pre>
+<p>The adjusted Cox model should also be assessed for the proportional hazards assumption:</p>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="timetoevent.html#cb144-1" tabindex="-1"></a>adjusted_cox_ph_test <span class="ot">&lt;-</span></span>
+<span id="cb144-2"><a href="timetoevent.html#cb144-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">cox.zph</span>(adjusted_cox)</span>
+<span id="cb144-3"><a href="timetoevent.html#cb144-3" tabindex="-1"></a></span>
+<span id="cb144-4"><a href="timetoevent.html#cb144-4" tabindex="-1"></a><span class="fu">print</span>(adjusted_cox_ph_test)</span></code></pre></div>
+<pre><code>##                      chisq df      p
+## arm               1.00e+01  1 0.0015
+## age               1.03e-01  1 0.7483
+## male              9.17e-01  1 0.3382
+## hx_cvd            5.89e-04  1 0.9806
+## hx_hyperlipidemia 6.13e-02  1 0.8045
+## on_anticoagulants 2.25e-02  1 0.8807
+## on_antiplatelets  1.60e-01  1 0.6893
+## ich_location      7.23e+00  1 0.0072
+## ich_s_volume      3.18e+00  1 0.0746
+## ivh_s_volume      3.75e-04  1 0.9846
+## gcs_category      3.14e+00  2 0.2078
+## GLOBAL            2.70e+01 12 0.0077</code></pre>
+<p>In addition to the treatment violating the proportional hazards assumption, covariates also violate this assumption, leading to the same challenges in interpretation mentioned earlier.</p>
+<p>Setting aside the issues of the proportional hazards assumption and potential model misspecification, based on the adjusted analysis conditioning on the covariates in the model, the adjusted hazard of death would be 40% lower if all eligible patients were assigned to treatment instead of control.</p>
 <hr />
 </div>
-<div id="survival-probability-1" class="section level3 hasAnchor" number="7.3.2">
-<h3><span class="header-section-number">7.3.2</span> Survival Probability<a href="timetoevent.html#survival-probability-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="marginal-hazard-ratio" class="section level3 hasAnchor" number="7.2.3">
+<h3><span class="header-section-number">7.2.3</span> Marginal Hazard Ratio<a href="timetoevent.html#marginal-hazard-ratio" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>One way to obtain a covariate-adjusted marginal estimate of the hazard ratio is through the <code>speff2trial</code> package. The syntax is similar to the covariate adjusted Cox model. The argument <code>fixed = TRUE</code> specifies that no variable selection should take place. Note that the treatment variable <code>trt.id</code> should be a binary vector, not a factor. While we have established that the proportional hazards assumption is violated in this case, below is an example of how to carry out the analysis:</p>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="timetoevent.html#cb146-1" tabindex="-1"></a><span class="fu">library</span>(speff2trial)</span>
+<span id="cb146-2"><a href="timetoevent.html#cb146-2" tabindex="-1"></a></span>
+<span id="cb146-3"><a href="timetoevent.html#cb146-3" tabindex="-1"></a>surv_marginal_hr_adj <span class="ot">&lt;-</span></span>
+<span id="cb146-4"><a href="timetoevent.html#cb146-4" tabindex="-1"></a>  speff2trial<span class="sc">::</span><span class="fu">speffSurv</span>(</span>
+<span id="cb146-5"><a href="timetoevent.html#cb146-5" tabindex="-1"></a>    <span class="at">formula =</span></span>
+<span id="cb146-6"><a href="timetoevent.html#cb146-6" tabindex="-1"></a>      survival<span class="sc">::</span><span class="fu">Surv</span>(days_on_study, died_on_study) <span class="sc">~</span></span>
+<span id="cb146-7"><a href="timetoevent.html#cb146-7" tabindex="-1"></a>      age <span class="sc">+</span> male <span class="sc">+</span> hx_cvd <span class="sc">+</span> hx_hyperlipidemia <span class="sc">+</span></span>
+<span id="cb146-8"><a href="timetoevent.html#cb146-8" tabindex="-1"></a>      on_anticoagulants <span class="sc">+</span> on_antiplatelets <span class="sc">+</span> ich_location <span class="sc">+</span></span>
+<span id="cb146-9"><a href="timetoevent.html#cb146-9" tabindex="-1"></a>      ich_s_volume <span class="sc">+</span> ivh_s_volume <span class="sc">+</span> gcs_category,</span>
+<span id="cb146-10"><a href="timetoevent.html#cb146-10" tabindex="-1"></a>    <span class="at">data =</span> </span>
+<span id="cb146-11"><a href="timetoevent.html#cb146-11" tabindex="-1"></a>      <span class="co"># Note: `trt.id` must be 0/1, not factor</span></span>
+<span id="cb146-12"><a href="timetoevent.html#cb146-12" tabindex="-1"></a>      sim_miii <span class="sc">%&gt;%</span> </span>
+<span id="cb146-13"><a href="timetoevent.html#cb146-13" tabindex="-1"></a>      as.data.frame,</span>
+<span id="cb146-14"><a href="timetoevent.html#cb146-14" tabindex="-1"></a>    <span class="at">trt.id =</span> <span class="st">&quot;tx&quot;</span>,</span>
+<span id="cb146-15"><a href="timetoevent.html#cb146-15" tabindex="-1"></a>    <span class="at">fixed =</span> <span class="cn">TRUE</span></span>
+<span id="cb146-16"><a href="timetoevent.html#cb146-16" tabindex="-1"></a>  )</span>
+<span id="cb146-17"><a href="timetoevent.html#cb146-17" tabindex="-1"></a></span>
+<span id="cb146-18"><a href="timetoevent.html#cb146-18" tabindex="-1"></a>surv_marginal_hr_adj_table <span class="ot">&lt;-</span></span>
+<span id="cb146-19"><a href="timetoevent.html#cb146-19" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb146-20"><a href="timetoevent.html#cb146-20" tabindex="-1"></a>    <span class="at">HR =</span> <span class="fu">exp</span>(surv_marginal_hr_adj<span class="sc">$</span>beta),</span>
+<span id="cb146-21"><a href="timetoevent.html#cb146-21" tabindex="-1"></a>    <span class="fu">summary</span>(surv_marginal_hr_adj)<span class="sc">$</span>tab</span>
+<span id="cb146-22"><a href="timetoevent.html#cb146-22" tabindex="-1"></a>  )</span>
+<span id="cb146-23"><a href="timetoevent.html#cb146-23" tabindex="-1"></a></span>
+<span id="cb146-24"><a href="timetoevent.html#cb146-24" tabindex="-1"></a>surv_marginal_hr_adj_table</span></code></pre></div>
+<pre><code>##                 HR     Log.HR        SE    LowerCI     UpperCI           p
+## Prop Haz 0.5672352 -0.5669813 0.2015897 -0.9620899 -0.17187265 0.004915033
+## Speff    0.6359396 -0.4526517 0.1845075 -0.8142797 -0.09102368 0.014155331</code></pre>
+<p>The hazard of death would be 36% lower if all eligible patients were assigned to treatment instead of control.</p>
+<p>The relative efficiency of an adjusted analysis can be computed from the resulting object:</p>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="timetoevent.html#cb148-1" tabindex="-1"></a>relative_efficiency_spe_mhr <span class="ot">&lt;-</span></span>
+<span id="cb148-2"><a href="timetoevent.html#cb148-2" tabindex="-1"></a>  <span class="fu">with</span>(</span>
+<span id="cb148-3"><a href="timetoevent.html#cb148-3" tabindex="-1"></a>    <span class="at">data =</span> surv_marginal_hr_adj,</span>
+<span id="cb148-4"><a href="timetoevent.html#cb148-4" tabindex="-1"></a>    <span class="at">expr =</span> {<span class="fu">as.numeric</span>(varbeta[<span class="st">&quot;Prop Haz&quot;</span>]<span class="sc">/</span>varbeta[<span class="st">&quot;Speff&quot;</span>])}</span>
+<span id="cb148-5"><a href="timetoevent.html#cb148-5" tabindex="-1"></a>  )</span>
+<span id="cb148-6"><a href="timetoevent.html#cb148-6" tabindex="-1"></a></span>
+<span id="cb148-7"><a href="timetoevent.html#cb148-7" tabindex="-1"></a>relative_efficiency_spe_mhr</span></code></pre></div>
+<pre><code>## [1] 1.193737</code></pre>
+<p>Covariates improve the efficiency of estimating the marginal hazard ratio by 19.4%.</p>
+<hr />
+</div>
+<div id="survival-probability-1" class="section level3 hasAnchor" number="7.2.4">
+<h3><span class="header-section-number">7.2.4</span> Survival Probability<a href="timetoevent.html#survival-probability-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Producing covariate-adjusted estimates of the survival metadata follows the same syntax as before with <code>adjrct::survrct</code>. The formulas can be used to include terms for the baseline covariates in both the outcome and treatment models:</p>
-<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="timetoevent.html#cb153-1" tabindex="-1"></a><span class="co"># Note: this can be time-consuming to compute</span></span>
-<span id="cb153-2"><a href="timetoevent.html#cb153-2" tabindex="-1"></a>surv_metadata_adj <span class="ot">&lt;-</span></span>
-<span id="cb153-3"><a href="timetoevent.html#cb153-3" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">survrct</span>(</span>
-<span id="cb153-4"><a href="timetoevent.html#cb153-4" tabindex="-1"></a>    <span class="at">outcome.formula =</span></span>
-<span id="cb153-5"><a href="timetoevent.html#cb153-5" tabindex="-1"></a>      <span class="fu">Surv</span>(days_on_study, died_on_study) <span class="sc">~</span></span>
-<span id="cb153-6"><a href="timetoevent.html#cb153-6" tabindex="-1"></a>      tx <span class="sc">+</span> age <span class="sc">+</span> male <span class="sc">+</span> hx_cvd <span class="sc">+</span> hx_hyperlipidemia <span class="sc">+</span></span>
-<span id="cb153-7"><a href="timetoevent.html#cb153-7" tabindex="-1"></a>      on_anticoagulants <span class="sc">+</span> on_antiplatelets <span class="sc">+</span> ich_location <span class="sc">+</span></span>
-<span id="cb153-8"><a href="timetoevent.html#cb153-8" tabindex="-1"></a>      ich_s_volume <span class="sc">+</span> ivh_s_volume <span class="sc">+</span> gcs_category,</span>
-<span id="cb153-9"><a href="timetoevent.html#cb153-9" tabindex="-1"></a>    <span class="at">trt.formula =</span></span>
-<span id="cb153-10"><a href="timetoevent.html#cb153-10" tabindex="-1"></a>      tx <span class="sc">~</span></span>
-<span id="cb153-11"><a href="timetoevent.html#cb153-11" tabindex="-1"></a>      age <span class="sc">+</span> male <span class="sc">+</span> hx_cvd <span class="sc">+</span> hx_hyperlipidemia <span class="sc">+</span></span>
-<span id="cb153-12"><a href="timetoevent.html#cb153-12" tabindex="-1"></a>      on_anticoagulants <span class="sc">+</span> on_antiplatelets <span class="sc">+</span> ich_location <span class="sc">+</span></span>
-<span id="cb153-13"><a href="timetoevent.html#cb153-13" tabindex="-1"></a>      ich_s_volume <span class="sc">+</span> ivh_s_volume <span class="sc">+</span> gcs_category,</span>
-<span id="cb153-14"><a href="timetoevent.html#cb153-14" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
-<span id="cb153-15"><a href="timetoevent.html#cb153-15" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="timetoevent.html#cb150-1" tabindex="-1"></a><span class="co"># Note: this can be time-consuming to compute</span></span>
+<span id="cb150-2"><a href="timetoevent.html#cb150-2" tabindex="-1"></a>surv_metadata_adj <span class="ot">&lt;-</span></span>
+<span id="cb150-3"><a href="timetoevent.html#cb150-3" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">survrct</span>(</span>
+<span id="cb150-4"><a href="timetoevent.html#cb150-4" tabindex="-1"></a>    <span class="at">outcome.formula =</span></span>
+<span id="cb150-5"><a href="timetoevent.html#cb150-5" tabindex="-1"></a>      <span class="fu">Surv</span>(days_on_study, died_on_study) <span class="sc">~</span></span>
+<span id="cb150-6"><a href="timetoevent.html#cb150-6" tabindex="-1"></a>      tx <span class="sc">+</span> age <span class="sc">+</span> male <span class="sc">+</span> hx_cvd <span class="sc">+</span> hx_hyperlipidemia <span class="sc">+</span></span>
+<span id="cb150-7"><a href="timetoevent.html#cb150-7" tabindex="-1"></a>      on_anticoagulants <span class="sc">+</span> on_antiplatelets <span class="sc">+</span> ich_location <span class="sc">+</span></span>
+<span id="cb150-8"><a href="timetoevent.html#cb150-8" tabindex="-1"></a>      ich_s_volume <span class="sc">+</span> ivh_s_volume <span class="sc">+</span> gcs_category,</span>
+<span id="cb150-9"><a href="timetoevent.html#cb150-9" tabindex="-1"></a>    <span class="at">trt.formula =</span></span>
+<span id="cb150-10"><a href="timetoevent.html#cb150-10" tabindex="-1"></a>      tx <span class="sc">~</span></span>
+<span id="cb150-11"><a href="timetoevent.html#cb150-11" tabindex="-1"></a>      age <span class="sc">+</span> male <span class="sc">+</span> hx_cvd <span class="sc">+</span> hx_hyperlipidemia <span class="sc">+</span></span>
+<span id="cb150-12"><a href="timetoevent.html#cb150-12" tabindex="-1"></a>      on_anticoagulants <span class="sc">+</span> on_antiplatelets <span class="sc">+</span> ich_location <span class="sc">+</span></span>
+<span id="cb150-13"><a href="timetoevent.html#cb150-13" tabindex="-1"></a>      ich_s_volume <span class="sc">+</span> ivh_s_volume <span class="sc">+</span> gcs_category,</span>
+<span id="cb150-14"><a href="timetoevent.html#cb150-14" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
+<span id="cb150-15"><a href="timetoevent.html#cb150-15" tabindex="-1"></a>  )</span></code></pre></div>
 <p>Once the metadata is computed, the syntax to produce the results is identical:</p>
-<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="timetoevent.html#cb154-1" tabindex="-1"></a>surv_prob_adj <span class="ot">&lt;-</span></span>
-<span id="cb154-2"><a href="timetoevent.html#cb154-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">survprob</span>(</span>
-<span id="cb154-3"><a href="timetoevent.html#cb154-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_adj,</span>
-<span id="cb154-4"><a href="timetoevent.html#cb154-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
-<span id="cb154-5"><a href="timetoevent.html#cb154-5" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb151-1"><a href="timetoevent.html#cb151-1" tabindex="-1"></a>surv_prob_adj <span class="ot">&lt;-</span></span>
+<span id="cb151-2"><a href="timetoevent.html#cb151-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">survprob</span>(</span>
+<span id="cb151-3"><a href="timetoevent.html#cb151-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_adj,</span>
+<span id="cb151-4"><a href="timetoevent.html#cb151-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
+<span id="cb151-5"><a href="timetoevent.html#cb151-5" tabindex="-1"></a>  )</span></code></pre></div>
 <p>The results can be printed using the <code>base::print</code> function:</p>
-<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="timetoevent.html#cb155-1" tabindex="-1"></a>surv_prob_adj</span></code></pre></div>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="timetoevent.html#cb152-1" tabindex="-1"></a>surv_prob_adj</span></code></pre></div>
 <pre><code>## Survival Probability Estimator: tmle</code></pre>
 <pre><code>## Marginal Survival Probability: Pr(T &gt; 90 | A = a)</code></pre>
 <pre><code>## Treatment Arm</code></pre>
@@ -544,18 +688,27 @@ The Survival Probability assumes that <span class="math inline">\(\ldots\)</span
 <pre><code>## Estimate: 0.08</code></pre>
 <pre><code>## Std. error: 0.03</code></pre>
 <pre><code>## 95% CI: (0.02, 0.14)</code></pre>
+<p>The probability of surviving at 90 days post randomization was 8 percent higher if everyone were assigned to treatment than if everyone were assigned to control.</p>
+<p>The relative efficiency of an adjusted analysis can be computed from the resulting object:</p>
+<p>Calculating the relative efficiency gives:</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="timetoevent.html#cb168-1" tabindex="-1"></a>relative_efficiency_surv_prob <span class="ot">&lt;-</span></span>
+<span id="cb168-2"><a href="timetoevent.html#cb168-2" tabindex="-1"></a>  (surv_prob_unadj<span class="sc">$</span>estimates[[<span class="dv">1</span>]]<span class="sc">$</span>std.error<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span></span>
+<span id="cb168-3"><a href="timetoevent.html#cb168-3" tabindex="-1"></a>     surv_prob_adj<span class="sc">$</span>estimates[[<span class="dv">1</span>]]<span class="sc">$</span>std.error<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb168-4"><a href="timetoevent.html#cb168-4" tabindex="-1"></a></span>
+<span id="cb168-5"><a href="timetoevent.html#cb168-5" tabindex="-1"></a>relative_efficiency_surv_prob</span></code></pre></div>
+<p>[1] 1.084233</p>
+<p>Covariates improve the efficiency of estimating the marginal hazard ratio by 8.4%.</p>
 <hr />
 </div>
-<div id="restricted-mean-survival-time-rmst-1" class="section level3 hasAnchor" number="7.3.3">
-<h3><span class="header-section-number">7.3.3</span> Restricted Mean Survival Time (RMST)<a href="timetoevent.html#restricted-mean-survival-time-rmst-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="restricted-mean-survival-time-rmst-1" class="section level3 hasAnchor" number="7.2.5">
+<h3><span class="header-section-number">7.2.5</span> Restricted Mean Survival Time (RMST)<a href="timetoevent.html#restricted-mean-survival-time-rmst-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Similar to the survival probability, once the metadata is computed, the syntax to produce the covariate-adjusted RMST is identical:</p>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="timetoevent.html#cb171-1" tabindex="-1"></a>rmst_adj <span class="ot">&lt;-</span></span>
-<span id="cb171-2"><a href="timetoevent.html#cb171-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">rmst</span>(</span>
-<span id="cb171-3"><a href="timetoevent.html#cb171-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_adj,</span>
-<span id="cb171-4"><a href="timetoevent.html#cb171-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
-<span id="cb171-5"><a href="timetoevent.html#cb171-5" tabindex="-1"></a>  )</span></code></pre></div>
-<p>Similarly, results can be printed using the <code>base::print</code> function:</p>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="timetoevent.html#cb172-1" tabindex="-1"></a>rmst_adj</span></code></pre></div>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="timetoevent.html#cb169-1" tabindex="-1"></a>rmst_adj <span class="ot">&lt;-</span></span>
+<span id="cb169-2"><a href="timetoevent.html#cb169-2" tabindex="-1"></a>  adjrct<span class="sc">::</span><span class="fu">rmst</span>(</span>
+<span id="cb169-3"><a href="timetoevent.html#cb169-3" tabindex="-1"></a>    <span class="at">metadata =</span> surv_metadata_adj,</span>
+<span id="cb169-4"><a href="timetoevent.html#cb169-4" tabindex="-1"></a>    <span class="at">horizon =</span> <span class="dv">90</span></span>
+<span id="cb169-5"><a href="timetoevent.html#cb169-5" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="timetoevent.html#cb170-1" tabindex="-1"></a>rmst_adj</span></code></pre></div>
 <pre><code>## RMST Estimator: tmle</code></pre>
 <pre><code>## Marginal RMST: E(min[T, 90] | A = a)</code></pre>
 <pre><code>## Treatment Arm</code></pre>
@@ -571,12 +724,20 @@ The Survival Probability assumes that <span class="math inline">\(\ldots\)</span
 <pre><code>## Estimate: 7.63</code></pre>
 <pre><code>## Std. error: 2.11</code></pre>
 <pre><code>## 95% CI: (3.49, 11.77)</code></pre>
+<p>Patients can expect to live 7.6 days longer in the first 90 days if everyone were assigned to treatment than if everyone were assigned to control. Calculating the relative efficiency gives:</p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="timetoevent.html#cb186-1" tabindex="-1"></a>relative_efficiency_rmst <span class="ot">&lt;-</span></span>
+<span id="cb186-2"><a href="timetoevent.html#cb186-2" tabindex="-1"></a>  (rmst_unadj<span class="sc">$</span>estimates[[<span class="dv">1</span>]]<span class="sc">$</span>std.error<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span></span>
+<span id="cb186-3"><a href="timetoevent.html#cb186-3" tabindex="-1"></a>     rmst_adj<span class="sc">$</span>estimates[[<span class="dv">1</span>]]<span class="sc">$</span>std.error<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb186-4"><a href="timetoevent.html#cb186-4" tabindex="-1"></a></span>
+<span id="cb186-5"><a href="timetoevent.html#cb186-5" tabindex="-1"></a>relative_efficiency_rmst</span></code></pre></div>
+<p>[1] 1.138953</p>
+<p>Covariates improve the efficiency of estimating the marginal hazard ratio by 13.9%.</p>
 
 </div>
 </div>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-Diaz2018" class="csl-entry">
 Dı́az, Iván, Elizabeth Colantuoni, Daniel F. Hanley, and Michael Rosenblum. 2018. <span>“Improved Precision in the Analysis of Randomized Trials with Survival Outcomes, Without Assuming Proportional Hazards.”</span> <em>Lifetime Data Analysis</em> 25 (3): 439–68. <a href="https://doi.org/10.1007/s10985-018-9428-5">https://doi.org/10.1007/s10985-018-9428-5</a>.
 </div>

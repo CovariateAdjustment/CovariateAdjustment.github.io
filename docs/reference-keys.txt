@@ -52,9 +52,10 @@ logrank-test
 cox-proportional-hazards-model
 survival-probability
 restricted-mean-survival-time-rmst
-event-driven-trials
 covariate-adjusted-estimators
-kaplan-meier-estimator-1
+covariate-adjusted-estimates-of-survival-function
+conditional-hazard-ratio
+marginal-hazard-ratio
 survival-probability-1
 restricted-mean-survival-time-rmst-1
 groupsequential

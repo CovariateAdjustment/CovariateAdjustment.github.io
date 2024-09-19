@@ -18,6 +18,8 @@ github-repo: covariateadjustment/covariateadjustment.github.io
 ```{r Book-Setup, echo = FALSE, message = FALSE}
 library(tidyverse)
 library(table1)
+library(Cairo)
+library(margins)
 
 ### Set Default Options ########################################################
 fig_w <- 8

@@ -37,6 +37,7 @@ Below are some of the packages that we will use from CRAN, along with a brief de
   - [margins](https://cran.r-project.org/web/packages/margins/index.html) - Calculating marginal or partial effects from regression models
   - [mgcv](https://cran.r-project.org/web/packages/mgcv/index.html) - Fitting generalized additive models
   - [sandwich](https://cran.r-project.org/web/packages/sandwich/index.html) Robust covariance matrix estimation
+  - [speff2trial](https://cran.r-project.org/web/packages/speff2trial/index.html) Semiparametric estimation of the marginal hazard ratio using inverse probability weighting
   - [survminer](https://cran.r-project.org/web/packages/survminer/index.html) - Creating plots of time-to-event data
   - [survRM2](https://cran.r-project.org/web/packages/survRM2/index.html) - Calculating the restricted mean survival time (RMST) with and without covariate adjustment.
   - [table1](https://cran.r-project.org/web/packages/table1/index.html) - Creating simple tabulations in aggregate and by treatment arm
@@ -50,6 +51,7 @@ required_packages <-
     "margins",
     "mgcv",
     "sandwich",
+    "speff2trial"
     "survminer",
     "survRM2",
     "table1",

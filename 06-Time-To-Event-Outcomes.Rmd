@@ -20,8 +20,8 @@ The Logrank test and the Cox Proportional Hazards model are closely related to e
 
 The Cox Proportional Hazards (PH) Model provides a valid test of the null hypothesis if the sandwich covariance estimator is used and censoring is either conditionally independent of treatment assignment given the covariates or conditionally independent of the covariates given treatment assignment. As previously mentioned, the [proportional hazards assumption](#hazard_ratio) may not be known to hold a priori, presents difficulties in interpretation when the assumption does not empirically hold, and does not quantify the amount of time a participant can expect to be event free under a particular treatment [@Rudser2012].
 
-The Restricted Mean Survival Time assumes that $\ldots$.
-The Survival Probability assumes that $\ldots$.
+Analyses of the Restricted Mean Survival Time typically assume that $\ldots$.
+Analyses of the Survival Probability typically assume that $\ldots$.
 
 
 --------------------------------------------------------------------------------
@@ -35,18 +35,18 @@ The Survival Probability assumes that $\ldots$.
 library(survival)
 library(survminer)
 
-time_to_death_km <-
-  survfit(
-    formula = miii_surv ~ arm,
-    data = sim_miii
-  )
-
 miii_surv <- 
   with(sim_miii,
        survival::Surv(
          time = days_on_study,
          event = died_on_study
        )
+  )
+
+time_to_death_km <-
+  survfit(
+    formula = miii_surv ~ arm,
+    data = sim_miii
   )
 
 ggsurvplot(
@@ -89,7 +89,7 @@ survival::survdiff(
 
 ### Cox Proportional Hazards Model
 
-The Cox Proportional Hazards model can be fitted using the `survival::coxph` function: the specification of the model is done using a formula object, with a `survival::Surv` object on the left hand side, and the covariates specified on the right hand side. To obtain the robust variance estimate of the coefficients, the `robust` argument should be set to `TRUE`. See `?survival::coxph` for more details, such as handling of tied survival times.
+The Cox Proportional Hazards model can be fitted using the `survival::coxph` function: the specification of the model is done using a formula object, with a `survival::Surv` object on the left hand side, and the covariates specified on the right hand side. To obtain the robust variance estimate of the coefficients, the `robust` argument should be set to `TRUE`. See `?survival::coxph` for more details, such as handling of tied survival times. Note that when the model only includes treatment assignment, it is estimating a marginal estimand, the marginal hazard ratio: when baseline covariates are included, it is estimating a conditional estimand, the hazard ratio conditional on the specified covariates.
 
 ```{r Unadjusted-Cox-MISTIE}
 unadjusted_cox <-
@@ -128,10 +128,9 @@ abline(h = 0, col = "red")
 ```
 
 
-Here we see that the hazard ratio for treatment arm is negative initially, reflecting lower mortality after randomization in the surgical arm. The magnitude of this effect decreases with time, eventually becoming indistinguishable from zero. This pattern of mortality and time-varying treatment effect is consistent with the fact that most stroke-related mortality occurs in the few weeks following its initial onset, and the intervention is only expected to address mortality related to the initial hemorrhagic stroke. In such a setting, we might expect a violation of the proportional hazards assumption at some point in follow-up, but not know how the treatment effect varies in time.
+Here we see that the hazard ratio for treatment arm is negative earlier in the study, reflecting lower mortality after randomization in the surgical arm. The magnitude of this effect decreases with time, eventually becoming indistinguishable from zero. Since the assumption that the hazards are approximately proportional over the follow-up period is not empirically supported, this complicates the interpretation of the estimated hazard ratio. The estimate represents a weighted average of the time-varying hazard ratio: what further complicates interpretation is that the weighting of the time-varying hazards depends on the distribution of censoring times, which are considered a nuisance parameter [@Rudser2012].
 
-
-
+Setting aside the issues of the proportional hazards assumption, based on the unadjusted analysis, the hazard of death would be `r round(x = 100*(1 - exp(unadjusted_cox$coefficients)), digits = 0)`% lower if all eligible patients were assigned to treatment instead of control.
 
 --------------------------------------------------------------------------------
 
@@ -163,7 +162,7 @@ surv_prob_unadj <-
 surv_prob_unadj
 ```
 
-
+Without covariate adjustment, the probability of surviving at 90 days post randomization was `r round(100*surv_prob_unadj$estimates[[1]]$theta, digits = 0)` percent higher if everyone were assigned to treatment than if everyone were assigned to control. 
 
 
 --------------------------------------------------------------------------------
@@ -204,15 +203,7 @@ rmst_unadj <-
 rmst_unadj
 ```
 
-
-
-
---------------------------------------------------------------------------------
-
-
-
-
-## Event-Driven Trials
+Based on the unadjusted analysis, patients can expect to live `r round(rmst_unadj$estimates[[1]]$theta, digits = 1)` days longer in the first 90 days if everyone were assigned to treatment than if everyone were assigned to control.
 
 
 
@@ -224,7 +215,9 @@ rmst_unadj
 
 ## Covariate-Adjusted Estimators
 
+The code to produce a covariate adjusted analysis is usually a straightforward modification of the code used for an unadjusted analysis: in many cases, it is simply a matter of adding the baseline covariates into the regression model formula.
 
+Care must be taken, however, to evaluate the assumptions of the models being used where applicable, and ensure that the interpretation is consistent with the target of inference (marginal vs. conditional estimands).
 
 
 --------------------------------------------------------------------------------
@@ -232,10 +225,101 @@ rmst_unadj
 
 
 
-### Kaplan-Meier Estimator
+### Covariate Adjusted Estimates of Survival Function
+
+Covariate adjustment can not only improve upon the precision of the Kaplan-Meier estimate of the survival function, it can also provide an estimate that requires less stringent assumptions for validity.
+
+
+--------------------------------------------------------------------------------
+
+### Conditional Hazard Ratio
+
+As noted before, covariates can be added to the Cox model, however the resulting estimates are no longer marginal quantities, they are conditional on the specification of the covariates:
+
+```{r Adjusted-Cox-MISTIE}
+adjusted_cox <-
+  survival::coxph(
+    formula =
+      Surv(time = days_on_study,
+           event = died_on_study) ~ arm +
+      age + male + hx_cvd + hx_hyperlipidemia +
+      on_anticoagulants + on_antiplatelets + ich_location +
+      ich_s_volume + ivh_s_volume + gcs_category,
+    ties = "efron",
+    robust = TRUE,
+    data = sim_miii
+  )
+
+summary(adjusted_cox)
+```
+
+
+The adjusted Cox model should also be assessed for the proportional hazards assumption:
+
+```{r Adjusted-Cox-PH-Test-MISTIE}
+adjusted_cox_ph_test <-
+  survival::cox.zph(adjusted_cox)
+
+print(adjusted_cox_ph_test)
+```
+
+In addition to the treatment violating the proportional hazards assumption, covariates also violate this assumption, leading to the same challenges in interpretation mentioned earlier.
+
+Setting aside the issues of the proportional hazards assumption and potential model misspecification, based on the adjusted analysis conditioning on the covariates in the model, the adjusted hazard of death would be `r round(x = 100*(1 - exp(adjusted_cox$coefficients["armsurgical"])), digits = 0)`% lower if all eligible patients were assigned to treatment instead of control.
+
+
+--------------------------------------------------------------------------------
 
 
 
+### Marginal Hazard Ratio
+
+One way to obtain a covariate-adjusted marginal estimate of the hazard ratio is through the `speff2trial` package. The syntax is similar to the covariate adjusted Cox model. The argument `fixed = TRUE` specifies that no variable selection should take place. Note that the treatment variable `trt.id` should be a binary vector, not a factor. While we have established that the proportional hazards assumption is violated in this case, below is an example of how to carry out the analysis:
+
+```{r speff2trial-MISTIE}
+library(speff2trial)
+
+surv_marginal_hr_adj <-
+  speff2trial::speffSurv(
+    formula =
+      survival::Surv(days_on_study, died_on_study) ~
+      age + male + hx_cvd + hx_hyperlipidemia +
+      on_anticoagulants + on_antiplatelets + ich_location +
+      ich_s_volume + ivh_s_volume + gcs_category,
+    data = 
+      # Note: `trt.id` must be 0/1, not factor
+      sim_miii %>% 
+      as.data.frame,
+    trt.id = "tx",
+    fixed = TRUE
+  )
+
+surv_marginal_hr_adj_table <-
+  data.frame(
+    HR = exp(surv_marginal_hr_adj$beta),
+    summary(surv_marginal_hr_adj)$tab
+  )
+
+surv_marginal_hr_adj_table
+```
+
+The hazard of death would be `r round(x = 100*(1 - exp(surv_marginal_hr_adj$beta["Speff"])), digits = 0)`% lower if all eligible patients were assigned to treatment instead of control.
+
+The relative efficiency of an adjusted analysis can be computed from the resulting object:
+
+
+```{r speff2trial-MISTIE-Relative-Efficiency}
+relative_efficiency_spe_mhr <-
+  with(
+    data = surv_marginal_hr_adj,
+    expr = {as.numeric(varbeta["Prop Haz"]/varbeta["Speff"])}
+  )
+
+relative_efficiency_spe_mhr
+```
+
+
+Covariates improve the efficiency of estimating the marginal hazard ratio by `r round(100*(relative_efficiency_spe_mhr - 1), digits = 1)`%. 
 
 --------------------------------------------------------------------------------
 
@@ -280,9 +364,29 @@ surv_prob_adj <-
 The results can be printed using the `base::print` function:
 
 
-```{r Adjusted-Survival-Probability-MISTIE-Print, results = 'asis', message = TRUE}
+```{r Adjusted-Survival-Probability-MISTIE-Relative-Efficiency, results = 'asis', message = TRUE}
 surv_prob_adj
 ```
+
+The probability of surviving at 90 days post randomization was `r round(100*surv_prob_adj$estimates[[1]]$theta, digits = 0)` percent higher if everyone were assigned to treatment than if everyone were assigned to control. 
+
+
+The relative efficiency of an adjusted analysis can be computed from the resulting object:
+
+
+Calculating the relative efficiency gives:
+
+
+```{r Adjusted-RMST-adjrct-MISTIE-print, results = 'asis', message = TRUE}
+relative_efficiency_surv_prob <-
+  (surv_prob_unadj$estimates[[1]]$std.error^2/
+     surv_prob_adj$estimates[[1]]$std.error^2)
+
+relative_efficiency_surv_prob
+```
+
+
+Covariates improve the efficiency of estimating the marginal hazard ratio by `r round(100*(relative_efficiency_surv_prob - 1), digits = 1)`%.
 
 
 
@@ -306,9 +410,20 @@ rmst_adj <-
 ```
 
 
-Similarly, results can be printed using the `base::print` function:
-
-
-```{r Adjusted-RMST-adjrct-MISTIE-print, results = 'asis', message = TRUE}
+```{r Adjusted-RMST-MISTIE, results = 'asis', message = TRUE}
 rmst_adj
 ```
+
+Patients can expect to live `r round(rmst_adj$estimates[[1]]$theta, digits = 1)` days longer in the first 90 days if everyone were assigned to treatment than if everyone were assigned to control. Calculating the relative efficiency gives:
+
+
+```{r Adjusted-RMST-adjrct-MISTIE-Relative-Efficiency, results = 'asis', message = TRUE}
+relative_efficiency_rmst <-
+  (rmst_unadj$estimates[[1]]$std.error^2/
+     rmst_adj$estimates[[1]]$std.error^2)
+
+relative_efficiency_rmst
+```
+
+
+Covariates improve the efficiency of estimating the marginal hazard ratio by `r round(100*(relative_efficiency_rmst - 1), digits = 1)`%.

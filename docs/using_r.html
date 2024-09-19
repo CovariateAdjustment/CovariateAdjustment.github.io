@@ -7,7 +7,7 @@
   <title>Chapter 4 Using R | Covariate Adjustment in Randomized Trials</title>
   <meta name="description" content="<p>This a series of tutorials meant to help investigators apply covariate
 adjusted analyses in randomized trials.</p>" />
-  <meta name="generator" content="bookdown 0.35 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Using R | Covariate Adjustment in Randomized Trials" />
   <meta property="og:type" content="book" />
@@ -59,7 +59,7 @@ adjusted analyses in randomized trials.</p>" />
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -131,6 +131,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -248,12 +249,13 @@ div.csl-indent {
 <li class="chapter" data-level="7.1.4" data-path="timetoevent.html"><a href="timetoevent.html#survival-probability"><i class="fa fa-check"></i><b>7.1.4</b> Survival Probability</a></li>
 <li class="chapter" data-level="7.1.5" data-path="timetoevent.html"><a href="timetoevent.html#restricted-mean-survival-time-rmst"><i class="fa fa-check"></i><b>7.1.5</b> Restricted Mean Survival Time (RMST)</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="timetoevent.html"><a href="timetoevent.html#event-driven-trials"><i class="fa fa-check"></i><b>7.2</b> Event-Driven Trials</a></li>
-<li class="chapter" data-level="7.3" data-path="timetoevent.html"><a href="timetoevent.html#covariate-adjusted-estimators"><i class="fa fa-check"></i><b>7.3</b> Covariate-Adjusted Estimators</a>
+<li class="chapter" data-level="7.2" data-path="timetoevent.html"><a href="timetoevent.html#covariate-adjusted-estimators"><i class="fa fa-check"></i><b>7.2</b> Covariate-Adjusted Estimators</a>
 <ul>
-<li class="chapter" data-level="7.3.1" data-path="timetoevent.html"><a href="timetoevent.html#kaplan-meier-estimator-1"><i class="fa fa-check"></i><b>7.3.1</b> Kaplan-Meier Estimator</a></li>
-<li class="chapter" data-level="7.3.2" data-path="timetoevent.html"><a href="timetoevent.html#survival-probability-1"><i class="fa fa-check"></i><b>7.3.2</b> Survival Probability</a></li>
-<li class="chapter" data-level="7.3.3" data-path="timetoevent.html"><a href="timetoevent.html#restricted-mean-survival-time-rmst-1"><i class="fa fa-check"></i><b>7.3.3</b> Restricted Mean Survival Time (RMST)</a></li>
+<li class="chapter" data-level="7.2.1" data-path="timetoevent.html"><a href="timetoevent.html#covariate-adjusted-estimates-of-survival-function"><i class="fa fa-check"></i><b>7.2.1</b> Covariate Adjusted Estimates of Survival Function</a></li>
+<li class="chapter" data-level="7.2.2" data-path="timetoevent.html"><a href="timetoevent.html#conditional-hazard-ratio"><i class="fa fa-check"></i><b>7.2.2</b> Conditional Hazard Ratio</a></li>
+<li class="chapter" data-level="7.2.3" data-path="timetoevent.html"><a href="timetoevent.html#marginal-hazard-ratio"><i class="fa fa-check"></i><b>7.2.3</b> Marginal Hazard Ratio</a></li>
+<li class="chapter" data-level="7.2.4" data-path="timetoevent.html"><a href="timetoevent.html#survival-probability-1"><i class="fa fa-check"></i><b>7.2.4</b> Survival Probability</a></li>
+<li class="chapter" data-level="7.2.5" data-path="timetoevent.html"><a href="timetoevent.html#restricted-mean-survival-time-rmst-1"><i class="fa fa-check"></i><b>7.2.5</b> Restricted Mean Survival Time (RMST)</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="groupsequential.html"><a href="groupsequential.html"><i class="fa fa-check"></i><b>8</b> Group Sequential Designs</a>
@@ -334,31 +336,33 @@ div.csl-indent {
 <li><a href="https://cran.r-project.org/web/packages/margins/index.html">margins</a> - Calculating marginal or partial effects from regression models</li>
 <li><a href="https://cran.r-project.org/web/packages/mgcv/index.html">mgcv</a> - Fitting generalized additive models</li>
 <li><a href="https://cran.r-project.org/web/packages/sandwich/index.html">sandwich</a> Robust covariance matrix estimation</li>
+<li><a href="https://cran.r-project.org/web/packages/speff2trial/index.html">speff2trial</a> Semiparametric estimation of the marginal hazard ratio using inverse probability weighting</li>
 <li><a href="https://cran.r-project.org/web/packages/survminer/index.html">survminer</a> - Creating plots of time-to-event data</li>
 <li><a href="https://cran.r-project.org/web/packages/survRM2/index.html">survRM2</a> - Calculating the restricted mean survival time (RMST) with and without covariate adjustment.</li>
 <li><a href="https://cran.r-project.org/web/packages/table1/index.html">table1</a> - Creating simple tabulations in aggregate and by treatment arm</li>
 <li><a href="https://www.tidyverse.org/packages/">tidyverse</a> - An ecosystem of packages for working with data</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="using_r.html#cb7-1" tabindex="-1"></a>required_packages <span class="ot">&lt;-</span></span>
-<span id="cb7-2"><a href="using_r.html#cb7-2" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;devtools&quot;</span>,</span>
-<span id="cb7-3"><a href="using_r.html#cb7-3" tabindex="-1"></a>    <span class="st">&quot;cobalt&quot;</span>,</span>
-<span id="cb7-4"><a href="using_r.html#cb7-4" tabindex="-1"></a>    <span class="st">&quot;knitr&quot;</span>,</span>
-<span id="cb7-5"><a href="using_r.html#cb7-5" tabindex="-1"></a>    <span class="st">&quot;margins&quot;</span>,</span>
-<span id="cb7-6"><a href="using_r.html#cb7-6" tabindex="-1"></a>    <span class="st">&quot;mgcv&quot;</span>,</span>
-<span id="cb7-7"><a href="using_r.html#cb7-7" tabindex="-1"></a>    <span class="st">&quot;sandwich&quot;</span>,</span>
-<span id="cb7-8"><a href="using_r.html#cb7-8" tabindex="-1"></a>    <span class="st">&quot;survminer&quot;</span>,</span>
-<span id="cb7-9"><a href="using_r.html#cb7-9" tabindex="-1"></a>    <span class="st">&quot;survRM2&quot;</span>,</span>
-<span id="cb7-10"><a href="using_r.html#cb7-10" tabindex="-1"></a>    <span class="st">&quot;table1&quot;</span>,</span>
-<span id="cb7-11"><a href="using_r.html#cb7-11" tabindex="-1"></a>    <span class="st">&quot;tidyverse&quot;</span></span>
-<span id="cb7-12"><a href="using_r.html#cb7-12" tabindex="-1"></a>  )</span>
-<span id="cb7-13"><a href="using_r.html#cb7-13" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="using_r.html#cb7-14" tabindex="-1"></a>packages_to_install <span class="ot">&lt;-</span></span>
-<span id="cb7-15"><a href="using_r.html#cb7-15" tabindex="-1"></a>  <span class="fu">setdiff</span>(</span>
-<span id="cb7-16"><a href="using_r.html#cb7-16" tabindex="-1"></a>    <span class="at">x =</span> required_packages,</span>
-<span id="cb7-17"><a href="using_r.html#cb7-17" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">installed.packages</span>(.Library)[, <span class="st">&quot;Package&quot;</span>]</span>
-<span id="cb7-18"><a href="using_r.html#cb7-18" tabindex="-1"></a>  )</span>
-<span id="cb7-19"><a href="using_r.html#cb7-19" tabindex="-1"></a></span>
-<span id="cb7-20"><a href="using_r.html#cb7-20" tabindex="-1"></a><span class="fu">install.packages</span>(packages_to_install)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="using_r.html#cb2-1" tabindex="-1"></a>required_packages <span class="ot">&lt;-</span></span>
+<span id="cb2-2"><a href="using_r.html#cb2-2" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">&quot;devtools&quot;</span>,</span>
+<span id="cb2-3"><a href="using_r.html#cb2-3" tabindex="-1"></a>    <span class="st">&quot;cobalt&quot;</span>,</span>
+<span id="cb2-4"><a href="using_r.html#cb2-4" tabindex="-1"></a>    <span class="st">&quot;knitr&quot;</span>,</span>
+<span id="cb2-5"><a href="using_r.html#cb2-5" tabindex="-1"></a>    <span class="st">&quot;margins&quot;</span>,</span>
+<span id="cb2-6"><a href="using_r.html#cb2-6" tabindex="-1"></a>    <span class="st">&quot;mgcv&quot;</span>,</span>
+<span id="cb2-7"><a href="using_r.html#cb2-7" tabindex="-1"></a>    <span class="st">&quot;sandwich&quot;</span>,</span>
+<span id="cb2-8"><a href="using_r.html#cb2-8" tabindex="-1"></a>    <span class="st">&quot;speff2trial&quot;</span></span>
+<span id="cb2-9"><a href="using_r.html#cb2-9" tabindex="-1"></a>    <span class="st">&quot;survminer&quot;</span>,</span>
+<span id="cb2-10"><a href="using_r.html#cb2-10" tabindex="-1"></a>    <span class="st">&quot;survRM2&quot;</span>,</span>
+<span id="cb2-11"><a href="using_r.html#cb2-11" tabindex="-1"></a>    <span class="st">&quot;table1&quot;</span>,</span>
+<span id="cb2-12"><a href="using_r.html#cb2-12" tabindex="-1"></a>    <span class="st">&quot;tidyverse&quot;</span></span>
+<span id="cb2-13"><a href="using_r.html#cb2-13" tabindex="-1"></a>  )</span>
+<span id="cb2-14"><a href="using_r.html#cb2-14" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="using_r.html#cb2-15" tabindex="-1"></a>packages_to_install <span class="ot">&lt;-</span></span>
+<span id="cb2-16"><a href="using_r.html#cb2-16" tabindex="-1"></a>  <span class="fu">setdiff</span>(</span>
+<span id="cb2-17"><a href="using_r.html#cb2-17" tabindex="-1"></a>    <span class="at">x =</span> required_packages,</span>
+<span id="cb2-18"><a href="using_r.html#cb2-18" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">installed.packages</span>(.Library)[, <span class="st">&quot;Package&quot;</span>]</span>
+<span id="cb2-19"><a href="using_r.html#cb2-19" tabindex="-1"></a>  )</span>
+<span id="cb2-20"><a href="using_r.html#cb2-20" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="using_r.html#cb2-21" tabindex="-1"></a><span class="fu">install.packages</span>(packages_to_install)</span></code></pre></div>
 <hr />
 </div>
 <div id="packages-from-github" class="section level3 hasAnchor" number="4.1.2">
@@ -368,14 +372,14 @@ div.csl-indent {
 <li><a href="https://github.com/nt-williams/simul">simul</a> Inference based on Efficient Influence Function and Multiplier Bootstrap</li>
 <li><a href="https://github.com/nt-williams/adjrct">adjrct</a> Doubly Robust, Efficient Estimators for Survival and Time to Event Outcomes</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="using_r.html#cb8-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;nt-williams/simul&quot;</span>)</span>
-<span id="cb8-2"><a href="using_r.html#cb8-2" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;nt-williams/adjrct&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="using_r.html#cb3-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;nt-williams/simul&quot;</span>)</span>
+<span id="cb3-2"><a href="using_r.html#cb3-2" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;nt-williams/adjrct&quot;</span>)</span></code></pre></div>
 </div>
 <div id="loading-packages-into-workspace" class="section level3 hasAnchor" number="4.1.3">
 <h3><span class="header-section-number">4.1.3</span> Loading Packages into Workspace<a href="using_r.html#loading-packages-into-workspace" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Once a package has been successfully installed, we use the <code>library()</code> command to load it into the workspace for use:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="using_r.html#cb9-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Data manipulation: dplyr, tidyr</span></span>
-<span id="cb9-2"><a href="using_r.html#cb9-2" tabindex="-1"></a><span class="fu">library</span>(table1) <span class="co"># Creation of Summary tables</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="using_r.html#cb4-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Data manipulation: dplyr, tidyr</span></span>
+<span id="cb4-2"><a href="using_r.html#cb4-2" tabindex="-1"></a><span class="fu">library</span>(table1) <span class="co"># Creation of Summary tables</span></span></code></pre></div>
 <p>It is possible that different packages contain a function of the same name. For example, the <code>table1</code> package contains the function <code>table1()</code>: there are other packages that also have a function named <code>table1()</code>, such as the <a href="https://cran.r-project.org/web/packages/furniture/index.html"><code>furniture</code></a> package. If both of these packages are loaded, it can cause confusion about which version should be used when <code>table1()</code> is called. R will warn when such conflicts can arise, but as a best practice, it is useful to specify the package and function as as follows: <code>table1::table1()</code>. This makes code easier to use and potentially reduces ambiguity.</p>
 <hr />
 </div>
@@ -383,62 +387,62 @@ div.csl-indent {
 <div id="Load_MISTIE" class="section level2 hasAnchor" number="4.2">
 <h2><span class="header-section-number">4.2</span> Loading the Data: MISTIE-III<a href="using_r.html#Load_MISTIE" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The <a href="index.html#mistie_iii">data dictionary</a> and more information about the MISTIE III study were presented earlier <span class="citation">(<a href="#ref-Hanley2019">Hanley et al. 2019</a>)</span>. All of the data needed for the examples are available on the web. To load these, we create a file connection to the URL using the <code>url()</code> function, and then use <code>read.csv()</code> to read in the comma separated values (CSV) file. To load data from a local file path, the <code>file.path()</code> function is useful for creating file paths. We can start by loading the simulated MISTIE III data. Once we have loaded the full data, we can use <code>dplyr::slice</code> to take the first 500 rows.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="using_r.html#cb10-1" tabindex="-1"></a>data_url <span class="ot">&lt;-</span></span>
-<span id="cb10-2"><a href="using_r.html#cb10-2" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">&quot;https://github.com/jbetz-jhu/CovariateAdjustmentTutorial&quot;</span>,</span>
-<span id="cb10-3"><a href="using_r.html#cb10-3" tabindex="-1"></a>         <span class="st">&quot;/raw/main/Simulated_MISTIE_III_v1.2.csv&quot;</span>)</span>
-<span id="cb10-4"><a href="using_r.html#cb10-4" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="using_r.html#cb10-5" tabindex="-1"></a>sim_miii_full <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="fu">url</span>(data_url))</span>
-<span id="cb10-6"><a href="using_r.html#cb10-6" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="using_r.html#cb10-7" tabindex="-1"></a><span class="co"># Read in data: Recast categorical variables as factors</span></span>
-<span id="cb10-8"><a href="using_r.html#cb10-8" tabindex="-1"></a>sim_miii_full <span class="ot">&lt;-</span></span>
-<span id="cb10-9"><a href="using_r.html#cb10-9" tabindex="-1"></a>  sim_miii_full <span class="sc">%&gt;%</span> </span>
-<span id="cb10-10"><a href="using_r.html#cb10-10" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">tibble</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb10-11"><a href="using_r.html#cb10-11" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
-<span id="cb10-12"><a href="using_r.html#cb10-12" tabindex="-1"></a>    <span class="co"># Convert variables from binary indicators to labeled categorical variables</span></span>
-<span id="cb10-13"><a href="using_r.html#cb10-13" tabindex="-1"></a>    <span class="at">male =</span></span>
-<span id="cb10-14"><a href="using_r.html#cb10-14" tabindex="-1"></a>      <span class="fu">factor</span>(</span>
-<span id="cb10-15"><a href="using_r.html#cb10-15" tabindex="-1"></a>        <span class="at">x =</span> male,</span>
-<span id="cb10-16"><a href="using_r.html#cb10-16" tabindex="-1"></a>        <span class="at">levels =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>,</span>
-<span id="cb10-17"><a href="using_r.html#cb10-17" tabindex="-1"></a>        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;0. Female&quot;</span>, <span class="st">&quot;1. Male&quot;</span>)</span>
-<span id="cb10-18"><a href="using_r.html#cb10-18" tabindex="-1"></a>      ),</span>
-<span id="cb10-19"><a href="using_r.html#cb10-19" tabindex="-1"></a>    <span class="fu">across</span>(</span>
-<span id="cb10-20"><a href="using_r.html#cb10-20" tabindex="-1"></a>      <span class="at">.cols =</span> </span>
-<span id="cb10-21"><a href="using_r.html#cb10-21" tabindex="-1"></a>        <span class="fu">all_of</span>(</span>
-<span id="cb10-22"><a href="using_r.html#cb10-22" tabindex="-1"></a>          <span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;hx_cvd&quot;</span>, <span class="st">&quot;hx_hyperlipidemia&quot;</span>,</span>
-<span id="cb10-23"><a href="using_r.html#cb10-23" tabindex="-1"></a>                <span class="st">&quot;on_anticoagulants&quot;</span>, <span class="st">&quot;on_antiplatelets&quot;</span>)</span>
-<span id="cb10-24"><a href="using_r.html#cb10-24" tabindex="-1"></a>        ),</span>
-<span id="cb10-25"><a href="using_r.html#cb10-25" tabindex="-1"></a>      <span class="at">.fns =</span> <span class="cf">function</span>(x) <span class="fu">factor</span>(x, <span class="at">levels =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;0. No&quot;</span>, <span class="st">&quot;1. Yes&quot;</span>))</span>
-<span id="cb10-26"><a href="using_r.html#cb10-26" tabindex="-1"></a>    ),</span>
-<span id="cb10-27"><a href="using_r.html#cb10-27" tabindex="-1"></a>    <span class="co"># Convert GCS and MRS variables from character data to categorical variables</span></span>
-<span id="cb10-28"><a href="using_r.html#cb10-28" tabindex="-1"></a>    <span class="fu">across</span>(</span>
-<span id="cb10-29"><a href="using_r.html#cb10-29" tabindex="-1"></a>      <span class="at">.cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;gcs&quot;</span>) <span class="sc">|</span> <span class="fu">starts_with</span>(<span class="st">&quot;mrs&quot;</span>),</span>
-<span id="cb10-30"><a href="using_r.html#cb10-30" tabindex="-1"></a>      <span class="at">.fns =</span> factor</span>
-<span id="cb10-31"><a href="using_r.html#cb10-31" tabindex="-1"></a>    ),</span>
-<span id="cb10-32"><a href="using_r.html#cb10-32" tabindex="-1"></a>    <span class="at">ich_location =</span></span>
-<span id="cb10-33"><a href="using_r.html#cb10-33" tabindex="-1"></a>      <span class="fu">factor</span>(</span>
-<span id="cb10-34"><a href="using_r.html#cb10-34" tabindex="-1"></a>        <span class="at">x =</span> ich_location,</span>
-<span id="cb10-35"><a href="using_r.html#cb10-35" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Deep&quot;</span>, <span class="st">&quot;Lobar&quot;</span>)</span>
-<span id="cb10-36"><a href="using_r.html#cb10-36" tabindex="-1"></a>      ),</span>
-<span id="cb10-37"><a href="using_r.html#cb10-37" tabindex="-1"></a>    <span class="at">arm =</span></span>
-<span id="cb10-38"><a href="using_r.html#cb10-38" tabindex="-1"></a>      <span class="fu">factor</span>(</span>
-<span id="cb10-39"><a href="using_r.html#cb10-39" tabindex="-1"></a>        <span class="at">x =</span> arm,</span>
-<span id="cb10-40"><a href="using_r.html#cb10-40" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;medical&quot;</span>, <span class="st">&quot;surgical&quot;</span>)</span>
-<span id="cb10-41"><a href="using_r.html#cb10-41" tabindex="-1"></a>      ),</span>
-<span id="cb10-42"><a href="using_r.html#cb10-42" tabindex="-1"></a>    <span class="at">tx =</span> <span class="dv">1</span><span class="sc">*</span>(arm <span class="sc">==</span> <span class="st">&quot;surgical&quot;</span>)</span>
-<span id="cb10-43"><a href="using_r.html#cb10-43" tabindex="-1"></a>  )</span>
-<span id="cb10-44"><a href="using_r.html#cb10-44" tabindex="-1"></a></span>
-<span id="cb10-45"><a href="using_r.html#cb10-45" tabindex="-1"></a></span>
-<span id="cb10-46"><a href="using_r.html#cb10-46" tabindex="-1"></a><span class="co"># Take the first 500 rows</span></span>
-<span id="cb10-47"><a href="using_r.html#cb10-47" tabindex="-1"></a>sim_miii <span class="ot">&lt;-</span></span>
-<span id="cb10-48"><a href="using_r.html#cb10-48" tabindex="-1"></a>  sim_miii_full <span class="sc">%&gt;%</span> </span>
-<span id="cb10-49"><a href="using_r.html#cb10-49" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">500</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="using_r.html#cb5-1" tabindex="-1"></a>data_url <span class="ot">&lt;-</span></span>
+<span id="cb5-2"><a href="using_r.html#cb5-2" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">&quot;https://github.com/jbetz-jhu/CovariateAdjustmentTutorial&quot;</span>,</span>
+<span id="cb5-3"><a href="using_r.html#cb5-3" tabindex="-1"></a>         <span class="st">&quot;/raw/main/Simulated_MISTIE_III_v1.2.csv&quot;</span>)</span>
+<span id="cb5-4"><a href="using_r.html#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="using_r.html#cb5-5" tabindex="-1"></a>sim_miii_full <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> <span class="fu">url</span>(data_url))</span>
+<span id="cb5-6"><a href="using_r.html#cb5-6" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="using_r.html#cb5-7" tabindex="-1"></a><span class="co"># Read in data: Recast categorical variables as factors</span></span>
+<span id="cb5-8"><a href="using_r.html#cb5-8" tabindex="-1"></a>sim_miii_full <span class="ot">&lt;-</span></span>
+<span id="cb5-9"><a href="using_r.html#cb5-9" tabindex="-1"></a>  sim_miii_full <span class="sc">%&gt;%</span> </span>
+<span id="cb5-10"><a href="using_r.html#cb5-10" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb5-11"><a href="using_r.html#cb5-11" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb5-12"><a href="using_r.html#cb5-12" tabindex="-1"></a>    <span class="co"># Convert variables from binary indicators to labeled categorical variables</span></span>
+<span id="cb5-13"><a href="using_r.html#cb5-13" tabindex="-1"></a>    <span class="at">male =</span></span>
+<span id="cb5-14"><a href="using_r.html#cb5-14" tabindex="-1"></a>      <span class="fu">factor</span>(</span>
+<span id="cb5-15"><a href="using_r.html#cb5-15" tabindex="-1"></a>        <span class="at">x =</span> male,</span>
+<span id="cb5-16"><a href="using_r.html#cb5-16" tabindex="-1"></a>        <span class="at">levels =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>,</span>
+<span id="cb5-17"><a href="using_r.html#cb5-17" tabindex="-1"></a>        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;0. Female&quot;</span>, <span class="st">&quot;1. Male&quot;</span>)</span>
+<span id="cb5-18"><a href="using_r.html#cb5-18" tabindex="-1"></a>      ),</span>
+<span id="cb5-19"><a href="using_r.html#cb5-19" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb5-20"><a href="using_r.html#cb5-20" tabindex="-1"></a>      <span class="at">.cols =</span> </span>
+<span id="cb5-21"><a href="using_r.html#cb5-21" tabindex="-1"></a>        <span class="fu">all_of</span>(</span>
+<span id="cb5-22"><a href="using_r.html#cb5-22" tabindex="-1"></a>          <span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;hx_cvd&quot;</span>, <span class="st">&quot;hx_hyperlipidemia&quot;</span>,</span>
+<span id="cb5-23"><a href="using_r.html#cb5-23" tabindex="-1"></a>                <span class="st">&quot;on_anticoagulants&quot;</span>, <span class="st">&quot;on_antiplatelets&quot;</span>)</span>
+<span id="cb5-24"><a href="using_r.html#cb5-24" tabindex="-1"></a>        ),</span>
+<span id="cb5-25"><a href="using_r.html#cb5-25" tabindex="-1"></a>      <span class="at">.fns =</span> <span class="cf">function</span>(x) <span class="fu">factor</span>(x, <span class="at">levels =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;0. No&quot;</span>, <span class="st">&quot;1. Yes&quot;</span>))</span>
+<span id="cb5-26"><a href="using_r.html#cb5-26" tabindex="-1"></a>    ),</span>
+<span id="cb5-27"><a href="using_r.html#cb5-27" tabindex="-1"></a>    <span class="co"># Convert GCS and MRS variables from character data to categorical variables</span></span>
+<span id="cb5-28"><a href="using_r.html#cb5-28" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb5-29"><a href="using_r.html#cb5-29" tabindex="-1"></a>      <span class="at">.cols =</span> <span class="fu">starts_with</span>(<span class="st">&quot;gcs&quot;</span>) <span class="sc">|</span> <span class="fu">starts_with</span>(<span class="st">&quot;mrs&quot;</span>),</span>
+<span id="cb5-30"><a href="using_r.html#cb5-30" tabindex="-1"></a>      <span class="at">.fns =</span> factor</span>
+<span id="cb5-31"><a href="using_r.html#cb5-31" tabindex="-1"></a>    ),</span>
+<span id="cb5-32"><a href="using_r.html#cb5-32" tabindex="-1"></a>    <span class="at">ich_location =</span></span>
+<span id="cb5-33"><a href="using_r.html#cb5-33" tabindex="-1"></a>      <span class="fu">factor</span>(</span>
+<span id="cb5-34"><a href="using_r.html#cb5-34" tabindex="-1"></a>        <span class="at">x =</span> ich_location,</span>
+<span id="cb5-35"><a href="using_r.html#cb5-35" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Deep&quot;</span>, <span class="st">&quot;Lobar&quot;</span>)</span>
+<span id="cb5-36"><a href="using_r.html#cb5-36" tabindex="-1"></a>      ),</span>
+<span id="cb5-37"><a href="using_r.html#cb5-37" tabindex="-1"></a>    <span class="at">arm =</span></span>
+<span id="cb5-38"><a href="using_r.html#cb5-38" tabindex="-1"></a>      <span class="fu">factor</span>(</span>
+<span id="cb5-39"><a href="using_r.html#cb5-39" tabindex="-1"></a>        <span class="at">x =</span> arm,</span>
+<span id="cb5-40"><a href="using_r.html#cb5-40" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;medical&quot;</span>, <span class="st">&quot;surgical&quot;</span>)</span>
+<span id="cb5-41"><a href="using_r.html#cb5-41" tabindex="-1"></a>      ),</span>
+<span id="cb5-42"><a href="using_r.html#cb5-42" tabindex="-1"></a>    <span class="at">tx =</span> <span class="dv">1</span><span class="sc">*</span>(arm <span class="sc">==</span> <span class="st">&quot;surgical&quot;</span>)</span>
+<span id="cb5-43"><a href="using_r.html#cb5-43" tabindex="-1"></a>  )</span>
+<span id="cb5-44"><a href="using_r.html#cb5-44" tabindex="-1"></a></span>
+<span id="cb5-45"><a href="using_r.html#cb5-45" tabindex="-1"></a></span>
+<span id="cb5-46"><a href="using_r.html#cb5-46" tabindex="-1"></a><span class="co"># Take the first 500 rows</span></span>
+<span id="cb5-47"><a href="using_r.html#cb5-47" tabindex="-1"></a>sim_miii <span class="ot">&lt;-</span></span>
+<span id="cb5-48"><a href="using_r.html#cb5-48" tabindex="-1"></a>  sim_miii_full <span class="sc">%&gt;%</span> </span>
+<span id="cb5-49"><a href="using_r.html#cb5-49" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">500</span>)</span></code></pre></div>
 <p>Other useful functions include:</p>
 <ul>
 <li><code>head()</code>/<code>tail()</code> - Looking at the first <span class="math inline">\(n\)</span> rows of a dataset</li>
 <li><code>nrow()</code>/<code>ncol()</code> - Counting the rows/columns of a dataset</li>
 <li><code>colnames()</code>/<code>rownames()</code> - Getting the row/column names of a dataset</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="using_r.html#cb11-1" tabindex="-1"></a><span class="fu">head</span>(sim_miii)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="using_r.html#cb6-1" tabindex="-1"></a><span class="fu">head</span>(sim_miii)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 22
 ##   sim_participant_id   age male      hx_cvd hx_hyperlipidemia on_anticoagulants
 ##                &lt;int&gt; &lt;int&gt; &lt;fct&gt;     &lt;fct&gt;  &lt;fct&gt;             &lt;fct&gt;            
@@ -453,11 +457,11 @@ div.csl-indent {
 ## #   ich_eot_volume &lt;dbl&gt;, mrs_30d &lt;fct&gt;, mrs_30d_complete &lt;fct&gt;,
 ## #   mrs_180d &lt;fct&gt;, mrs_180d_complete &lt;fct&gt;, mrs_365d &lt;fct&gt;,
 ## #   mrs_365d_complete &lt;fct&gt;, days_on_study &lt;int&gt;, died_on_study &lt;int&gt;, tx &lt;dbl&gt;</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="using_r.html#cb13-1" tabindex="-1"></a><span class="fu">nrow</span>(sim_miii)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="using_r.html#cb8-1" tabindex="-1"></a><span class="fu">nrow</span>(sim_miii)</span></code></pre></div>
 <pre><code>## [1] 500</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="using_r.html#cb15-1" tabindex="-1"></a><span class="fu">ncol</span>(sim_miii)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="using_r.html#cb10-1" tabindex="-1"></a><span class="fu">ncol</span>(sim_miii)</span></code></pre></div>
 <pre><code>## [1] 22</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="using_r.html#cb17-1" tabindex="-1"></a><span class="fu">colnames</span>(sim_miii)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="using_r.html#cb12-1" tabindex="-1"></a><span class="fu">colnames</span>(sim_miii)</span></code></pre></div>
 <pre><code>##  [1] &quot;sim_participant_id&quot; &quot;age&quot;                &quot;male&quot;              
 ##  [4] &quot;hx_cvd&quot;             &quot;hx_hyperlipidemia&quot;  &quot;on_anticoagulants&quot; 
 ##  [7] &quot;on_antiplatelets&quot;   &quot;ich_location&quot;       &quot;ich_s_volume&quot;      
@@ -471,12 +475,12 @@ div.csl-indent {
 <div id="assessing-baseline-balance" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> Assessing Baseline Balance<a href="using_r.html#assessing-baseline-balance" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>While randomization will tend to produce treatment groups that are similar on both measured and unmeasured factors, there will always be some degree of imbalance between groups in some characteristics. It is important to remember that these differences only represent confounding if groups are imbalanced on variables that are associated with the outcome. To assess the degree of imbalance, we can tabulate characteristics by treatment arm, and compute standardized differences to get a scale-free measure of the magnitude of imbalance.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="using_r.html#cb19-1" tabindex="-1"></a><span class="fu">table1</span>(</span>
-<span id="cb19-2"><a href="using_r.html#cb19-2" tabindex="-1"></a>  <span class="sc">~</span> age <span class="sc">+</span> male <span class="sc">+</span></span>
-<span id="cb19-3"><a href="using_r.html#cb19-3" tabindex="-1"></a>    on_antiplatelets <span class="sc">+</span> ich_location <span class="sc">+</span> ich_s_volume <span class="sc">+</span> ivh_s_volume <span class="sc">+</span></span>
-<span id="cb19-4"><a href="using_r.html#cb19-4" tabindex="-1"></a>    gcs_category <span class="sc">|</span> arm, </span>
-<span id="cb19-5"><a href="using_r.html#cb19-5" tabindex="-1"></a>  <span class="at">data =</span> sim_miii</span>
-<span id="cb19-6"><a href="using_r.html#cb19-6" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="using_r.html#cb14-1" tabindex="-1"></a><span class="fu">table1</span>(</span>
+<span id="cb14-2"><a href="using_r.html#cb14-2" tabindex="-1"></a>  <span class="sc">~</span> age <span class="sc">+</span> male <span class="sc">+</span></span>
+<span id="cb14-3"><a href="using_r.html#cb14-3" tabindex="-1"></a>    on_antiplatelets <span class="sc">+</span> ich_location <span class="sc">+</span> ich_s_volume <span class="sc">+</span> ivh_s_volume <span class="sc">+</span></span>
+<span id="cb14-4"><a href="using_r.html#cb14-4" tabindex="-1"></a>    gcs_category <span class="sc">|</span> arm, </span>
+<span id="cb14-5"><a href="using_r.html#cb14-5" tabindex="-1"></a>  <span class="at">data =</span> sim_miii</span>
+<span id="cb14-6"><a href="using_r.html#cb14-6" tabindex="-1"></a>)</span></code></pre></div>
 <div class="Rtable1"><table class="Rtable1">
 <thead>
 <tr>
@@ -623,23 +627,23 @@ div.csl-indent {
 </table>
 </div>
 <p>This allows us to compare the means, medians, frequencies, and ranges of variables between groups.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="using_r.html#cb20-1" tabindex="-1"></a><span class="fu">library</span>(cobalt)</span></code></pre></div>
-<pre><code>## Warning: package &#39;cobalt&#39; was built under R version 4.3.1</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="using_r.html#cb22-1" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">bal.tab</span>(</span>
-<span id="cb22-2"><a href="using_r.html#cb22-2" tabindex="-1"></a>  <span class="at">x =</span> </span>
-<span id="cb22-3"><a href="using_r.html#cb22-3" tabindex="-1"></a>    <span class="co"># Only tabulate baseline variables</span></span>
-<span id="cb22-4"><a href="using_r.html#cb22-4" tabindex="-1"></a>    sim_miii <span class="sc">%&gt;%</span> </span>
-<span id="cb22-5"><a href="using_r.html#cb22-5" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
-<span id="cb22-6"><a href="using_r.html#cb22-6" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">all_of</span>(</span>
-<span id="cb22-7"><a href="using_r.html#cb22-7" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;male&quot;</span>, <span class="st">&quot;on_antiplatelets&quot;</span>,</span>
-<span id="cb22-8"><a href="using_r.html#cb22-8" tabindex="-1"></a>              <span class="st">&quot;ich_location&quot;</span>, <span class="st">&quot;ich_s_volume&quot;</span>, <span class="st">&quot;ivh_s_volume&quot;</span>, <span class="st">&quot;gcs_category&quot;</span>)</span>
-<span id="cb22-9"><a href="using_r.html#cb22-9" tabindex="-1"></a>      )</span>
-<span id="cb22-10"><a href="using_r.html#cb22-10" tabindex="-1"></a>    ),</span>
-<span id="cb22-11"><a href="using_r.html#cb22-11" tabindex="-1"></a>  <span class="at">treat =</span> sim_miii<span class="sc">$</span>arm,</span>
-<span id="cb22-12"><a href="using_r.html#cb22-12" tabindex="-1"></a>  <span class="co"># Compute standardized differences for both binary and continuous variables</span></span>
-<span id="cb22-13"><a href="using_r.html#cb22-13" tabindex="-1"></a>  <span class="at">binary =</span> <span class="st">&quot;std&quot;</span>,</span>
-<span id="cb22-14"><a href="using_r.html#cb22-14" tabindex="-1"></a>  <span class="at">continuous =</span> <span class="st">&quot;std&quot;</span></span>
-<span id="cb22-15"><a href="using_r.html#cb22-15" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="using_r.html#cb15-1" tabindex="-1"></a><span class="fu">library</span>(cobalt)</span>
+<span id="cb15-2"><a href="using_r.html#cb15-2" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="using_r.html#cb15-3" tabindex="-1"></a>cobalt<span class="sc">::</span><span class="fu">bal.tab</span>(</span>
+<span id="cb15-4"><a href="using_r.html#cb15-4" tabindex="-1"></a>  <span class="at">x =</span> </span>
+<span id="cb15-5"><a href="using_r.html#cb15-5" tabindex="-1"></a>    <span class="co"># Only tabulate baseline variables</span></span>
+<span id="cb15-6"><a href="using_r.html#cb15-6" tabindex="-1"></a>    sim_miii <span class="sc">%&gt;%</span> </span>
+<span id="cb15-7"><a href="using_r.html#cb15-7" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
+<span id="cb15-8"><a href="using_r.html#cb15-8" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">all_of</span>(</span>
+<span id="cb15-9"><a href="using_r.html#cb15-9" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(<span class="st">&quot;age&quot;</span>, <span class="st">&quot;male&quot;</span>, <span class="st">&quot;on_antiplatelets&quot;</span>,</span>
+<span id="cb15-10"><a href="using_r.html#cb15-10" tabindex="-1"></a>              <span class="st">&quot;ich_location&quot;</span>, <span class="st">&quot;ich_s_volume&quot;</span>, <span class="st">&quot;ivh_s_volume&quot;</span>, <span class="st">&quot;gcs_category&quot;</span>)</span>
+<span id="cb15-11"><a href="using_r.html#cb15-11" tabindex="-1"></a>      )</span>
+<span id="cb15-12"><a href="using_r.html#cb15-12" tabindex="-1"></a>    ),</span>
+<span id="cb15-13"><a href="using_r.html#cb15-13" tabindex="-1"></a>  <span class="at">treat =</span> sim_miii<span class="sc">$</span>arm,</span>
+<span id="cb15-14"><a href="using_r.html#cb15-14" tabindex="-1"></a>  <span class="co"># Compute standardized differences for both binary and continuous variables</span></span>
+<span id="cb15-15"><a href="using_r.html#cb15-15" tabindex="-1"></a>  <span class="at">binary =</span> <span class="st">&quot;std&quot;</span>,</span>
+<span id="cb15-16"><a href="using_r.html#cb15-16" tabindex="-1"></a>  <span class="at">continuous =</span> <span class="st">&quot;std&quot;</span></span>
+<span id="cb15-17"><a href="using_r.html#cb15-17" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>## Balance Measures
 ##                                    Type Diff.Un
 ## age                             Contin. -0.0362
@@ -661,51 +665,51 @@ div.csl-indent {
 <h2><span class="header-section-number">4.4</span> Visualizing Data<a href="using_r.html#visualizing-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>One of the many strength of R is the powerful and flexible data visualization tools in its software ecosystem: see <a href="https://r-graph-gallery.com/">the R Graph Gallery</a> for some examples. The <a href="https://ggplot2.tidyverse.org/"><code>ggplot2</code></a> package, and some related packages like <a href="https://cran.r-project.org/web/packages/survminer/index.html">survminer</a>, are useful for assessing baseline balance and visualizing outcome data.</p>
 <p>For example, we may want to assess the cumulative distribution of a baseline covariate instead of just checking the summary statistics.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="using_r.html#cb24-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb24-2"><a href="using_r.html#cb24-2" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="using_r.html#cb24-3" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
-<span id="cb24-4"><a href="using_r.html#cb24-4" tabindex="-1"></a>  <span class="at">data =</span> sim_miii,</span>
-<span id="cb24-5"><a href="using_r.html#cb24-5" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
-<span id="cb24-6"><a href="using_r.html#cb24-6" tabindex="-1"></a>    <span class="at">x =</span> age</span>
-<span id="cb24-7"><a href="using_r.html#cb24-7" tabindex="-1"></a>  )</span>
-<span id="cb24-8"><a href="using_r.html#cb24-8" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb24-9"><a href="using_r.html#cb24-9" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(</span>
-<span id="cb24-10"><a href="using_r.html#cb24-10" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span>,</span>
-<span id="cb24-11"><a href="using_r.html#cb24-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb24-12"><a href="using_r.html#cb24-12" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(</span>
-<span id="cb24-13"><a href="using_r.html#cb24-13" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">color =</span> arm),</span>
-<span id="cb24-14"><a href="using_r.html#cb24-14" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span>,</span>
-<span id="cb24-15"><a href="using_r.html#cb24-15" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb24-16"><a href="using_r.html#cb24-16" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="using_r.html#cb17-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb17-2"><a href="using_r.html#cb17-2" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="using_r.html#cb17-3" tabindex="-1"></a><span class="fu">ggplot</span>(</span>
+<span id="cb17-4"><a href="using_r.html#cb17-4" tabindex="-1"></a>  <span class="at">data =</span> sim_miii,</span>
+<span id="cb17-5"><a href="using_r.html#cb17-5" tabindex="-1"></a>  <span class="fu">aes</span>(</span>
+<span id="cb17-6"><a href="using_r.html#cb17-6" tabindex="-1"></a>    <span class="at">x =</span> age</span>
+<span id="cb17-7"><a href="using_r.html#cb17-7" tabindex="-1"></a>  )</span>
+<span id="cb17-8"><a href="using_r.html#cb17-8" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb17-9"><a href="using_r.html#cb17-9" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(</span>
+<span id="cb17-10"><a href="using_r.html#cb17-10" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span>,</span>
+<span id="cb17-11"><a href="using_r.html#cb17-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="using_r.html#cb17-12" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(</span>
+<span id="cb17-13"><a href="using_r.html#cb17-13" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">color =</span> arm),</span>
+<span id="cb17-14"><a href="using_r.html#cb17-14" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.6</span>,</span>
+<span id="cb17-15"><a href="using_r.html#cb17-15" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-16"><a href="using_r.html#cb17-16" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
 <p><img src="_main_files/figure-html/Plot-eCDF-Age-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Or we may want to create a plot of the Kaplan-Meier estimate of the survival function (see the <a href="estimands.html#estimands">estimands</a> section for its definition, and the <a href="timetoevent.html#timetoevent">time-to-event</a> section for further discussion).</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="using_r.html#cb25-1" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
-<span id="cb25-2"><a href="using_r.html#cb25-2" tabindex="-1"></a><span class="fu">library</span>(survminer)</span></code></pre></div>
-<pre><code>## Warning: package &#39;survminer&#39; was built under R version 4.3.1</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="using_r.html#cb27-1" tabindex="-1"></a><span class="co"># Create a &#39;survival object&#39; from event times and indicators</span></span>
-<span id="cb27-2"><a href="using_r.html#cb27-2" tabindex="-1"></a>miii_surv <span class="ot">&lt;-</span> </span>
-<span id="cb27-3"><a href="using_r.html#cb27-3" tabindex="-1"></a>  <span class="fu">with</span>(sim_miii,</span>
-<span id="cb27-4"><a href="using_r.html#cb27-4" tabindex="-1"></a>       survival<span class="sc">::</span><span class="fu">Surv</span>(</span>
-<span id="cb27-5"><a href="using_r.html#cb27-5" tabindex="-1"></a>         <span class="at">time =</span> days_on_study,</span>
-<span id="cb27-6"><a href="using_r.html#cb27-6" tabindex="-1"></a>         <span class="at">event =</span> died_on_study</span>
-<span id="cb27-7"><a href="using_r.html#cb27-7" tabindex="-1"></a>       )</span>
-<span id="cb27-8"><a href="using_r.html#cb27-8" tabindex="-1"></a>  )</span>
-<span id="cb27-9"><a href="using_r.html#cb27-9" tabindex="-1"></a></span>
-<span id="cb27-10"><a href="using_r.html#cb27-10" tabindex="-1"></a><span class="co"># Use survfit to calculate survival data</span></span>
-<span id="cb27-11"><a href="using_r.html#cb27-11" tabindex="-1"></a>time_to_death_km <span class="ot">&lt;-</span></span>
-<span id="cb27-12"><a href="using_r.html#cb27-12" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">survfit</span>(</span>
-<span id="cb27-13"><a href="using_r.html#cb27-13" tabindex="-1"></a>    <span class="at">formula =</span> miii_surv <span class="sc">~</span> arm,</span>
-<span id="cb27-14"><a href="using_r.html#cb27-14" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
-<span id="cb27-15"><a href="using_r.html#cb27-15" tabindex="-1"></a>  )</span>
-<span id="cb27-16"><a href="using_r.html#cb27-16" tabindex="-1"></a></span>
-<span id="cb27-17"><a href="using_r.html#cb27-17" tabindex="-1"></a><span class="co"># Create the Kaplan-Meier Plot</span></span>
-<span id="cb27-18"><a href="using_r.html#cb27-18" tabindex="-1"></a>survminer<span class="sc">::</span><span class="fu">ggsurvplot</span>(</span>
-<span id="cb27-19"><a href="using_r.html#cb27-19" tabindex="-1"></a>  <span class="at">fit =</span> time_to_death_km,</span>
-<span id="cb27-20"><a href="using_r.html#cb27-20" tabindex="-1"></a>  <span class="at">conf.int =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb27-21"><a href="using_r.html#cb27-21" tabindex="-1"></a>  <span class="at">risk.table =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb27-22"><a href="using_r.html#cb27-22" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Days&quot;</span>, </span>
-<span id="cb27-23"><a href="using_r.html#cb27-23" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;Survival probability&quot;</span></span>
-<span id="cb27-24"><a href="using_r.html#cb27-24" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="using_r.html#cb18-1" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb18-2"><a href="using_r.html#cb18-2" tabindex="-1"></a><span class="fu">library</span>(survminer)</span>
+<span id="cb18-3"><a href="using_r.html#cb18-3" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="using_r.html#cb18-4" tabindex="-1"></a><span class="co"># Create a &#39;survival object&#39; from event times and indicators</span></span>
+<span id="cb18-5"><a href="using_r.html#cb18-5" tabindex="-1"></a>miii_surv <span class="ot">&lt;-</span> </span>
+<span id="cb18-6"><a href="using_r.html#cb18-6" tabindex="-1"></a>  <span class="fu">with</span>(sim_miii,</span>
+<span id="cb18-7"><a href="using_r.html#cb18-7" tabindex="-1"></a>       survival<span class="sc">::</span><span class="fu">Surv</span>(</span>
+<span id="cb18-8"><a href="using_r.html#cb18-8" tabindex="-1"></a>         <span class="at">time =</span> days_on_study,</span>
+<span id="cb18-9"><a href="using_r.html#cb18-9" tabindex="-1"></a>         <span class="at">event =</span> died_on_study</span>
+<span id="cb18-10"><a href="using_r.html#cb18-10" tabindex="-1"></a>       )</span>
+<span id="cb18-11"><a href="using_r.html#cb18-11" tabindex="-1"></a>  )</span>
+<span id="cb18-12"><a href="using_r.html#cb18-12" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="using_r.html#cb18-13" tabindex="-1"></a><span class="co"># Use survfit to calculate survival data</span></span>
+<span id="cb18-14"><a href="using_r.html#cb18-14" tabindex="-1"></a>time_to_death_km <span class="ot">&lt;-</span></span>
+<span id="cb18-15"><a href="using_r.html#cb18-15" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">survfit</span>(</span>
+<span id="cb18-16"><a href="using_r.html#cb18-16" tabindex="-1"></a>    <span class="at">formula =</span> miii_surv <span class="sc">~</span> arm,</span>
+<span id="cb18-17"><a href="using_r.html#cb18-17" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
+<span id="cb18-18"><a href="using_r.html#cb18-18" tabindex="-1"></a>  )</span>
+<span id="cb18-19"><a href="using_r.html#cb18-19" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="using_r.html#cb18-20" tabindex="-1"></a><span class="co"># Create the Kaplan-Meier Plot</span></span>
+<span id="cb18-21"><a href="using_r.html#cb18-21" tabindex="-1"></a>survminer<span class="sc">::</span><span class="fu">ggsurvplot</span>(</span>
+<span id="cb18-22"><a href="using_r.html#cb18-22" tabindex="-1"></a>  <span class="at">fit =</span> time_to_death_km,</span>
+<span id="cb18-23"><a href="using_r.html#cb18-23" tabindex="-1"></a>  <span class="at">conf.int =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb18-24"><a href="using_r.html#cb18-24" tabindex="-1"></a>  <span class="at">risk.table =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb18-25"><a href="using_r.html#cb18-25" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Days&quot;</span>, </span>
+<span id="cb18-26"><a href="using_r.html#cb18-26" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">&quot;Survival probability&quot;</span></span>
+<span id="cb18-27"><a href="using_r.html#cb18-27" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="_main_files/figure-html/Plot-KM-MISTIE-III-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>From this plot, we can see that most of the mortality occurs soon after randomization, with greater mortality in the medical management arm early in the trial. After the first 90 days, the rate of events decreases in both arms.</p>
 <hr />
@@ -716,16 +720,16 @@ div.csl-indent {
 <div id="generalized-linear-model" class="section level3 hasAnchor" number="4.5.1">
 <h3><span class="header-section-number">4.5.1</span> Generalized Linear Model<a href="using_r.html#generalized-linear-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Fitting a GLM in R is done using the <code>glm()</code> function. For example if we wanted to model the probability of being assigned to the surgical arm in MISTIE III by an individual’s age, ICH volume, and IVH volume, the code is as follows:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="using_r.html#cb28-1" tabindex="-1"></a>pr_mis_glm <span class="ot">&lt;-</span></span>
-<span id="cb28-2"><a href="using_r.html#cb28-2" tabindex="-1"></a>  <span class="fu">glm</span>(</span>
-<span id="cb28-3"><a href="using_r.html#cb28-3" tabindex="-1"></a>    <span class="at">formula =</span></span>
-<span id="cb28-4"><a href="using_r.html#cb28-4" tabindex="-1"></a>      tx <span class="sc">~</span> age <span class="sc">+</span> ich_s_volume <span class="sc">+</span> ivh_s_volume,</span>
-<span id="cb28-5"><a href="using_r.html#cb28-5" tabindex="-1"></a>    <span class="at">data =</span> sim_miii,</span>
-<span id="cb28-6"><a href="using_r.html#cb28-6" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>)</span>
-<span id="cb28-7"><a href="using_r.html#cb28-7" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="using_r.html#cb19-1" tabindex="-1"></a>pr_mis_glm <span class="ot">&lt;-</span></span>
+<span id="cb19-2"><a href="using_r.html#cb19-2" tabindex="-1"></a>  <span class="fu">glm</span>(</span>
+<span id="cb19-3"><a href="using_r.html#cb19-3" tabindex="-1"></a>    <span class="at">formula =</span></span>
+<span id="cb19-4"><a href="using_r.html#cb19-4" tabindex="-1"></a>      tx <span class="sc">~</span> age <span class="sc">+</span> ich_s_volume <span class="sc">+</span> ivh_s_volume,</span>
+<span id="cb19-5"><a href="using_r.html#cb19-5" tabindex="-1"></a>    <span class="at">data =</span> sim_miii,</span>
+<span id="cb19-6"><a href="using_r.html#cb19-6" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>)</span>
+<span id="cb19-7"><a href="using_r.html#cb19-7" tabindex="-1"></a>  )</span></code></pre></div>
 <p>Once the model has been fit, we can use it for creating summary tables, calculating confidence intervals, or generating fitted values for a new dataset:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="using_r.html#cb29-1" tabindex="-1"></a><span class="co"># Produce GLM Summary Table</span></span>
-<span id="cb29-2"><a href="using_r.html#cb29-2" tabindex="-1"></a><span class="fu">summary</span>(pr_mis_glm)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="using_r.html#cb20-1" tabindex="-1"></a><span class="co"># Produce GLM Summary Table</span></span>
+<span id="cb20-2"><a href="using_r.html#cb20-2" tabindex="-1"></a><span class="fu">summary</span>(pr_mis_glm)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## glm(formula = tx ~ age + ich_s_volume + ivh_s_volume, family = binomial(link = &quot;logit&quot;), 
@@ -745,39 +749,39 @@ div.csl-indent {
 ## AIC: 699.58
 ## 
 ## Number of Fisher Scoring iterations: 3</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="using_r.html#cb31-1" tabindex="-1"></a><span class="co"># Calculate Confidence Intervals for Coefficients</span></span>
-<span id="cb31-2"><a href="using_r.html#cb31-2" tabindex="-1"></a><span class="fu">confint</span>(pr_mis_glm)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="using_r.html#cb22-1" tabindex="-1"></a><span class="co"># Calculate Confidence Intervals for Coefficients</span></span>
+<span id="cb22-2"><a href="using_r.html#cb22-2" tabindex="-1"></a><span class="fu">confint</span>(pr_mis_glm)</span></code></pre></div>
 <pre><code>##                    2.5 %     97.5 %
 ## (Intercept)  -0.67578350 1.29885632
 ## age          -0.01732742 0.01045830
 ## ich_s_volume -0.01148661 0.00983616
 ## ivh_s_volume -0.07808960 0.02017825</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="using_r.html#cb33-1" tabindex="-1"></a><span class="co"># Calculate fitted probabilities for new data:</span></span>
-<span id="cb33-2"><a href="using_r.html#cb33-2" tabindex="-1"></a><span class="co"># 1. 65 years old, 30 mL ICH, 0 mL IVH</span></span>
-<span id="cb33-3"><a href="using_r.html#cb33-3" tabindex="-1"></a><span class="co"># 2. 70 years old, 50 mL ICH, 15 mL IVH</span></span>
-<span id="cb33-4"><a href="using_r.html#cb33-4" tabindex="-1"></a><span class="fu">predict</span>(</span>
-<span id="cb33-5"><a href="using_r.html#cb33-5" tabindex="-1"></a>  <span class="at">object =</span> pr_mis_glm,</span>
-<span id="cb33-6"><a href="using_r.html#cb33-6" tabindex="-1"></a>  <span class="at">newdata =</span> </span>
-<span id="cb33-7"><a href="using_r.html#cb33-7" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
-<span id="cb33-8"><a href="using_r.html#cb33-8" tabindex="-1"></a>      <span class="at">age =</span> <span class="fu">c</span>(<span class="dv">65</span>, <span class="dv">70</span>),</span>
-<span id="cb33-9"><a href="using_r.html#cb33-9" tabindex="-1"></a>      <span class="at">ich_s_volume =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">50</span>),</span>
-<span id="cb33-10"><a href="using_r.html#cb33-10" tabindex="-1"></a>      <span class="at">ivh_s_volume =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">15</span>)</span>
-<span id="cb33-11"><a href="using_r.html#cb33-11" tabindex="-1"></a>    ),</span>
-<span id="cb33-12"><a href="using_r.html#cb33-12" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;response&quot;</span></span>
-<span id="cb33-13"><a href="using_r.html#cb33-13" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="using_r.html#cb24-1" tabindex="-1"></a><span class="co"># Calculate fitted probabilities for new data:</span></span>
+<span id="cb24-2"><a href="using_r.html#cb24-2" tabindex="-1"></a><span class="co"># 1. 65 years old, 30 mL ICH, 0 mL IVH</span></span>
+<span id="cb24-3"><a href="using_r.html#cb24-3" tabindex="-1"></a><span class="co"># 2. 70 years old, 50 mL ICH, 15 mL IVH</span></span>
+<span id="cb24-4"><a href="using_r.html#cb24-4" tabindex="-1"></a><span class="fu">predict</span>(</span>
+<span id="cb24-5"><a href="using_r.html#cb24-5" tabindex="-1"></a>  <span class="at">object =</span> pr_mis_glm,</span>
+<span id="cb24-6"><a href="using_r.html#cb24-6" tabindex="-1"></a>  <span class="at">newdata =</span> </span>
+<span id="cb24-7"><a href="using_r.html#cb24-7" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
+<span id="cb24-8"><a href="using_r.html#cb24-8" tabindex="-1"></a>      <span class="at">age =</span> <span class="fu">c</span>(<span class="dv">65</span>, <span class="dv">70</span>),</span>
+<span id="cb24-9"><a href="using_r.html#cb24-9" tabindex="-1"></a>      <span class="at">ich_s_volume =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">50</span>),</span>
+<span id="cb24-10"><a href="using_r.html#cb24-10" tabindex="-1"></a>      <span class="at">ivh_s_volume =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">15</span>)</span>
+<span id="cb24-11"><a href="using_r.html#cb24-11" tabindex="-1"></a>    ),</span>
+<span id="cb24-12"><a href="using_r.html#cb24-12" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;response&quot;</span></span>
+<span id="cb24-13"><a href="using_r.html#cb24-13" tabindex="-1"></a>)</span></code></pre></div>
 <pre><code>##         1         2 
 ## 0.5156414 0.4025950</code></pre>
 </div>
 <div id="logrank-test-and-cox-proportional-hazards-model" class="section level3 hasAnchor" number="4.5.2">
 <h3><span class="header-section-number">4.5.2</span> Logrank Test and Cox Proportional Hazards Model<a href="using_r.html#logrank-test-and-cox-proportional-hazards-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For time-to-event outcomes, such as mortality, the logrank test and Cox Proportional Hazards (PH) model are commonly used analytic approaches. Using the survival object <code>miii_surv</code> created earlier using <code>survival::Surv()</code>, we can pass this object to other functions to perform the logrank test (using <code>survival::survdiff</code>) and fit the Cox PH model (using <code>survival::coxph</code>).</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="using_r.html#cb35-1" tabindex="-1"></a>mortality_logrank <span class="ot">&lt;-</span></span>
-<span id="cb35-2"><a href="using_r.html#cb35-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">survdiff</span>(</span>
-<span id="cb35-3"><a href="using_r.html#cb35-3" tabindex="-1"></a>    <span class="at">formula =</span> miii_surv <span class="sc">~</span> arm,</span>
-<span id="cb35-4"><a href="using_r.html#cb35-4" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
-<span id="cb35-5"><a href="using_r.html#cb35-5" tabindex="-1"></a>  )</span>
-<span id="cb35-6"><a href="using_r.html#cb35-6" tabindex="-1"></a></span>
-<span id="cb35-7"><a href="using_r.html#cb35-7" tabindex="-1"></a>mortality_logrank</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="using_r.html#cb26-1" tabindex="-1"></a>mortality_logrank <span class="ot">&lt;-</span></span>
+<span id="cb26-2"><a href="using_r.html#cb26-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">survdiff</span>(</span>
+<span id="cb26-3"><a href="using_r.html#cb26-3" tabindex="-1"></a>    <span class="at">formula =</span> miii_surv <span class="sc">~</span> arm,</span>
+<span id="cb26-4"><a href="using_r.html#cb26-4" tabindex="-1"></a>    <span class="at">data =</span> sim_miii</span>
+<span id="cb26-5"><a href="using_r.html#cb26-5" tabindex="-1"></a>  )</span>
+<span id="cb26-6"><a href="using_r.html#cb26-6" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="using_r.html#cb26-7" tabindex="-1"></a>mortality_logrank</span></code></pre></div>
 <pre><code>## Call:
 ## survival::survdiff(formula = miii_surv ~ arm, data = sim_miii)
 ## 
@@ -787,15 +791,15 @@ div.csl-indent {
 ## 
 ##  Chisq= 8.1  on 1 degrees of freedom, p= 0.005</code></pre>
 <p>For the Cox PH model, the <code>ties = "efron"</code> argument specifies how tied survival times are addressed, and the <code>robust = TRUE</code> computes robust estimates of the covariance matrix of regression coefficients:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="using_r.html#cb37-1" tabindex="-1"></a>mortality_cox <span class="ot">&lt;-</span></span>
-<span id="cb37-2"><a href="using_r.html#cb37-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">coxph</span>(</span>
-<span id="cb37-3"><a href="using_r.html#cb37-3" tabindex="-1"></a>    <span class="at">formula =</span> miii_surv <span class="sc">~</span> arm,</span>
-<span id="cb37-4"><a href="using_r.html#cb37-4" tabindex="-1"></a>    <span class="at">data =</span> sim_miii,</span>
-<span id="cb37-5"><a href="using_r.html#cb37-5" tabindex="-1"></a>    <span class="at">ties =</span> <span class="st">&quot;efron&quot;</span>,</span>
-<span id="cb37-6"><a href="using_r.html#cb37-6" tabindex="-1"></a>    <span class="at">robust =</span> <span class="cn">TRUE</span></span>
-<span id="cb37-7"><a href="using_r.html#cb37-7" tabindex="-1"></a>  )</span>
-<span id="cb37-8"><a href="using_r.html#cb37-8" tabindex="-1"></a></span>
-<span id="cb37-9"><a href="using_r.html#cb37-9" tabindex="-1"></a><span class="fu">summary</span>(mortality_cox)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="using_r.html#cb28-1" tabindex="-1"></a>mortality_cox <span class="ot">&lt;-</span></span>
+<span id="cb28-2"><a href="using_r.html#cb28-2" tabindex="-1"></a>  survival<span class="sc">::</span><span class="fu">coxph</span>(</span>
+<span id="cb28-3"><a href="using_r.html#cb28-3" tabindex="-1"></a>    <span class="at">formula =</span> miii_surv <span class="sc">~</span> arm,</span>
+<span id="cb28-4"><a href="using_r.html#cb28-4" tabindex="-1"></a>    <span class="at">data =</span> sim_miii,</span>
+<span id="cb28-5"><a href="using_r.html#cb28-5" tabindex="-1"></a>    <span class="at">ties =</span> <span class="st">&quot;efron&quot;</span>,</span>
+<span id="cb28-6"><a href="using_r.html#cb28-6" tabindex="-1"></a>    <span class="at">robust =</span> <span class="cn">TRUE</span></span>
+<span id="cb28-7"><a href="using_r.html#cb28-7" tabindex="-1"></a>  )</span>
+<span id="cb28-8"><a href="using_r.html#cb28-8" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="using_r.html#cb28-9" tabindex="-1"></a><span class="fu">summary</span>(mortality_cox)</span></code></pre></div>
 <pre><code>## Call:
 ## survival::coxph(formula = miii_surv ~ arm, data = sim_miii, ties = &quot;efron&quot;, 
 ##     robust = TRUE)
@@ -818,14 +822,14 @@ div.csl-indent {
 ##   (Note: the likelihood ratio and score tests assume independence of
 ##      observations within a cluster, the Wald and robust score tests do not).</code></pre>
 <p>This model assumes that the ratio of the rates of events between the treatment and control arm is approximately constant over time. We can assess using the <code>survival::cox.zph</code> function:</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="using_r.html#cb39-1" tabindex="-1"></a><span class="co"># Test Proportionality Assumption: Schoenfeld Residuals</span></span>
-<span id="cb39-2"><a href="using_r.html#cb39-2" tabindex="-1"></a><span class="fu">cox.zph</span>(<span class="at">fit =</span> mortality_cox)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="using_r.html#cb30-1" tabindex="-1"></a><span class="co"># Test Proportionality Assumption: Schoenfeld Residuals</span></span>
+<span id="cb30-2"><a href="using_r.html#cb30-2" tabindex="-1"></a><span class="fu">cox.zph</span>(<span class="at">fit =</span> mortality_cox)</span></code></pre></div>
 <pre><code>##        chisq df      p
 ## arm     9.85  1 0.0017
 ## GLOBAL  9.85  1 0.0017</code></pre>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="using_r.html#cb41-1" tabindex="-1"></a><span class="co"># Plot smoothed residuals</span></span>
-<span id="cb41-2"><a href="using_r.html#cb41-2" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cox.zph</span>(<span class="at">fit =</span> mortality_cox))</span>
-<span id="cb41-3"><a href="using_r.html#cb41-3" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="using_r.html#cb32-1" tabindex="-1"></a><span class="co"># Plot smoothed residuals</span></span>
+<span id="cb32-2"><a href="using_r.html#cb32-2" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cox.zph</span>(<span class="at">fit =</span> mortality_cox))</span>
+<span id="cb32-3"><a href="using_r.html#cb32-3" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
 <p><img src="_main_files/figure-html/Cox-PH-Test-MISTIE-III-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>From the plot, we can see that the hazard ratio is initially negative, but increases towards zero as time goes on. It seems as if the treatment has a beneficial effect on mortality for a few weeks after randomization, which then diminishes. This is a violation of the proportional hazards assumption, which is further discussed in the chapter on <a href="estimands.html#survival_estimands">estimands</a>.</p>
 <hr />
@@ -837,17 +841,17 @@ div.csl-indent {
 <h3><span class="header-section-number">4.6.1</span> Robust Standard Errors<a href="using_r.html#robust-standard-errors" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Most of the standard errors reported in software, such as those returned by <code>vcov()</code>, are model-based estimates of the standard error, which assume that the model is correctly specified. Robust or “Sandwich” standard errors can be used to obtain a consistent estimate of the standard error in such cases. Note that robust estimates of standard errors are different from robust estimates of the regression coefficients themselves.</p>
 <p>The <code>sandwich::vcovHC()</code> function can be used to obtain different types of robust standard errors:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="using_r.html#cb42-1" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span></code></pre></div>
-<pre><code>## Warning: package &#39;sandwich&#39; was built under R version 4.3.1</code></pre>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="using_r.html#cb44-1" tabindex="-1"></a><span class="co"># Model-based standard errors</span></span>
-<span id="cb44-2"><a href="using_r.html#cb44-2" tabindex="-1"></a><span class="fu">vcov</span>(<span class="at">object =</span> pr_mis_glm)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="using_r.html#cb33-1" tabindex="-1"></a><span class="fu">library</span>(sandwich)</span>
+<span id="cb33-2"><a href="using_r.html#cb33-2" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="using_r.html#cb33-3" tabindex="-1"></a><span class="co"># Model-based standard errors</span></span>
+<span id="cb33-4"><a href="using_r.html#cb33-4" tabindex="-1"></a><span class="fu">vcov</span>(<span class="at">object =</span> pr_mis_glm)</span></code></pre></div>
 <pre><code>##               (Intercept)           age  ich_s_volume  ivh_s_volume
 ## (Intercept)   0.252837171 -2.993310e-03 -1.285278e-03 -1.316243e-03
 ## age          -0.002993310  5.009960e-05 -1.254035e-06  1.346355e-05
 ## ich_s_volume -0.001285278 -1.254035e-06  2.945316e-05 -1.887093e-05
 ## ivh_s_volume -0.001316243  1.346355e-05 -1.887093e-05  6.221973e-04</code></pre>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="using_r.html#cb46-1" tabindex="-1"></a><span class="co"># Robust standard errors</span></span>
-<span id="cb46-2"><a href="using_r.html#cb46-2" tabindex="-1"></a>sandwich<span class="sc">::</span><span class="fu">vcovHC</span>(<span class="at">x =</span> pr_mis_glm, <span class="at">type =</span> <span class="st">&quot;HC3&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="using_r.html#cb35-1" tabindex="-1"></a><span class="co"># Robust standard errors</span></span>
+<span id="cb35-2"><a href="using_r.html#cb35-2" tabindex="-1"></a>sandwich<span class="sc">::</span><span class="fu">vcovHC</span>(<span class="at">x =</span> pr_mis_glm, <span class="at">type =</span> <span class="st">&quot;HC3&quot;</span>)</span></code></pre></div>
 <pre><code>##               (Intercept)           age  ich_s_volume  ivh_s_volume
 ## (Intercept)   0.263262683 -3.112090e-03 -1.349840e-03 -0.0014409131
 ## age          -0.003112090  5.179135e-05 -9.534434e-07  0.0000144568
@@ -860,71 +864,71 @@ div.csl-indent {
 <h3><span class="header-section-number">4.6.2</span> Bootstrap Estimator<a href="using_r.html#bootstrap-estimator" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The bootstrap procedure uses resampling to obtain an estimate of the variance of the sampling distribution of an estimator. In R, this is done using the <code>boot</code> package, which is part of base R.</p>
 <p>First, we need to write a function to produce the statistic of interest. In this case, we will bootstrap the Mann-Whitney U statistic: see the <a href="estimands.html#ordinal_estimands">estimands</a> for more information on this estimand. The first argument to this function must be the data, and the second argument should be a vector of indices for our bootstrap sample, and any other arguments can be supplied thereafter.</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="using_r.html#cb48-1" tabindex="-1"></a><span class="co"># 1. Write a function that produces the test statistic:</span></span>
-<span id="cb48-2"><a href="using_r.html#cb48-2" tabindex="-1"></a>wilcox_to_auc <span class="ot">&lt;-</span></span>
-<span id="cb48-3"><a href="using_r.html#cb48-3" tabindex="-1"></a>  <span class="cf">function</span>(data, <span class="at">indices =</span> <span class="cn">NULL</span>, formula){</span>
-<span id="cb48-4"><a href="using_r.html#cb48-4" tabindex="-1"></a>    <span class="co"># Input data must be a data.frame</span></span>
-<span id="cb48-5"><a href="using_r.html#cb48-5" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">all</span>(<span class="fu">class</span>(data) <span class="sc">==</span> <span class="st">&quot;data.frame&quot;</span>)){</span>
-<span id="cb48-6"><a href="using_r.html#cb48-6" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;`data` must be a data.frame: use `as.data.frame()` for a tibble.&quot;</span>)</span>
-<span id="cb48-7"><a href="using_r.html#cb48-7" tabindex="-1"></a>    }</span>
-<span id="cb48-8"><a href="using_r.html#cb48-8" tabindex="-1"></a>    </span>
-<span id="cb48-9"><a href="using_r.html#cb48-9" tabindex="-1"></a>    <span class="co"># If bootstrap indices not supplied, use entire dataset</span></span>
-<span id="cb48-10"><a href="using_r.html#cb48-10" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.null</span>(indices)) indices <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)</span>
-<span id="cb48-11"><a href="using_r.html#cb48-11" tabindex="-1"></a>    </span>
-<span id="cb48-12"><a href="using_r.html#cb48-12" tabindex="-1"></a>    <span class="co"># Extract Outcome/Treatment from Formula</span></span>
-<span id="cb48-13"><a href="using_r.html#cb48-13" tabindex="-1"></a>    outcome <span class="ot">&lt;-</span> <span class="fu">all.vars</span>(<span class="fu">update</span>(formula, . <span class="sc">~</span> <span class="dv">0</span>))</span>
-<span id="cb48-14"><a href="using_r.html#cb48-14" tabindex="-1"></a>    treatment <span class="ot">&lt;-</span> <span class="fu">all.vars</span>(<span class="fu">update</span>(formula, <span class="dv">0</span> <span class="sc">~</span> .))</span>
-<span id="cb48-15"><a href="using_r.html#cb48-15" tabindex="-1"></a>    <span class="fu">stopifnot</span>(<span class="fu">length</span>(treatment) <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb48-16"><a href="using_r.html#cb48-16" tabindex="-1"></a>    </span>
-<span id="cb48-17"><a href="using_r.html#cb48-17" tabindex="-1"></a>    <span class="co"># Convert outcome to numeric using levels: Assumes levels are ordered</span></span>
-<span id="cb48-18"><a href="using_r.html#cb48-18" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.numeric</span>(data[, outcome])){</span>
-<span id="cb48-19"><a href="using_r.html#cb48-19" tabindex="-1"></a>      data[, outcome] <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data[, outcome])</span>
-<span id="cb48-20"><a href="using_r.html#cb48-20" tabindex="-1"></a>    }</span>
-<span id="cb48-21"><a href="using_r.html#cb48-21" tabindex="-1"></a>    </span>
-<span id="cb48-22"><a href="using_r.html#cb48-22" tabindex="-1"></a>    <span class="co"># Run Wilcoxon Rank Sum on data using the bootstrap indices</span></span>
-<span id="cb48-23"><a href="using_r.html#cb48-23" tabindex="-1"></a>    wrst_result <span class="ot">&lt;-</span></span>
-<span id="cb48-24"><a href="using_r.html#cb48-24" tabindex="-1"></a>      <span class="fu">wilcox.test</span>(</span>
-<span id="cb48-25"><a href="using_r.html#cb48-25" tabindex="-1"></a>        <span class="at">formula =</span> formula,</span>
-<span id="cb48-26"><a href="using_r.html#cb48-26" tabindex="-1"></a>        <span class="at">data =</span> data[indices,]</span>
-<span id="cb48-27"><a href="using_r.html#cb48-27" tabindex="-1"></a>      )</span>
-<span id="cb48-28"><a href="using_r.html#cb48-28" tabindex="-1"></a>    </span>
-<span id="cb48-29"><a href="using_r.html#cb48-29" tabindex="-1"></a>    <span class="co"># Compute AUC statistic</span></span>
-<span id="cb48-30"><a href="using_r.html#cb48-30" tabindex="-1"></a>    <span class="fu">return</span>(wrst_result<span class="sc">$</span>statistic<span class="sc">/</span><span class="fu">prod</span>(<span class="fu">table</span>(data[indices, treatment])))</span>
-<span id="cb48-31"><a href="using_r.html#cb48-31" tabindex="-1"></a>  }</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="using_r.html#cb37-1" tabindex="-1"></a><span class="co"># 1. Write a function that produces the test statistic:</span></span>
+<span id="cb37-2"><a href="using_r.html#cb37-2" tabindex="-1"></a>wilcox_to_auc <span class="ot">&lt;-</span></span>
+<span id="cb37-3"><a href="using_r.html#cb37-3" tabindex="-1"></a>  <span class="cf">function</span>(data, <span class="at">indices =</span> <span class="cn">NULL</span>, formula){</span>
+<span id="cb37-4"><a href="using_r.html#cb37-4" tabindex="-1"></a>    <span class="co"># Input data must be a data.frame</span></span>
+<span id="cb37-5"><a href="using_r.html#cb37-5" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">all</span>(<span class="fu">class</span>(data) <span class="sc">==</span> <span class="st">&quot;data.frame&quot;</span>)){</span>
+<span id="cb37-6"><a href="using_r.html#cb37-6" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">&quot;`data` must be a data.frame: use `as.data.frame()` for a tibble.&quot;</span>)</span>
+<span id="cb37-7"><a href="using_r.html#cb37-7" tabindex="-1"></a>    }</span>
+<span id="cb37-8"><a href="using_r.html#cb37-8" tabindex="-1"></a>    </span>
+<span id="cb37-9"><a href="using_r.html#cb37-9" tabindex="-1"></a>    <span class="co"># If bootstrap indices not supplied, use entire dataset</span></span>
+<span id="cb37-10"><a href="using_r.html#cb37-10" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.null</span>(indices)) indices <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)</span>
+<span id="cb37-11"><a href="using_r.html#cb37-11" tabindex="-1"></a>    </span>
+<span id="cb37-12"><a href="using_r.html#cb37-12" tabindex="-1"></a>    <span class="co"># Extract Outcome/Treatment from Formula</span></span>
+<span id="cb37-13"><a href="using_r.html#cb37-13" tabindex="-1"></a>    outcome <span class="ot">&lt;-</span> <span class="fu">all.vars</span>(<span class="fu">update</span>(formula, . <span class="sc">~</span> <span class="dv">0</span>))</span>
+<span id="cb37-14"><a href="using_r.html#cb37-14" tabindex="-1"></a>    treatment <span class="ot">&lt;-</span> <span class="fu">all.vars</span>(<span class="fu">update</span>(formula, <span class="dv">0</span> <span class="sc">~</span> .))</span>
+<span id="cb37-15"><a href="using_r.html#cb37-15" tabindex="-1"></a>    <span class="fu">stopifnot</span>(<span class="fu">length</span>(treatment) <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb37-16"><a href="using_r.html#cb37-16" tabindex="-1"></a>    </span>
+<span id="cb37-17"><a href="using_r.html#cb37-17" tabindex="-1"></a>    <span class="co"># Convert outcome to numeric using levels: Assumes levels are ordered</span></span>
+<span id="cb37-18"><a href="using_r.html#cb37-18" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.numeric</span>(data[, outcome])){</span>
+<span id="cb37-19"><a href="using_r.html#cb37-19" tabindex="-1"></a>      data[, outcome] <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data[, outcome])</span>
+<span id="cb37-20"><a href="using_r.html#cb37-20" tabindex="-1"></a>    }</span>
+<span id="cb37-21"><a href="using_r.html#cb37-21" tabindex="-1"></a>    </span>
+<span id="cb37-22"><a href="using_r.html#cb37-22" tabindex="-1"></a>    <span class="co"># Run Wilcoxon Rank Sum on data using the bootstrap indices</span></span>
+<span id="cb37-23"><a href="using_r.html#cb37-23" tabindex="-1"></a>    wrst_result <span class="ot">&lt;-</span></span>
+<span id="cb37-24"><a href="using_r.html#cb37-24" tabindex="-1"></a>      <span class="fu">wilcox.test</span>(</span>
+<span id="cb37-25"><a href="using_r.html#cb37-25" tabindex="-1"></a>        <span class="at">formula =</span> formula,</span>
+<span id="cb37-26"><a href="using_r.html#cb37-26" tabindex="-1"></a>        <span class="at">data =</span> data[indices,]</span>
+<span id="cb37-27"><a href="using_r.html#cb37-27" tabindex="-1"></a>      )</span>
+<span id="cb37-28"><a href="using_r.html#cb37-28" tabindex="-1"></a>    </span>
+<span id="cb37-29"><a href="using_r.html#cb37-29" tabindex="-1"></a>    <span class="co"># Compute AUC statistic</span></span>
+<span id="cb37-30"><a href="using_r.html#cb37-30" tabindex="-1"></a>    <span class="fu">return</span>(wrst_result<span class="sc">$</span>statistic<span class="sc">/</span><span class="fu">prod</span>(<span class="fu">table</span>(data[indices, treatment])))</span>
+<span id="cb37-31"><a href="using_r.html#cb37-31" tabindex="-1"></a>  }</span></code></pre></div>
 <p>Now, we call this function using <code>boot</code>, passing any arguments required: <code>boot</code> will resample the data, and pass the indices to the function, and evaluate the result. From the result, we can calculate the standard error or estimate of the bootstrap distribution:</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="using_r.html#cb49-1" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
-<span id="cb49-2"><a href="using_r.html#cb49-2" tabindex="-1"></a></span>
-<span id="cb49-3"><a href="using_r.html#cb49-3" tabindex="-1"></a><span class="co"># Perform 10,000 bootstraps of data</span></span>
-<span id="cb49-4"><a href="using_r.html#cb49-4" tabindex="-1"></a>n_boot_samples <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb49-5"><a href="using_r.html#cb49-5" tabindex="-1"></a></span>
-<span id="cb49-6"><a href="using_r.html#cb49-6" tabindex="-1"></a>mrs_365d_auc_boot <span class="ot">&lt;-</span></span>
-<span id="cb49-7"><a href="using_r.html#cb49-7" tabindex="-1"></a>  boot<span class="sc">::</span><span class="fu">boot</span>(</span>
-<span id="cb49-8"><a href="using_r.html#cb49-8" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">as.data.frame</span>(sim_miii),</span>
-<span id="cb49-9"><a href="using_r.html#cb49-9" tabindex="-1"></a>    <span class="at">statistic =</span> wilcox_to_auc,</span>
-<span id="cb49-10"><a href="using_r.html#cb49-10" tabindex="-1"></a>    <span class="at">R =</span> n_boot_samples,</span>
-<span id="cb49-11"><a href="using_r.html#cb49-11" tabindex="-1"></a>    <span class="at">formula =</span> mrs_365d <span class="sc">~</span> arm</span>
-<span id="cb49-12"><a href="using_r.html#cb49-12" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="using_r.html#cb38-1" tabindex="-1"></a><span class="fu">library</span>(boot)</span>
+<span id="cb38-2"><a href="using_r.html#cb38-2" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="using_r.html#cb38-3" tabindex="-1"></a><span class="co"># Perform 10,000 bootstraps of data</span></span>
+<span id="cb38-4"><a href="using_r.html#cb38-4" tabindex="-1"></a>n_boot_samples <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb38-5"><a href="using_r.html#cb38-5" tabindex="-1"></a></span>
+<span id="cb38-6"><a href="using_r.html#cb38-6" tabindex="-1"></a>mrs_365d_auc_boot <span class="ot">&lt;-</span></span>
+<span id="cb38-7"><a href="using_r.html#cb38-7" tabindex="-1"></a>  boot<span class="sc">::</span><span class="fu">boot</span>(</span>
+<span id="cb38-8"><a href="using_r.html#cb38-8" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">as.data.frame</span>(sim_miii),</span>
+<span id="cb38-9"><a href="using_r.html#cb38-9" tabindex="-1"></a>    <span class="at">statistic =</span> wilcox_to_auc,</span>
+<span id="cb38-10"><a href="using_r.html#cb38-10" tabindex="-1"></a>    <span class="at">R =</span> n_boot_samples,</span>
+<span id="cb38-11"><a href="using_r.html#cb38-11" tabindex="-1"></a>    <span class="at">formula =</span> mrs_365d <span class="sc">~</span> arm</span>
+<span id="cb38-12"><a href="using_r.html#cb38-12" tabindex="-1"></a>  )</span></code></pre></div>
 <p>Once the bootstrap procedure is complete, we can view and summarize the results.</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="using_r.html#cb50-1" tabindex="-1"></a><span class="co"># Bootstrap Standard Error</span></span>
-<span id="cb50-2"><a href="using_r.html#cb50-2" tabindex="-1"></a><span class="fu">sd</span>(mrs_365d_auc_boot<span class="sc">$</span>t[,<span class="dv">1</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="using_r.html#cb39-1" tabindex="-1"></a><span class="co"># Bootstrap Standard Error</span></span>
+<span id="cb39-2"><a href="using_r.html#cb39-2" tabindex="-1"></a><span class="fu">sd</span>(mrs_365d_auc_boot<span class="sc">$</span>t[,<span class="dv">1</span>])</span></code></pre></div>
 <pre><code>## [1] 0.02515884</code></pre>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="using_r.html#cb52-1" tabindex="-1"></a><span class="co"># Bootstrap Variance (SE^2)</span></span>
-<span id="cb52-2"><a href="using_r.html#cb52-2" tabindex="-1"></a><span class="fu">var</span>(mrs_365d_auc_boot<span class="sc">$</span>t[,<span class="dv">1</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="using_r.html#cb41-1" tabindex="-1"></a><span class="co"># Bootstrap Variance (SE^2)</span></span>
+<span id="cb41-2"><a href="using_r.html#cb41-2" tabindex="-1"></a><span class="fu">var</span>(mrs_365d_auc_boot<span class="sc">$</span>t[,<span class="dv">1</span>])</span></code></pre></div>
 <pre><code>## [1] 0.000632967</code></pre>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="using_r.html#cb54-1" tabindex="-1"></a><span class="co"># Produce a histogram and quantile-quantile plot</span></span>
-<span id="cb54-2"><a href="using_r.html#cb54-2" tabindex="-1"></a><span class="fu">plot</span>(mrs_365d_auc_boot)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="using_r.html#cb43-1" tabindex="-1"></a><span class="co"># Produce a histogram and quantile-quantile plot</span></span>
+<span id="cb43-2"><a href="using_r.html#cb43-2" tabindex="-1"></a><span class="fu">plot</span>(mrs_365d_auc_boot)</span></code></pre></div>
 <p><img src="_main_files/figure-html/Boot-Example-Step-3-Use-Results-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Confidence intervals can be computed using <code>boot::boot.ci</code>:</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="using_r.html#cb55-1" tabindex="-1"></a>mrs_365d_auc_boot_ci <span class="ot">&lt;-</span></span>
-<span id="cb55-2"><a href="using_r.html#cb55-2" tabindex="-1"></a>  boot<span class="sc">::</span><span class="fu">boot.ci</span>(</span>
-<span id="cb55-3"><a href="using_r.html#cb55-3" tabindex="-1"></a>    <span class="at">boot.out =</span> mrs_365d_auc_boot,</span>
-<span id="cb55-4"><a href="using_r.html#cb55-4" tabindex="-1"></a>    <span class="at">conf =</span> <span class="fl">0.95</span>,</span>
-<span id="cb55-5"><a href="using_r.html#cb55-5" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;bca&quot;</span>,</span>
-<span id="cb55-6"><a href="using_r.html#cb55-6" tabindex="-1"></a>    <span class="at">index =</span> <span class="dv">1</span></span>
-<span id="cb55-7"><a href="using_r.html#cb55-7" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="using_r.html#cb44-1" tabindex="-1"></a>mrs_365d_auc_boot_ci <span class="ot">&lt;-</span></span>
+<span id="cb44-2"><a href="using_r.html#cb44-2" tabindex="-1"></a>  boot<span class="sc">::</span><span class="fu">boot.ci</span>(</span>
+<span id="cb44-3"><a href="using_r.html#cb44-3" tabindex="-1"></a>    <span class="at">boot.out =</span> mrs_365d_auc_boot,</span>
+<span id="cb44-4"><a href="using_r.html#cb44-4" tabindex="-1"></a>    <span class="at">conf =</span> <span class="fl">0.95</span>,</span>
+<span id="cb44-5"><a href="using_r.html#cb44-5" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">&quot;bca&quot;</span>,</span>
+<span id="cb44-6"><a href="using_r.html#cb44-6" tabindex="-1"></a>    <span class="at">index =</span> <span class="dv">1</span></span>
+<span id="cb44-7"><a href="using_r.html#cb44-7" tabindex="-1"></a>  )</span></code></pre></div>
 <p>The results can be printed out or extracted for use elsewhere:</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="using_r.html#cb56-1" tabindex="-1"></a><span class="co"># boot.ci result</span></span>
-<span id="cb56-2"><a href="using_r.html#cb56-2" tabindex="-1"></a>mrs_365d_auc_boot_ci</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="using_r.html#cb45-1" tabindex="-1"></a><span class="co"># boot.ci result</span></span>
+<span id="cb45-2"><a href="using_r.html#cb45-2" tabindex="-1"></a>mrs_365d_auc_boot_ci</span></code></pre></div>
 <pre><code>## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
 ## Based on 10000 bootstrap replicates
 ## 
@@ -936,12 +940,12 @@ div.csl-indent {
 ## Level       BCa          
 ## 95%   ( 0.5022,  0.6005 )  
 ## Calculations and Intervals on Original Scale</code></pre>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="using_r.html#cb58-1" tabindex="-1"></a><span class="co"># Extract the lower/upper confidence limits</span></span>
-<span id="cb58-2"><a href="using_r.html#cb58-2" tabindex="-1"></a>mrs_365d_auc_boot_ci_result <span class="ot">&lt;-</span></span>
-<span id="cb58-3"><a href="using_r.html#cb58-3" tabindex="-1"></a>  <span class="fu">tail</span>(<span class="at">x =</span> mrs_365d_auc_boot_ci<span class="sc">$</span>bca[<span class="dv">1</span>,], <span class="at">n =</span> <span class="dv">2</span>)</span>
-<span id="cb58-4"><a href="using_r.html#cb58-4" tabindex="-1"></a></span>
-<span id="cb58-5"><a href="using_r.html#cb58-5" tabindex="-1"></a><span class="co"># Print out result</span></span>
-<span id="cb58-6"><a href="using_r.html#cb58-6" tabindex="-1"></a>mrs_365d_auc_boot_ci_result</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="using_r.html#cb47-1" tabindex="-1"></a><span class="co"># Extract the lower/upper confidence limits</span></span>
+<span id="cb47-2"><a href="using_r.html#cb47-2" tabindex="-1"></a>mrs_365d_auc_boot_ci_result <span class="ot">&lt;-</span></span>
+<span id="cb47-3"><a href="using_r.html#cb47-3" tabindex="-1"></a>  <span class="fu">tail</span>(<span class="at">x =</span> mrs_365d_auc_boot_ci<span class="sc">$</span>bca[<span class="dv">1</span>,], <span class="at">n =</span> <span class="dv">2</span>)</span>
+<span id="cb47-4"><a href="using_r.html#cb47-4" tabindex="-1"></a></span>
+<span id="cb47-5"><a href="using_r.html#cb47-5" tabindex="-1"></a><span class="co"># Print out result</span></span>
+<span id="cb47-6"><a href="using_r.html#cb47-6" tabindex="-1"></a>mrs_365d_auc_boot_ci_result</span></code></pre></div>
 <pre><code>##                     
 ## 0.5022205 0.6005486</code></pre>
 <p>The most straightforward way to calculate a p-value using the bootstrap involves finding the smallest value of <span class="math inline">\(\alpha\)</span> at which the <span class="math inline">\(100(1 - \alpha)\%\)</span> confidence interval does not contain the null value, resulting in a rejection of the null hypothesis. While not implemented in <code>boot</code>, this can be done using a binary search algorithm for the values of <span class="math inline">\(\alpha\)</span> typically used in practice: <span class="math inline">\(0.05 \ge \alpha \ge 0.0001\)</span>.</p>
@@ -956,7 +960,7 @@ div.csl-indent {
 </div>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-DobsonBarnett2018" class="csl-entry">
 Dobson, Annette J., and Adrian G. Barnett. 2018. <em>An Introduction to Generalized Linear Models, Fourth Edition</em>. Chapman; Hall/<span>CRC</span>. <a href="https://doi.org/10.1201/9781315182780">https://doi.org/10.1201/9781315182780</a>.
 </div>
