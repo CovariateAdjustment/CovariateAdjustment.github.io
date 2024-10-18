@@ -386,7 +386,7 @@ relative_efficiency_surv_prob
 ```
 
 
-Covariates improve the efficiency of estimating the marginal hazard ratio by `r round(100*(relative_efficiency_surv_prob - 1), digits = 1)`%.
+Covariates improve the efficiency of estimating the survival probability by `r round(100*(relative_efficiency_surv_prob - 1), digits = 1)`%.
 
 
 
@@ -426,4 +426,4 @@ relative_efficiency_rmst
 ```
 
 
-Covariates improve the efficiency of estimating the marginal hazard ratio by `r round(100*(relative_efficiency_rmst - 1), digits = 1)`%.
+Covariates improve the efficiency of estimating the RMST by `r round(100*(relative_efficiency_rmst - 1), digits = 1)`%.

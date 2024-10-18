@@ -60,7 +60,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -1712,8 +1712,8 @@ A relative estimand is given by the ratio of RMST:</p>
 <p>The Kaplan-Meier (or K-M) estimate of the survival function is one of the most ubiquitous approaches to time-to-event outcomes. The K-M estimator assumes that censoring occurs independent of event time in each treatment arm. This is often violated when baseline covariates associated with event times and dropout <span class="citation">(<a href="#ref-Diaz2018">Dı́az et al. 2018</a>)</span>.</p>
 <p>The Logrank test and the Cox Proportional Hazards model are closely related to each other and <a href="#hazard_ratio">the proportional hazards assumption</a>. The Logrank Test provides a valid test of the null hypothesis if censoring is independent of treatment or the event time in each treatment arm <span class="citation">(<a href="#ref-VanLancker2021">Lancker, Dukes, and Vansteelandt 2021</a>)</span>. While its validity does not depend on the proportional hazards (PH) assumption, its power is greatest when the PH assumption is true. When the PH assumption does not hold, weighted logrank tests can improve power by emphasizing different parts of the survival curve <span class="citation">(<a href="#ref-Lin2017">Lin and León 2017</a>)</span>.</p>
 <p>The Cox Proportional Hazards (PH) Model provides a valid test of the null hypothesis if the sandwich covariance estimator is used and censoring is either conditionally independent of treatment assignment given the covariates or conditionally independent of the covariates given treatment assignment. As previously mentioned, the <a href="#hazard_ratio">proportional hazards assumption</a> may not be known to hold a priori, presents difficulties in interpretation when the assumption does not empirically hold, and does not quantify the amount of time a participant can expect to be event free under a particular treatment <span class="citation">(<a href="#ref-Rudser2012">Rudser, LeBlanc, and Emerson 2012</a>)</span>.</p>
-<p>The Restricted Mean Survival Time assumes that <span class="math inline">\(\ldots\)</span>.
-The Survival Probability assumes that <span class="math inline">\(\ldots\)</span>.</p>
+<p>Analyses of the Restricted Mean Survival Time typically assume that <span class="math inline">\(\ldots\)</span>.
+Analyses of the Survival Probability typically assume that <span class="math inline">\(\ldots\)</span>.</p>
 <hr />
 <div id="kaplan-meier-estimator" class="section level3" number="7.1.1">
 <h3><span class="header-section-number">7.1.1</span> Kaplan-Meier Estimator</h3>
@@ -2084,7 +2084,7 @@ The Survival Probability assumes that <span class="math inline">\(\ldots\)</span
 <span id="cb168-4"><a href="#cb168-4" tabindex="-1"></a></span>
 <span id="cb168-5"><a href="#cb168-5" tabindex="-1"></a>relative_efficiency_surv_prob</span></code></pre></div>
 <p>[1] 1.084233</p>
-<p>Covariates improve the efficiency of estimating the marginal hazard ratio by 8.4%.</p>
+<p>Covariates improve the efficiency of estimating the survival probability by 8.4%.</p>
 <hr />
 </div>
 <div id="restricted-mean-survival-time-rmst-1" class="section level3" number="7.2.5">
@@ -2118,7 +2118,7 @@ The Survival Probability assumes that <span class="math inline">\(\ldots\)</span
 <span id="cb186-4"><a href="#cb186-4" tabindex="-1"></a></span>
 <span id="cb186-5"><a href="#cb186-5" tabindex="-1"></a>relative_efficiency_rmst</span></code></pre></div>
 <p>[1] 1.138953</p>
-<p>Covariates improve the efficiency of estimating the marginal hazard ratio by 13.9%.</p>
+<p>Covariates improve the efficiency of estimating the RMST by 13.9%.</p>
 
 </div>
 </div>
